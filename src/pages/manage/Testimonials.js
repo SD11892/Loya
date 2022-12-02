@@ -17,9 +17,12 @@ import { ReactSVG } from "react-svg";
 import { Close as CloseIcon } from "../../icons/close";
 import { Export as ExportIcon } from "../../icons/export";
 import TestTable from "../../components/testimonials/table";
+import { Link } from "react-router-dom";
 
 const Testimonials = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [visible, setVisible] = React.useState("visible");
+  const [height, setHeight] = React.useState("");
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -38,18 +41,25 @@ const Testimonials = () => {
         container
         justifyContent="space-between"
         style={{
-          visibility: open,
+          visibility: visible,
           width: "100%",
           lineHeight: "0.8rem",
           marginLeft: "2rem",
           alignItems: "center",
+          height: height,
         }}
       >
-        <Grid item style={{ visibility: open }}>
-          <PageTitle>Welcome to Senja 👋</PageTitle>
+        <Grid item>
+          <PageTitle>Welcome to Loya 👋</PageTitle>
         </Grid>
-        <Grid item style={{ visibility: open }}>
-          <IconButton>
+        <Grid item>
+          <IconButton
+            style={{ marginLeft: "3.5rem" }}
+            onClick={() => {
+              setVisible("collapse");
+              setHeight("0px");
+            }}
+          >
             <CloseIcon />
           </IconButton>
         </Grid>
@@ -58,19 +68,20 @@ const Testimonials = () => {
         container
         spacing={2}
         style={{
-          visibility: open,
           marginTop: "1rem",
           marginLeft: "2rem",
           marginBottom: "2rem",
           border: "1px solid #ddd",
           borderRadius: "10px",
           padding: "1rem",
+          visibility: visible,
+          height: height,
         }}
       >
-        <Grid item xs={0} sm={2} style={{ visibility: open }}>
+        <Grid item xs={0} sm={2} style={{ visibility: visible }}>
           <ReactSVG src="welcome.svg" />
         </Grid>
-        <Grid item xs={12} sm={10} style={{ visibility: open }}>
+        <Grid item xs={12} sm={10}>
           <div style={{ marginTop: "1rem", fontWeight: "500" }}>
             Already got testimonials? Import them!
           </div>
@@ -82,14 +93,15 @@ const Testimonials = () => {
           <div
             style={{
               marginTop: "1rem",
-              color: "#52525b",
               fontSize: "0.7rem",
               fontWeight: "600",
             }}
           >
-            <a
-              href=""
+            <Link
+              to="/"
               style={{
+                textDecoration: "unset",
+                color: "#52525b",
                 border: "1px solid #ddd",
                 borderRadius: "4px",
                 padding: "4px 8px",
@@ -98,9 +110,12 @@ const Testimonials = () => {
             >
               <Googlesm />
               Google
-            </a>
-            <a
+            </Link>
+            <Link
+              to="/"
               style={{
+                textDecoration: "unset",
+                color: "#52525b",
                 border: "1px solid #ddd",
                 borderRadius: "4px",
                 padding: "4px 8px",
@@ -109,7 +124,7 @@ const Testimonials = () => {
             >
               <Facebooksm />
               Facebook
-            </a>
+            </Link>
           </div>
         </Grid>
       </Grid>
@@ -129,6 +144,7 @@ const Testimonials = () => {
         </Grid>
         <Grid item style={{ visibility: open }}>
           <IconButton
+            style={{ marginLeft: "3.5rem" }}
             aria-describedby={id}
             variant="contained"
             onClick={handleClick}

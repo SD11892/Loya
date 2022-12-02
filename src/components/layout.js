@@ -1,7 +1,6 @@
 import { Outlet } from "react-router-dom";
 import { styled } from "@mui/material/styles";
 import { Sidebar } from "./sideBar";
-import { Grow } from "@mui/material";
 
 const LayoutRoot = styled("div")(() => ({
   backgroundColor: "#ffffff",

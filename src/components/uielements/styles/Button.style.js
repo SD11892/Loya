@@ -78,6 +78,16 @@ const PlusButton = (ComponentName) => styled(ComponentName)`
     }
   }
 `;
+const EmbedButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiButton-root {
+      cursor: pointer;
+      background: rgb(103, 1, 230);
+      color: white;
+      border-radius: 0.25rem;
+    }
+  }
+`;
 const StatusButton = (ComponentName) => styled(ComponentName)`
    {
     &.MuiButton-root {
@@ -120,6 +130,7 @@ export {
   MenuButton,
   MainButton,
   PlusButton,
+  EmbedButton,
   StatusButton,
   DeleteButton,
   BackwardButton,

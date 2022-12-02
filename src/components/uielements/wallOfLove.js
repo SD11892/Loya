@@ -1,6 +1,6 @@
 import styled from 'styled-components';
 
-export const SiteStyle = styled.div`
+export const WallOfLoveStyle = styled.div`
   --primary: #6701e6;
   --on-primary: #ffffff;
   --on-primary-polar: #000000;
@@ -16,6 +16,50 @@ export const SiteStyle = styled.div`
   --box-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
   --width: 20px;
   --height: 20px;
+  --tw-border-spacing-x: 0;
+  --tw-border-spacing-y: 0;
+  --tw-translate-x: 0;
+  --tw-translate-y: 0;
+  --tw-rotate: 0;
+  --tw-skew-x: 0;
+  --tw-skew-y: 0;
+  --tw-scale-x: 1;
+  --tw-scale-y: 1;
+  --tw-pan-x: ;
+  --tw-pan-y: ;
+  --tw-pinch-zoom: ;
+  --tw-scroll-snap-strictness: proximity;
+  --tw-ordinal: ;
+  --tw-slashed-zero: ;
+  --tw-numeric-figure: ;
+  --tw-numeric-spacing: ;
+  --tw-numeric-fraction: ;
+  --tw-ring-inset: ;
+  --tw-ring-offset-width: 0px;
+  --tw-ring-offset-color: #fff;
+  --tw-ring-color: rgb(59 130 246 / 0.5);
+  --tw-ring-offset-shadow: 0 0 #0000;
+  --tw-ring-shadow: 0 0 #0000;
+  --tw-shadow: 0 0 #0000;
+  --tw-shadow-colored: 0 0 #0000;
+  --tw-blur: ;
+  --tw-brightness: ;
+  --tw-contrast: ;
+  --tw-grayscale: ;
+  --tw-hue-rotate: ;
+  --tw-invert: ;
+  --tw-saturate: ;
+  --tw-sepia: ;
+  --tw-drop-shadow: ;
+  --tw-backdrop-blur: ;
+  --tw-backdrop-brightness: ;
+  --tw-backdrop-contrast: ;
+  --tw-backdrop-grayscale: ;
+  --tw-backdrop-hue-rotate: ;
+  --tw-backdrop-invert: ;
+  --tw-backdrop-opacity: ;
+  --tw-backdrop-saturate: ;
+  --tw-backdrop-sepia: ;
 
   .sj-card {
     background-color: var(--clr-background);
@@ -105,6 +149,49 @@ export const SiteStyle = styled.div`
     z-index: var(--toastContainerZIndex, 9999);
   }
 
+  textarea {
+    resize: vertical;
+  }
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+  }
+  [type='text'],
+  [type='email'],
+  [type='url'],
+  [type='password'],
+  [type='number'],
+  [type='date'],
+  [type='datetime-local'],
+  [type='month'],
+  [type='search'],
+  [type='tel'],
+  [type='time'],
+  [type='week'],
+  [multiple],
+  textarea,
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    border-color: #6b7280;
+    border-width: 1px;
+    border-radius: 0;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    --tw-shadow: 0 0 #0000;
+  }
   ol,
   ul,
   menu {
@@ -176,18 +263,43 @@ export const SiteStyle = styled.div`
       'Noto Color Emoji';
     font-weight: 500;
   }
+  button,
+  [role='button'] {
+    cursor: pointer;
+  }
+  button,
+  [type='button'],
+  [type='reset'],
+  [type='submit'] {
+    -webkit-appearance: button;
+    background-color: transparent;
+    background-image: none;
+  }
+  button,
+  select {
+    text-transform: none;
+  }
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+  }
 
   .overflow-x-hidden {
     overflow-x: hidden;
   }
+  .block {
+    display: block;
+  }
 
-  .mx-auto {
-    margin-left: auto;
-    margin-right: auto;
-  }
-  .mt-auto {
-    margin-top: auto;
-  }
   .bg-zinc-100 {
     --tw-bg-opacity: 1;
     background-color: rgb(244 244 245 / var(--tw-bg-opacity));
@@ -210,6 +322,10 @@ export const SiteStyle = styled.div`
   .bg-white {
     --tw-bg-opacity: 1;
     background-color: rgb(255 255 255 / var(--tw-bg-opacity));
+  }
+  .bg-gray-100 {
+    --tw-bg-opacity: 1;
+    background-color: rgb(243 244 246 / var(--tw-bg-opacity));
   }
 
   .items-center {
@@ -259,10 +375,6 @@ export const SiteStyle = styled.div`
     --tw-border-opacity: 1;
     border-color: rgb(209 213 219 / var(--tw-border-opacity));
   }
-  .text-sm {
-    font-size: 0.875rem;
-    line-height: 1.25rem;
-  }
   .text-gray-700 {
     --tw-text-opacity: 1;
     color: rgb(55 65 81 / var(--tw-text-opacity));
@@ -275,8 +387,19 @@ export const SiteStyle = styled.div`
     font-size: 2.25rem;
     line-height: 2.5rem;
   }
+  .text-sm {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+  }
+  .text-left {
+    text-align: left;
+  }
   .text-center {
     text-align: center;
+  }
+  .text-primary {
+    --tw-text-opacity: 1;
+    color: rgb(103 1 230 / var(--tw-text-opacity));
   }
   .text-base {
     font-size: 1rem;
@@ -299,13 +422,25 @@ export const SiteStyle = styled.div`
   .rounded-full {
     border-radius: 9999px;
   }
+  .rounded-lg {
+    border-radius: 0.5rem;
+  }
+  .rounded-md {
+    border-radius: 0.375rem;
+  }
 
   .h-14 {
     height: 3.5rem;
   }
+  .h-24 {
+    height: 6rem;
+  }
 
   .gap-2 {
     gap: 0.5rem;
+  }
+  .gap-4 {
+    gap: 1rem;
   }
   .gap-8 {
     gap: 2rem;
@@ -314,7 +449,13 @@ export const SiteStyle = styled.div`
   .justify-center {
     justify-content: center;
   }
+  .justify-between {
+    justify-content: space-between;
+  }
 
+  .p-1 {
+    padding: 0.25rem;
+  }
   .px-2 {
     padding-left: 0.5rem;
     padding-right: 0.5rem;
@@ -331,10 +472,6 @@ export const SiteStyle = styled.div`
     padding-left: 2rem;
     padding-right: 2rem;
   }
-  .py-24 {
-    padding-top: 6rem;
-    padding-bottom: 6rem;
-  }
   .py-2 {
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
@@ -342,6 +479,14 @@ export const SiteStyle = styled.div`
   .py-2-5 {
     padding-top: 0.625rem;
     padding-bottom: 0.625rem;
+  }
+  .py-4 {
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  .py-24 {
+    padding-top: 6rem;
+    padding-bottom: 6rem;
   }
   .pt-24 {
     padding-top: 6rem;
@@ -352,6 +497,16 @@ export const SiteStyle = styled.div`
   .my-1 {
     margin-top: 0.25rem;
     margin-bottom: 0.25rem;
+  }
+  .mx-auto {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .mt-auto {
+    margin-top: auto;
+  }
+  .mt-2 {
+    margin-top: 0.5rem;
   }
   .mt-6 {
     margin-top: 1.5rem;
@@ -367,6 +522,10 @@ export const SiteStyle = styled.div`
     fill: #8b41f2;
   }
 
+  .duration-100 {
+    transition-duration: 0.1s;
+  }
+
   .z-50 {
     z-index: 50;
   }
@@ -379,6 +538,96 @@ export const SiteStyle = styled.div`
   }
   .fixed {
     position: fixed;
+  }
+
+  .focus-ring-primary:focus {
+    --tw-ring-opacity: 1;
+    --tw-ring-color: rgb(103 1 230 / var(--tw-ring-opacity)) !important;
+  }
+  .focus-border-primary:focus {
+    --tw-border-opacity: 1;
+    border-color: rgb(103 1 230 / var(--tw-border-opacity)) !important;
+  }
+
+  [type='text']:focus,
+  [type='email']:focus,
+  [type='url']:focus,
+  [type='password']:focus,
+  [type='number']:focus,
+  [type='date']:focus,
+  [type='datetime-local']:focus,
+  [type='month']:focus,
+  [type='search']:focus,
+  [type='tel']:focus,
+  [type='time']:focus,
+  [type='week']:focus,
+  [multiple]:focus,
+  textarea:focus,
+  select:focus {
+    outline: 2px solid transparent;
+    outline-offset: 2px;
+    --tw-ring-inset: var(--tw-empty);
+    --tw-ring-offset-width: 0px;
+    --tw-ring-offset-color: #fff;
+    --tw-ring-color: #2563eb;
+    --tw-ring-offset-shadow: var(--tw-ring-inset) 0 0 0
+      var(--tw-ring-offset-width) var(--tw-ring-offset-color);
+    --tw-ring-shadow: var(--tw-ring-inset) 0 0 0
+      calc(1px + var(--tw-ring-offset-width)) var(--tw-ring-color);
+    box-shadow: var(--tw-ring-offset-shadow), var(--tw-ring-shadow),
+      var(--tw-shadow);
+    border-color: #2563eb;
+  }
+  [type='text'],
+  [type='email'],
+  [type='url'],
+  [type='password'],
+  [type='number'],
+  [type='date'],
+  [type='datetime-local'],
+  [type='month'],
+  [type='search'],
+  [type='tel'],
+  [type='time'],
+  [type='week'],
+  [multiple],
+  textarea,
+  select {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    background-color: #fff;
+    border-color: #6b7280;
+    border-width: 1px;
+    border-radius: 0;
+    padding: 0.5rem 0.75rem;
+    font-size: 1rem;
+    line-height: 1.5rem;
+    --tw-shadow: 0 0 #0000;
+  }
+  button,
+  input,
+  optgroup,
+  select,
+  textarea {
+    font-family: inherit;
+    font-size: 100%;
+    font-weight: inherit;
+    line-height: inherit;
+    color: inherit;
+    margin: 0;
+    padding: 0;
+  }
+  .shadow-sm {
+    --tw-shadow: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+    --tw-shadow-colored: 0 1px 2px 0 var(--tw-shadow-color);
+    box-shadow: var(--tw-ring-offset-shadow, 0 0 #0000),
+      var(--tw-ring-shadow, 0 0 #0000), var(--tw-shadow);
+  }
+  .appearance-none {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
 
   @media (min-width: 640px) {

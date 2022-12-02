@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import BackwardButton from "../uielements/backwardButton";
 import { Grid, InputBase, Button } from "@mui/material";
 import PageTitle from "../uielements/pageTitle";
@@ -58,8 +58,11 @@ export const SearchPane = () => {
             fontWeight: "600",
           }}
         >
-          <a
+          <Link
+            to="/"
             style={{
+              textDecoration: "unset",
+              color: "#52525b",
               border: "1px solid #ddd",
               borderRadius: "4px",
               padding: "4px 8px",
@@ -68,9 +71,12 @@ export const SearchPane = () => {
           >
             <Googlesm />
             Google
-          </a>
-          <a
+          </Link>
+          <Link
+            to="/"
             style={{
+              textDecoration: "unset",
+              color: "#52525b",
               border: "1px solid #ddd",
               borderRadius: "4px",
               padding: "4px 8px",
@@ -79,7 +85,7 @@ export const SearchPane = () => {
           >
             <Facebooksm />
             Facebook
-          </a>
+          </Link>
         </Grid>
         <Grid item xs={12} style={{ marginBottom: "1rem" }}>
           <div style={{ marginTop: "1rem", fontWeight: "500" }}>
@@ -133,7 +139,13 @@ export const SearchPane = () => {
           <div style={{ marginTop: "1rem", fontWeight: "500" }}>Word Cloud</div>
         </Grid>
         <Grid item xs={12} style={{ marginBottom: "1rem" }}>
-          <img src="wordCloud.png" width="100%" height="100%" style={{}} />
+          <img
+            alt="wordCloud"
+            src="wordCloud.png"
+            width="100%"
+            height="100%"
+            style={{}}
+          />
         </Grid>
       </Grid>
     </div>

@@ -1,22 +1,13 @@
-import { useNavigate } from 'react-router-dom';
-import BackwardButton from '../uielements/backwardButton';
-import { Grid, Button } from '@mui/material';
-import PageTitle from '../uielements/pageTitle';
-import { Googlesm } from '../../icons/google_sm';
-import { Facebooksm } from '../../icons/facebook_sm';
-import { Star } from '../../icons/star';
-import styled from 'styled-components';
-
-import { SiteStyle } from './Site.style';
+import { WallOfLoveStyle } from '../uielements/wallOfLove';
 
 const Site = () => {
   return (
-    <SiteStyle>
+    <WallOfLoveStyle>
       <div className="mx-auto min-h-screen bg-zinc-100">
         <header className="relative">
           <div className="flex h-14 items-center bg-white px-8 shadow-lg">
             <div className="mx-auto flex w-full max-w-5xl items-center gap-8">
-              <a href="https://senja.io/" target="_blank">
+              <a href="https://loya.io/" target="_blank" rel="noreferrer">
                 <div className="flex items-center gap-2">
                   <svg
                     width="27"
@@ -46,7 +37,7 @@ const Site = () => {
                     style={{ fontSize: '19.200000000000003px' }}
                     className="font-heading font-semibold text-gray-900 "
                   >
-                    Senja
+                    Loya
                   </div>
                 </div>
               </a>
@@ -67,9 +58,9 @@ const Site = () => {
                 Our Wall of Love
               </h1>
               <a
-                href="https://senja.io/"
+                href="https://loya.io/"
                 data-sveltekit-reload=""
-                rel="nofollow"
+                rel="noreferrer"
                 target="_blank"
                 style={{
                   backgroundColor: 'var(--on-primary)',
@@ -121,7 +112,7 @@ const Site = () => {
                                 <div className="sj-avatar-container  svelte-173satm">
                                   <img
                                     src="./2.jpg"
-                                    alt="Wilson Wilson avatar"
+                                    alt="Ardi avatar"
                                     className=" svelte-173satm"
                                     referrerpolicy="no-referrer"
                                     style={{ width: '42px', height: '42px' }}
@@ -129,11 +120,9 @@ const Site = () => {
                                 </div>
                               </div>
                               <div className="overflow-x-hidden">
-                                <div className="sj-endorser-name ">
-                                  Wilson Wilson
-                                </div>
+                                <div className="sj-endorser-name ">Ardi</div>
                                 <div className="sj-desc ">
-                                  Co-founder of Senja
+                                  Co-founder of Loya
                                 </div>
                               </div>
                               <div className="sj-spacer"></div>
@@ -203,7 +192,7 @@ const Site = () => {
                               </div>
                             </div>
                             <div className="sj-content">
-                              I just learned about Senja this morning and now
+                              I just learned about Loya this morning and now
                               they have a new customer. I'm head over heels
                               about William's project. It just works! Well done!
                             </div>
@@ -224,8 +213,9 @@ const Site = () => {
       </div>
       <div className="fixed inset-x-0 bottom-0 z-50 sm-right-4 sm-inset-x-auto sm-bottom-4">
         <a
-          href="https://senja.io/?utm_source=senja&amp;utm_medium=website&amp;utm_campaign=page-powered-by_web&amp;version=1"
+          href="https://loya.io/?utm_source=loya&amp;utm_medium=website&amp;utm_campaign=page-powered-by_web&amp;version=1"
           target="_blank"
+          rel="noreferrer"
           className="flex items-center justify-center gap-2 border border-gray-300 bg-white px-4 py-2 sm-rounded-md sm-shadow-md"
         >
           <svg
@@ -253,7 +243,7 @@ const Site = () => {
             </g>
           </svg>
           <div className="font-heading text-sm font-bold text-gray-700">
-            Made with Senja
+            Made with Loya
           </div>
         </a>
       </div>
@@ -274,7 +264,7 @@ const Site = () => {
           height: '1px',
         }}
       ></div>
-    </SiteStyle>
+    </WallOfLoveStyle>
   );
 };
 

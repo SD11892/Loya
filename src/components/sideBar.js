@@ -1,6 +1,7 @@
-import { Link, useNavigate } from "react-router-dom";
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
 import { deepPurple } from "@mui/material/colors";
-import { Grid, Avatar } from "@mui/material";
+import { Grid, Avatar, Popover, Typography } from "@mui/material";
 import SideDrawer from "./uielements/drawer";
 import SiderButton from "./uielements/siderButton";
 import MenuButton from "./uielements/menuButton";
@@ -17,11 +18,22 @@ import { Rich as RichIcon } from "../icons/rich";
 import { DownArrow } from "../icons/downArrow";
 
 export const Sidebar = () => {
+  const [anchorEl, setAnchorEl] = React.useState(null);
   const navigate = useNavigate();
+
+  const open = Boolean(anchorEl);
+  const id = open ? "simple-popover" : undefined;
+
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
 
   return (
     <SideDrawer open variant="permanent" style={{ width: "14rem" }}>
-      <SiderButton>
+      <SiderButton onClick={handleClick}>
         <div style={{ flex: "none" }}>
           <Avatar
             sx={{
@@ -104,7 +116,9 @@ export const Sidebar = () => {
           </MenuButton>
         </Grid>
         <Grid xs={12}>
-          <MenuButton>
+          <MenuButton onClick={() => {
+              navigate("/widgets");
+            }}>
             <WidgetIcon />
             <SiderText>Widgets</SiderText>
           </MenuButton>
@@ -116,6 +130,32 @@ export const Sidebar = () => {
           </MenuButton>
         </Grid>
       </Grid>
+      <Popover
+        id={id}
+        open={open}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: "bottom",
+          horizontal: "right",
+        }}
+      >
+        <Typography sx={{ p: 2 }} style={{ cursor: "pointer" }}>
+          Signed in as dev@jovanni.services
+        </Typography>
+        <Typography sx={{ p: 2 }} style={{ cursor: "pointer" }}>
+          Account and Billing
+        </Typography>
+        <Typography sx={{ p: 2 }} style={{ cursor: "pointer" }}>
+          Upgrade
+        </Typography>
+        <Typography sx={{ p: 2 }} style={{ cursor: "pointer" }}>
+          Roadmap
+        </Typography>
+        <Typography sx={{ p: 2 }} style={{ cursor: "pointer" }}>
+          Sign Out
+        </Typography>
+      </Popover>
     </SideDrawer>
   );
 };

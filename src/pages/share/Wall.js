@@ -8,22 +8,22 @@ const Wall = () => {
     <Grid container justifyContent="space-between">
       <Grid
         item
-        xs={3}
         style={{
           background: '#fff',
           paddingLeft: '2rem',
           paddingRight: '2rem',
           borderRight: '1px solid #e5e7eb',
-          maxWidth: '24rem',
+          width: '24rem',
+          overflow: 'auto',
         }}
       >
         <Pane />
       </Grid>
       <Grid
         item
-        xs={9}
         style={{
-          maxWidth: 'calc(100% - 24rem)',
+          width: 'calc(100% - 24rem)',
+          overflow: 'scroll',
         }}
       >
         <Site />

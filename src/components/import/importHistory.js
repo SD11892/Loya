@@ -9,7 +9,6 @@ export const ImportHistory = () => {
     <div
       style={{
         width: "16rem",
-        width: "100%",
         height: "100vh",
         overflowY: "auto",
       }}

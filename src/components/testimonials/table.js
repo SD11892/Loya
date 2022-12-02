@@ -20,16 +20,16 @@ function createData(avatar, name, testimonial, rate, date, status) {
 const rows = [
   createData(
     "1.jpg",
-    "Oliver Meakings",
-    "Hey! It's Olly here, co-founder of Senja. This is a dummy review that'll show you how a testimonial works 😄",
+    "Ardi",
+    "Hey! It's Ardi here, co-founder of Loya. This is a dummy review that'll show you how a testimonial works 😄",
     0,
     "Nov 28, 2022",
     1
   ),
   createData(
     "2.jpg",
-    "Wilson Wilson",
-    "I just learned about Senja this morning and now they have a new customer. I'm head over heels about William's project. It just works! Well done!",
+    "William",
+    "I just learned about Loya this morning and now they have a new customer. I'm head over heels about William's project. It just works! Well done!",
     5,
     "Nov 28, 2022",
     0
@@ -190,7 +190,7 @@ const TestTable = () => {
                     <StatusButton
                       style={{ ...privateStyle }}
                       onClick={() => {
-                        setButtonText(["private", "private"]);
+                        setButtonText([buttonText[1 - row.status], "public"]);
                         row.status = 0;
                       }}
                     >
@@ -201,7 +201,7 @@ const TestTable = () => {
                       style={{ ...publicStyle }}
                       onClick={() => {
                         console.log("butt=", buttonText);
-                        setButtonText(["public", "public"]);
+                        setButtonText(["public", buttonText[1 - row.status]]);
                         row.status = 1;
                       }}
                     >
