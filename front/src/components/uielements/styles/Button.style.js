@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import IconContainer from "../iconContainer";
 
 const SiderButton = (ComponentName) => styled(ComponentName)`
    {
@@ -45,7 +46,10 @@ const MenuButton = (ComponentName) => styled(ComponentName)`
 const MainButton = (ComponentName) => styled(ComponentName)`
    {
     &.MuiButton-root {
-      display: block;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+      justify-content: center;
       cursor: pointer;
       transition-duration: 0.1s;
       background: rgb(103, 1, 230);
@@ -125,6 +129,17 @@ const BackwardButton = (ComponentName) => styled(ComponentName)`
     }
   }
 `;
+
+const ListButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiListItemButton-root:hover {
+      border-radius: 0.5rem;
+     ${IconContainer} {
+      visibility: visible;
+    }
+  }
+`;
+
 export {
   SiderButton,
   MenuButton,
@@ -134,4 +149,5 @@ export {
   StatusButton,
   DeleteButton,
   BackwardButton,
+  ListButton,
 };

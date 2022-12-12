@@ -3,19 +3,21 @@ import { useNavigate } from "react-router-dom";
 import { deepPurple } from "@mui/material/colors";
 import { Grid, Avatar, Popover, Typography } from "@mui/material";
 import SideDrawer from "./uielements/drawer";
-import SiderButton from "./uielements/siderButton";
-import MenuButton from "./uielements/menuButton";
+import SiderButton from "./uielements/buttons/siderButton";
+import MenuButton from "./uielements/buttons/menuButton";
 import SiderText from "./uielements/siderText";
 import Label from "./uielements/label";
 import { Form as FormIcon } from "../icons/form";
 import { Import as ImportIcon } from "../icons/import";
-import { Heart as HeartIcon } from "../icons/heart";
+import { Testimonial as TestimonialIcon } from "../icons/testimonial";
 import { Search as SearchIcon } from "../icons/search";
 import { Tags as TagsIcon } from "../icons/tags";
 import { Wall as WallIcon } from "../icons/wall";
 import { Widget as WidgetIcon } from "../icons/widget";
 import { Rich as RichIcon } from "../icons/rich";
 import { DownArrow } from "../icons/downArrow";
+import { REGISTER_SUCCESS } from "../actions/types";
+import { useDispatch, useSelector } from "react-redux";
 
 export const Sidebar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -42,12 +44,10 @@ export const Sidebar = () => {
               width: "28px",
               height: "28px",
             }}
-          >
-            W
-          </Avatar>
+          ></Avatar>
         </div>
         <div style={{ fontSize: "0.9rem", fontWeight: "600" }}>
-          William Williams
+          {JSON.parse(localStorage.getItem("user")).username}
         </div>
         <DownArrow />
       </SiderButton>
@@ -82,7 +82,7 @@ export const Sidebar = () => {
               navigate("/testimonials");
             }}
           >
-            <HeartIcon />
+            <TestimonialIcon />
             <SiderText>Testmonials</SiderText>
           </MenuButton>
         </Grid>
@@ -116,9 +116,11 @@ export const Sidebar = () => {
           </MenuButton>
         </Grid>
         <Grid xs={12}>
-          <MenuButton onClick={() => {
+          <MenuButton
+            onClick={() => {
               navigate("/widgets");
-            }}>
+            }}
+          >
             <WidgetIcon />
             <SiderText>Widgets</SiderText>
           </MenuButton>
@@ -137,24 +139,26 @@ export const Sidebar = () => {
         onClose={handleClose}
         anchorOrigin={{
           vertical: "bottom",
-          horizontal: "right",
+          horizontal: "left",
         }}
+        style={{ padding: "0.5rem" }}
       >
-        <Typography sx={{ p: 2 }} style={{ cursor: "pointer" }}>
-          Signed in as dev@jovanni.services
-        </Typography>
-        <Typography sx={{ p: 2 }} style={{ cursor: "pointer" }}>
-          Account and Billing
-        </Typography>
-        <Typography sx={{ p: 2 }} style={{ cursor: "pointer" }}>
-          Upgrade
-        </Typography>
-        <Typography sx={{ p: 2 }} style={{ cursor: "pointer" }}>
-          Roadmap
-        </Typography>
-        <Typography sx={{ p: 2 }} style={{ cursor: "pointer" }}>
+        <MenuButton sx={{ p: 2 }}>
+          {localStorage.getItem("user").username}
+        </MenuButton>
+        <MenuButton sx={{ p: 2 }}>Account and Billing</MenuButton>
+        <MenuButton sx={{ p: 2 }}>Upgrade</MenuButton>
+        <MenuButton sx={{ p: 2 }}>Roadmap</MenuButton>
+        <MenuButton
+          sx={{ p: 2 }}
+          style={{ color: "#6701e6" }}
+          onClick={() => {
+            navigate("/");
+            localStorage.clear();
+          }}
+        >
           Sign Out
-        </Typography>
+        </MenuButton>
       </Popover>
     </SideDrawer>
   );

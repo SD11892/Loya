@@ -11,7 +11,7 @@ import {
   Avatar,
 } from "@mui/material";
 import { Starsm as StarIcon } from "../../icons/star_sm";
-import StatusButton from "../../components/uielements/statusButton";
+import StatusButton from "../../components/uielements/buttons/statusButton";
 
 function createData(avatar, name, testimonial, rate, date, status) {
   return { avatar, name, testimonial, rate, date, status };
@@ -200,7 +200,6 @@ const TestTable = () => {
                     <StatusButton
                       style={{ ...publicStyle }}
                       onClick={() => {
-                        console.log("butt=", buttonText);
                         setButtonText(["public", buttonText[1 - row.status]]);
                         row.status = 1;
                       }}

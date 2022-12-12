@@ -15,7 +15,7 @@ const ImportTest = () => {
       <Grid container justifyContent="space-between">
         <Grid
           item
-          xs={3}
+          xs={2}
           style={{
             background: "rgb(250,250,250)",
             paddingLeft: "2rem",
@@ -24,12 +24,12 @@ const ImportTest = () => {
         >
           <ImportSelection />
         </Grid>
-        <Grid item xs={6}>
+        <Grid item xs={5}>
           <ImportChannel />
         </Grid>
         <Grid
           item
-          xs={3}
+          xs={5}
           style={{
             background: "rgb(250,250,250)",
             paddingLeft: "2rem",

@@ -15,7 +15,7 @@ import Rating from "@mui/material/Rating";
 
 import { styled } from "@mui/material/styles";
 
-import EmbedButton from "../../../components/uielements/embedButton";
+import EmbedButton from "../../../components/uielements/buttons/embedButton";
 
 import { LeftArrow as LeftArrowIcon } from "../../../icons/leftArrow";
 import { Embed as EmbedIcon } from "../../../icons/embed";

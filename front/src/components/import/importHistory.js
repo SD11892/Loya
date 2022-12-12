@@ -8,7 +8,7 @@ export const ImportHistory = () => {
   return (
     <div
       style={{
-        width: "16rem",
+        width: "100%",
         height: "100vh",
         overflowY: "auto",
       }}
@@ -21,11 +21,13 @@ export const ImportHistory = () => {
           container
           style={{ paddingTop: "1rem", borderTop: "1px solid #ddd" }}
         >
-          <Grid item xs={6}>
+          <Grid item xs={2}>
             <ReactSVG src="history.svg" />
           </Grid>
-          <Grid item xs={6}>
-            <PageTitle>No testimonials imported yet.</PageTitle>
+          <Grid item xs={10}>
+            <Description style={{ fontWeight: "bold" }}>
+              No testimonials imported yet.
+            </Description>
             <Description style={{ fontSize: "1rem" }}>
               Pick a testimonial source from the sidebar to get started.
             </Description>

@@ -14,14 +14,16 @@ const LayoutContent = styled("div")(() => ({
   position: "relative",
   flexGrow: "1",
   overflowY: "scroll",
-  height: "100%",
+  display: "flex",
+  flexDirection: "column",
+  height: "100vh",
 }));
 
 const LayoutContainer = styled("div")(() => ({
   flexDirection: "column",
   paddingTop: "2rem",
   maxWidth: "82rem",
-  width: "80%",
+  width: "88%",
   paddingBottom: "2.5rem",
   height: "100%",
 }));

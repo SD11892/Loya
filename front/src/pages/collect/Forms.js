@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import {
   Grid,
   Modal,
@@ -7,23 +7,32 @@ import {
   Button,
   Backdrop,
   InputBase,
+  IconButton,
 } from "@mui/material";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
-import ListItemButton from "@mui/material/ListItemButton";
+import ListItemButton from "../../components/uielements/buttons/listItemButton";
 import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Checkbox from "@mui/material/Checkbox";
 import Avatar from "@mui/material/Avatar";
-import PlusButton from "../../components/uielements/plusButton";
+import PlusButton from "../../components/uielements/buttons/plusButton";
 import PageTitle from "../../components/uielements/pageTitle";
 import Description from "../../components/uielements/description";
+import IconContainer from "../../components/uielements/iconContainer";
 import { Plus as PlusIcon } from "../../icons/plus";
 import { Qmark } from "../../icons/qmark";
 import { Close as CloseIcon } from "../../icons/close";
 import { Delete as DeleteIcon } from "../../icons/delete";
-import MainButton from "../../components/uielements/mainButton";
-import DeleteButton from "../../components/uielements/deleteButton";
+import MainButton from "../../components/uielements/buttons/mainButton";
+import DeleteButton from "../../components/uielements/buttons/deleteButton";
+import { getAll, createForm, deleteForm } from "../../actions/form";
+import { isEmpty } from "../../util/isEmpty";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { CopyUrl } from "../../icons/copyUrl";
+import { Edit } from "../../icons/edit";
+import FileCopyOutlinedIcon from "@mui/icons-material/FileCopyOutlined";
 
 const style = {
   position: "absolute",
@@ -41,11 +50,42 @@ const style = {
 };
 
 const Forms = () => {
-  const [checked, setChecked] = React.useState([1]);
+  const dispatch = useDispatch();
+  const forms = useSelector((state) => state.form.payload);
+  // const forms = [1, 2, 3, 4];
+  const [checked, setChecked] = React.useState([]);
   const [open, setOpen] = React.useState(false);
+  const [formName, setFormName] = React.useState("New Form");
+  const [text, setText] = React.useState("New Form");
 
+  const navigate = useNavigate();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const handleCreate = () => {
+    createForm(formName)
+      .then((res) => {
+        dispatch(getAll()).then((res) => {
+          console.log(res);
+          handleClose();
+        });
+        return {
+          CODE: 200,
+          message: "success",
+          data: res,
+        };
+      })
+      .catch((err) => {
+        console.log("createErr=", err);
+      });
+  };
+  useEffect(() => {
+    setFormName(text);
+  }, [text]);
+  useEffect(() => {
+    console.log("here");
+    dispatch(getAll());
+  }, []);
 
   const handleToggle = (value) => () => {
     const currentIndex = checked.indexOf(value);
@@ -59,6 +99,25 @@ const Forms = () => {
 
     setChecked(newChecked);
   };
+
+  const handleDelete = () => {
+    const deleteIds = [];
+    checked.map((row) => deleteIds.push(row.id));
+    deleteForm(deleteIds).then((res) => {
+      dispatch(getAll());
+    });
+    setChecked([]);
+  };
+
+  const copyContent = async (info) => {
+    let text = window.location.href + `/p/${info.projectId}/r/${info.formUrl}`;
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
+
   return (
     <div>
       <Grid
@@ -79,10 +138,13 @@ const Forms = () => {
           </Description>
         </Grid>
         <Grid item>
-          <DeleteButton>
-            <DeleteIcon />
-            Delete
-          </DeleteButton>
+          {isEmpty(checked) === true ? null : (
+            <DeleteButton onClick={handleDelete}>
+              <DeleteIcon />
+              <span style={{ marginLeft: "1rem" }}>Delete</span>
+            </DeleteButton>
+          )}
+
           <PlusButton onClick={handleOpen}>
             <PlusIcon style={{ background: "rgb(146,58,254)" }} />
             Create New
@@ -97,48 +159,105 @@ const Forms = () => {
           marginTop: "2rem",
         }}
       >
-        <List dense sx={{ width: "100%", bgcolor: "background.paper" }}>
-          {[0].map((value) => {
-            const labelId = `checkbox-list-secondary-label-${value}`;
-            return (
-              <ListItem key={value} style={{ margin: "1rem" }}>
-                <Checkbox
-                  style={{
-                    marginRight: "5px",
-                    color: "#ddd",
-                    borderRadius: "10px",
-                  }}
-                  edge="end"
-                  onChange={handleToggle(value)}
-                  checked={checked.indexOf(value) !== -1}
-                  inputProps={{ "aria-labelledby": labelId }}
-                />
-                <ListItemButton style={{ height: "50px" }}>
-                  <ListItemAvatar>
-                    <Avatar
+        {isEmpty(forms) ? (
+          <div>No Forms Created Here</div>
+        ) : (
+          <List dense sx={{ width: "100%", bgcolor: "background.paper" }}>
+            {forms.map((value) => {
+              const labelId = `checkbox-list-secondary-label-${value}`;
+
+              return (
+                <ListItem key={value.formId} style={{ marginTop: "1rem" }}>
+                  <ListItemButton
+                    onClick={(e) => {
+                      console.log(e);
+                      if (isEmpty(e.target.id)) {
+                        navigate(`/forms/${value.formUrl}`);
+                      }
+                    }}
+                  >
+                    <Checkbox
+                      id={`check[${value.id}]`}
                       style={{
-                        width: "15px",
-                        paddingLeft: "5px",
-                        paddingRight: "5px",
-                        height: "30px",
-                        borderRadius: "20%",
-                        border: "1px solid #ddd",
+                        marginRight: "5px",
+                        color: "#ddd",
+                        borderRadius: "10px",
                       }}
-                      alt={`Avatar n°${value + 1}`}
-                      src={"./item.svg"}
+                      edge="end"
+                      onChange={handleToggle(value)}
+                      checked={checked.indexOf(value) !== -1}
+                      inputProps={{ "aria-labelledby": labelId }}
                     />
-                  </ListItemAvatar>
-                  <ListItemText style={{ letterSpacing: "1px" }}>
-                    <div style={{ fontSize: "1rem", fontWeight: "600" }}>
-                      Loya Testimonial Form
-                    </div>
-                    <div>0 responses,created on Nov 28,2022</div>
-                  </ListItemText>
-                </ListItemButton>
-              </ListItem>
-            );
-          })}
-        </List>
+                    <ListItemAvatar>
+                      <Avatar
+                        style={{
+                          width: "15px",
+                          paddingLeft: "5px",
+                          paddingRight: "5px",
+                          height: "30px",
+                          borderRadius: "20%",
+                          border: "1px solid #ddd",
+                        }}
+                        alt={`Avatar n°${value + 1}`}
+                        src={"./item.svg"}
+                      />
+                    </ListItemAvatar>
+                    <ListItemText style={{ letterSpacing: "1px" }}>
+                      <div style={{ fontSize: "1rem", fontWeight: "600" }}>
+                        {value.formName}
+                      </div>
+                      <div>
+                        {value.response} responses,created on {value.crearedAt}
+                      </div>
+                    </ListItemText>
+                    <IconContainer>
+                      <IconButton
+                        id={`url[${value.id}]`}
+                        onClick={(eve) => {
+                          eve.stopPropagation();
+                          copyContent(value);
+                        }}
+                      >
+                        <CopyUrl />
+                      </IconButton>
+                    </IconContainer>
+                    <IconContainer>
+                      <IconButton>
+                        <Edit />
+                      </IconButton>
+                    </IconContainer>
+                    <IconContainer>
+                      <IconButton
+                        onClick={(ev) => {
+                          ev.stopPropagation();
+                          createForm(value.formName + " copy").then((res) => {
+                            dispatch(getAll());
+                          });
+                        }}
+                      >
+                        <FileCopyOutlinedIcon />
+                      </IconButton>
+                    </IconContainer>
+                    <IconContainer>
+                      <IconButton
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          let id = [];
+                          id.push(value.id);
+                          deleteForm(id).then(() => {
+                            dispatch(getAll());
+                          });
+                        }}
+                      >
+                        <DeleteIcon />
+                      </IconButton>
+                    </IconContainer>
+                  </ListItemButton>
+                </ListItem>
+              );
+            })}
+          </List>
+        )}
       </div>
       <Modal
         aria-labelledby="transition-modal-title"
@@ -184,17 +303,24 @@ const Forms = () => {
                 Form Name <Qmark />
               </div>
               <InputBase
-                defaultValue="New Form"
                 style={{
                   width: "100%",
                   border: "1px solid #ddd",
                   borderRadius: "5px",
                   paddingLeft: "5px",
                 }}
-              />
+                onChange={(e) => {
+                  setText(e.target.value);
+                }}
+              >
+                {text}
+              </InputBase>
             </div>
             <div style={{ marginTop: "1rem" }}>
-              <MainButton style={{ width: "100%", marginLeft: "unset" }}>
+              <MainButton
+                onClick={handleCreate}
+                style={{ width: "100%", marginLeft: "unset" }}
+              >
                 Create form
               </MainButton>
             </div>

@@ -1,8 +1,8 @@
 import { useNavigate } from "react-router-dom";
-import BackwardButton from "../uielements/backwardButton";
+import BackwardButton from "../uielements/buttons/backwardButton";
 import { Grid } from "@mui/material";
 import PageTitle from "../uielements/pageTitle";
-import MenuButton from "../uielements/menuButton";
+import MenuButton from "../uielements/buttons/menuButton";
 import { Google } from "../../icons/google";
 import { Facebook } from "../../icons/facebook";
 

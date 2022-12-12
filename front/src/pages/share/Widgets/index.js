@@ -8,12 +8,12 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Checkbox from "@mui/material/Checkbox";
 import Avatar from "@mui/material/Avatar";
-import PlusButton from "../../../components/uielements/plusButton";
+import PlusButton from "../../../components/uielements/buttons/plusButton";
 import PageTitle from "../../../components/uielements/pageTitle";
 import Description from "../../../components/uielements/description";
 import { Plus as PlusIcon } from "../../../icons/plus";
 import { Delete as DeleteIcon } from "../../../icons/delete";
-import DeleteButton from "../../../components/uielements/deleteButton";
+import DeleteButton from "../../../components/uielements/buttons/deleteButton";
 
 const Widgets = () => {
   const navigate = useNavigate();

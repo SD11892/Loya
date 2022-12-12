@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import BackwardButton from "../uielements/backwardButton";
+import BackwardButton from "../uielements/buttons/backwardButton";
 import { Grid, IconButton } from "@mui/material";
 import PageTitle from "../uielements/pageTitle";
 import { ThemeSet } from "./ThemeSet";

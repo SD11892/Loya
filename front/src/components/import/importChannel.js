@@ -5,7 +5,7 @@ import { Facebook } from "../../icons/facebook";
 import TextSmall from "../uielements/textSmall";
 import { Qmark } from "../../icons/qmark";
 import { Star } from "../../icons/star";
-import DeleteButton from "../uielements/deleteButton";
+import DeleteButton from "../uielements/buttons/deleteButton";
 
 export const ImportChannel = () => {
   return (
@@ -37,21 +37,18 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           style={{
-            marginTop: "1rem",
-            marginBottom: "1rem",
+            marginTop: "0.25rem",
             alignItems: "center",
           }}
         >
-          <PageTitle style={{ fontSize: "1.75rem" }}>
-            Import from Facebook
-          </PageTitle>
+          <PageTitle>Import from Facebook</PageTitle>
           <Facebook />
         </Grid>
         <Grid
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem" }}
         >
           <Grid item xs={6}>
             <TextSmall>
@@ -67,7 +64,7 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem", marginBottom: "0.25rem" }}
         >
           <Grid item xs={6}>
             <InputBase
@@ -97,11 +94,7 @@ export const ImportChannel = () => {
             <TextSmall>Avatar</TextSmall>
           </Grid>
         </Grid>
-        <Grid
-          container
-          spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
-        >
+        <Grid container spacing={2} style={{ marginTop: "0.25rem" }}>
           <Grid item>
             <Avatar
               sx={{
@@ -119,7 +112,7 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem" }}
         >
           <Grid item xs={6}>
             <TextSmall>Review</TextSmall>
@@ -129,7 +122,7 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem" }}
         >
           <Grid item xs={12}>
             <textarea
@@ -137,7 +130,7 @@ export const ImportChannel = () => {
               placeholder="Write your review here"
               style={{
                 width: "100%",
-                minHeight: "16rem",
+                minHeight: "8rem",
                 resize: "vertical",
                 borderColor: "#ddd",
                 borderRadius: "1rem",
@@ -151,7 +144,7 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem" }}
         >
           <Grid item xs={6}>
             <TextSmall>Rating</TextSmall>
@@ -161,7 +154,7 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem" }}
         >
           <Grid item xs={6}>
             <Star />
@@ -175,7 +168,7 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem" }}
         >
           <Grid item xs={6}>
             <TextSmall>Review URL</TextSmall>
@@ -185,7 +178,7 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem" }}
         >
           <Grid item xs={6}>
             <InputBase
@@ -203,7 +196,7 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem" }}
         >
           <Grid item xs={6}>
             <TextSmall>Date</TextSmall>
@@ -213,7 +206,7 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem" }}
         >
           <Grid item xs={6}>
             <TextField
@@ -232,7 +225,7 @@ export const ImportChannel = () => {
           container
           justifyContent="space-between"
           spacing={2}
-          style={{ marginTop: "1rem", marginBottom: "1rem" }}
+          style={{ marginTop: "0.25rem" }}
         >
           <Grid item xs={12}>
             <Button

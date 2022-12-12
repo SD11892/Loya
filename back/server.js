@@ -12,13 +12,12 @@ var corsOptions = {
 app.use(cors(corsOptions));
 
 app.use(require("./routes/auth.routes"));
-app.use(require("./routes/user.routes"));
+app.use(require("./routes/form.routes"));
 
 app.use(bodyParser.json());
 
 app.use(function (req, res) {
   res.setHeader("Content-Type", "text/plain");
-  res.write("you posted:\n");
   res.end(JSON.stringify(req.body, null, 2));
 });
 // parse requests of content-type - application/json

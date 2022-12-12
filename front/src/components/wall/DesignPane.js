@@ -7,7 +7,6 @@ import Picker from "../uielements/picker";
 export const DesignPane = () => {
   const [color, setColor] = useState(createColor("#000"));
   const handleChange = (value) => {
-    console.log("onChange=", value);
     setColor(value);
   };
   return (

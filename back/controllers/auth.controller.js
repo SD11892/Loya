@@ -1,7 +1,6 @@
 const db = require("../models");
 const config = require("../config/auth.config");
 const User = db.user;
-const Role = db.role;
 
 const Op = db.Sequelize.Op;
 
@@ -9,6 +8,7 @@ var jwt = require("jsonwebtoken");
 var bcrypt = require("bcryptjs");
 
 exports.signup = (req, res) => {
+  console.log("createAction Here?");
   // Save User to Database
   User.create({
     username: req.query.username,
@@ -16,28 +16,30 @@ exports.signup = (req, res) => {
     password: bcrypt.hashSync(req.query.password, 8),
   })
     .then((user) => {
-      if (req.query.roles) {
-        Role.findAll({
-          where: {
-            name: {
-              [Op.or]: req.query.roles,
-            },
-          },
-        }).then((roles) => {
-          user.setRoles(roles).then(() => {
-            res.send({ message: "User was registered successfully!" });
-          });
-        });
-      } else {
-        // user role = 1
-        user.setRoles([1]).then(() => {
-          res.send({ message: "User was registered successfully!" });
-        });
-      }
+      res.send({ message: "User was registered successfully!" });
     })
     .catch((err) => {
       res.status(500).send({ message: err.message });
     });
+};
+
+exports.verify = (req, res) => {
+  User.findOne({
+    where: {
+      email: req.query.email,
+    },
+  }).then((user) => {
+    if (user) {
+      res.status(400).send({
+        message: "Failed! Email is already in use!",
+      });
+      return;
+    } else {
+      res.status(200).send({
+        message: "No use",
+      });
+    }
+  });
 };
 
 exports.signin = (req, res) => {
@@ -47,6 +49,7 @@ exports.signin = (req, res) => {
     },
   })
     .then((user) => {
+      console.log("user=", user);
       if (!user) {
         console.log("User Not Found");
         return res.status(404).send({ message: "User Not found." });
@@ -58,7 +61,6 @@ exports.signin = (req, res) => {
       );
 
       if (!passwordIsValid) {
-        console.log("Password Not Found");
         return res.status(401).send({
           accessToken: null,
           message: "Invalid Password!",
@@ -70,17 +72,12 @@ exports.signin = (req, res) => {
       });
 
       var authorities = [];
-      user.getRoles().then((roles) => {
-        for (let i = 0; i < roles.length; i++) {
-          authorities.push("ROLE_" + roles[i].name.toUpperCase());
-        }
-        res.status(200).send({
-          id: user.id,
-          username: user.username,
-          email: user.email,
-          roles: authorities,
-          accessToken: token,
-        });
+
+      res.status(200).send({
+        id: user.id,
+        username: user.username,
+        email: user.email,
+        accessToken: token,
       });
     })
     .catch((err) => {

@@ -11,12 +11,9 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.post(
-  "/api/auth/signup",
-  [verifySignUp.checkDuplicateUsernameOrEmail, verifySignUp.checkRolesExisted],
-  controller.signup
-);
+router.post("/api/auth/signup", controller.signup);
 
 router.post("/api/auth/signin", controller.signin);
+router.post("/api/auth/email", controller.verify);
 
 module.exports = router;

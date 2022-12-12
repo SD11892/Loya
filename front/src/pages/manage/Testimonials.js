@@ -10,7 +10,7 @@ import { Googlesm } from "../../icons/google_sm";
 import { Facebooksm } from "../../icons/facebook_sm";
 import { Search } from "../../icons/search";
 import { Rect } from "../../icons/rect";
-import MainButton from "../../components/uielements/mainButton";
+import MainButton from "../../components/uielements/buttons/mainButton";
 import PageTitle from "../../components/uielements/pageTitle";
 import Description from "../../components/uielements/description";
 import { ReactSVG } from "react-svg";
@@ -78,10 +78,10 @@ const Testimonials = () => {
           height: height,
         }}
       >
-        <Grid item xs={0} sm={2} style={{ visibility: visible }}>
+        <Grid item xs={0} sm={3} style={{ visibility: visible }}>
           <ReactSVG src="welcome.svg" />
         </Grid>
-        <Grid item xs={12} sm={10}>
+        <Grid item xs={12} sm={9}>
           <div style={{ marginTop: "1rem", fontWeight: "500" }}>
             Already got testimonials? Import them!
           </div>

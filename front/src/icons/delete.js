@@ -8,7 +8,7 @@ export const Delete = () => {
       stroke="currentColor"
       fill="none"
       strokeWidth="2"
-      style={{ color: "rgb(239,68,68)", marginRight: "1rem" }}
+      style={{ color: "rgb(239,68,68)" }}
       strokeLinecap="round"
       strokeLinejoin="round"
     >
