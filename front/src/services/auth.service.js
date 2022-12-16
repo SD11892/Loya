@@ -44,7 +44,6 @@ const login = (email, password) => {
       },
     })
     .then((response) => {
-      console.log("response=", response);
       localStorage.setItem("user", JSON.stringify(response.data));
       return {
         CODE: "200",

@@ -3,8 +3,14 @@ module.exports = (sequelize, Sequelize) => {
     formUrl: {
       type: Sequelize.STRING,
     },
-    logoUrl: {
+    type: {
       type: Sequelize.STRING,
+    },
+    name: {
+      type: Sequelize.STRING,
+    },
+    data: {
+      type: Sequelize.BLOB("long"),
     },
     pColor: {
       type: Sequelize.STRING,

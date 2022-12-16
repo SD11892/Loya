@@ -1,14 +1,13 @@
-export const Delete = () => {
+export const Delete = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="18"
       height="18"
       viewBox="0 0 24 24"
-      stroke="currentColor"
-      fill="none"
+      stroke={props.stroke}
+      fill={props.fill}
       strokeWidth="2"
-      style={{ color: "rgb(239,68,68)" }}
       strokeLinecap="round"
       strokeLinejoin="round"
     >

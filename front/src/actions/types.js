@@ -8,3 +8,4 @@ export const SET_MESSAGE = "SET_MESSAGE";
 export const CLEAR_MESSAGE = "CLEAR_MESSAGE";
 
 export const GETALL_SUCCESS = "GETALL_SUCCESS";
+export const ALL_SUCCESS = "ALL_SUCCESS";

@@ -97,7 +97,7 @@ export default function CreateWidget() {
           <ColorButton variant="contained">Save Changes</ColorButton>
           &nbsp;&nbsp;
           <EmbedButton variant="contained">
-            <EmbedIcon style={{ background: "rgb(146,58,254)" }} />
+            <EmbedIcon />
             Embed
           </EmbedButton>
           &nbsp;&nbsp;&nbsp;

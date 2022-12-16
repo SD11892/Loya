@@ -6,12 +6,6 @@ module.exports = (sequelize, Sequelize) => {
     key: {
       type: Sequelize.STRING,
     },
-    value: {
-      type: Sequelize.STRING,
-    },
-    avatar: {
-      type: Sequelize.STRING,
-    },
   });
 
   return Attribution;

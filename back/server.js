@@ -1,7 +1,7 @@
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
-
+global.__basedir = __dirname;
 const app = express();
 
 var corsOptions = {
@@ -13,6 +13,7 @@ app.use(cors(corsOptions));
 
 app.use(require("./routes/auth.routes"));
 app.use(require("./routes/form.routes"));
+app.use(require("./routes/testimonial.routes"));
 
 app.use(bodyParser.json());
 

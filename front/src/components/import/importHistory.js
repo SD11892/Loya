@@ -22,7 +22,7 @@ export const ImportHistory = () => {
           style={{ paddingTop: "1rem", borderTop: "1px solid #ddd" }}
         >
           <Grid item xs={2}>
-            <ReactSVG src="history.svg" />
+            <ReactSVG src="history.svg" style={{ color: "#000" }} />
           </Grid>
           <Grid item xs={10}>
             <Description style={{ fontWeight: "bold" }}>

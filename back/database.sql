@@ -29,9 +29,12 @@ CREATE TABLE `attributions` (
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   KEY `Id` (`Id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `attributions` */
+
+insert  into `attributions`(`formUrl`,`key`,`value`,`avatar`,`Id`,`createdAt`,`updatedAt`) values 
+('MxwrFk','Your Name,Email Address,Headline,Your Website',NULL,NULL,15,'2022-12-15 18:15:24','2022-12-15 18:15:24');
 
 /*Table structure for table `designs` */
 
@@ -39,21 +42,21 @@ DROP TABLE IF EXISTS `designs`;
 
 CREATE TABLE `designs` (
   `formUrl` varchar(255) DEFAULT NULL,
-  `logoUrl` varchar(255) DEFAULT NULL,
+  `data` blob DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
   `pColor` varchar(255) DEFAULT NULL,
   `bColor` varchar(255) DEFAULT NULL,
   `Id` int(11) NOT NULL AUTO_INCREMENT,
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   KEY `Id` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `designs` */
 
-insert  into `designs`(`formUrl`,`logoUrl`,`pColor`,`bColor`,`Id`,`createdAt`,`updatedAt`) values 
-('pSVgIO','./heart.svg','#6701e6','#ffffff',79,'2022-12-12 17:28:53','2022-12-12 17:28:53'),
-('gGOQtx','./heart.svg','#6701e6','#ffffff',80,'2022-12-12 17:29:00','2022-12-12 17:29:00'),
-('uQxIop','./heart.svg','#6701e6','#ffffff',81,'2022-12-12 17:30:02','2022-12-12 17:30:02');
+insert  into `designs`(`formUrl`,`data`,`name`,`type`,`pColor`,`bColor`,`Id`,`createdAt`,`updatedAt`) values 
+('MxwrFk',NULL,NULL,NULL,'#6701e6','#ffffff',106,'2022-12-15 18:15:23','2022-12-15 18:15:23');
 
 /*Table structure for table `forms` */
 
@@ -68,14 +71,12 @@ CREATE TABLE `forms` (
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   PRIMARY KEY (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `forms` */
 
 insert  into `forms`(`Id`,`projectId`,`formUrl`,`formName`,`response`,`createdAt`,`updatedAt`) values 
-(8,1,'pSVgIO','Form',0,'2022-12-12 17:28:49','2022-12-12 17:28:49'),
-(9,1,'gGOQtx','Form',0,'2022-12-12 17:28:58','2022-12-12 17:28:58'),
-(10,1,'uQxIop','123',0,'2022-12-12 17:30:01','2022-12-12 17:30:01');
+(35,1,'MxwrFk','123',7,'2022-12-15 18:15:23','2022-12-16 12:14:59');
 
 /*Table structure for table `responses` */
 
@@ -90,14 +91,33 @@ CREATE TABLE `responses` (
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   KEY `Id` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `responses` */
 
 insert  into `responses`(`formUrl`,`prompt`,`collect`,`rating`,`Id`,`createdAt`,`updatedAt`) values 
-('pSVgIO','- What do you like most about us?\n- Would you recommend us to a friend?',0,NULL,79,'2022-12-12 17:28:56','2022-12-12 17:28:56'),
-('gGOQtx','- What do you like most about us?\n- Would you recommend us to a friend?',0,NULL,80,'2022-12-12 17:29:02','2022-12-12 17:29:02'),
-('uQxIop','- What do you like most about us?\n- Would you recommend us to a friend?',0,NULL,81,'2022-12-12 17:30:02','2022-12-12 17:30:02');
+('MxwrFk','- What do you like most about us?\n- Would you recommend us to a friend?',0,NULL,106,'2022-12-15 18:15:23','2022-12-15 18:15:23');
+
+/*Table structure for table `testimonials` */
+
+DROP TABLE IF EXISTS `testimonials`;
+
+CREATE TABLE `testimonials` (
+  `Id` int(11) NOT NULL AUTO_INCREMENT,
+  `url` varchar(255) DEFAULT NULL,
+  `key` varchar(255) DEFAULT NULL,
+  `value` varchar(255) DEFAULT NULL,
+  `content` varchar(255) DEFAULT NULL,
+  `status` int(1) DEFAULT NULL,
+  `data` blob DEFAULT NULL,
+  `name` varchar(255) DEFAULT NULL,
+  `type` varchar(255) DEFAULT NULL,
+  `createdAt` datetime DEFAULT NULL,
+  `updatedAt` datetime DEFAULT NULL,
+  PRIMARY KEY (`Id`)
+) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+
+/*Data for the table `testimonials` */
 
 /*Table structure for table `thanks` */
 
@@ -116,14 +136,12 @@ CREATE TABLE `thanks` (
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   KEY `Id` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=78 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=101 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `thanks` */
 
 insert  into `thanks`(`formUrl`,`title`,`message`,`call`,`text_btn`,`linkUrl`,`custom`,`directUrl`,`Id`,`createdAt`,`updatedAt`) values 
-('pSVgIO','Thank you','Thank you so much for your support! We appreciate your support and we hope you enjoy using our product.',0,NULL,NULL,0,NULL,75,'2022-12-12 17:28:59','2022-12-12 17:28:59'),
-('gGOQtx','Thank you','Thank you so much for your support! We appreciate your support and we hope you enjoy using our product.',0,NULL,NULL,0,NULL,76,'2022-12-12 17:29:02','2022-12-12 17:29:02'),
-('uQxIop','Thank you','Thank you so much for your support! We appreciate your support and we hope you enjoy using our product.',0,NULL,NULL,0,NULL,77,'2022-12-12 17:30:02','2022-12-12 17:30:02');
+('MxwrFk','Thank you','Thank you so much for your support! We appreciate your support and we hope you enjoy using our product.',0,NULL,NULL,0,NULL,100,'2022-12-15 18:15:24','2022-12-15 18:15:24');
 
 /*Table structure for table `users` */
 
@@ -137,12 +155,15 @@ CREATE TABLE `users` (
   `updatedAt` datetime DEFAULT NULL,
   `id` int(11) NOT NULL AUTO_INCREMENT,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `users` */
 
 insert  into `users`(`username`,`email`,`password`,`createdAt`,`updatedAt`,`id`) values 
-('William Williams','william@outlook.com','$2a$08$7/5T3GyHkcPsEYuVDJ94zeEvOCAbKln1TetUWfr5.rrUvO9TZ3SO.','2022-12-12 16:02:58','2022-12-12 16:02:58',1);
+('William Williams','william@outlook.com','$2a$08$7/5T3GyHkcPsEYuVDJ94zeEvOCAbKln1TetUWfr5.rrUvO9TZ3SO.','2022-12-12 16:02:58','2022-12-12 16:02:58',1),
+('True Color','truecolor@gmail.com','$2a$08$24i2C969Z96k2P3HlKCY/uaiq.hdPZYYpE6X3XkfmRWZIAq7pwttq','2022-12-14 12:37:33','2022-12-14 12:37:33',2),
+('True Color','truecolor@gmail.com','$2a$08$vTNhQGM.HHcu0EFuTCCeKOcN6vqiemb6HykfBvIQuDRGsJnCy9CxG','2022-12-14 12:37:34','2022-12-14 12:37:34',3),
+('Jack Jack','jack@outlook.com','$2a$08$x0Ay9VrxVuXdZZbamHY4g.9LhQ9wrwS0mR.lTzLFmbnfZcHwXktMy','2022-12-15 08:06:56','2022-12-15 08:06:56',4);
 
 /*Table structure for table `welcomes` */
 
@@ -156,14 +177,12 @@ CREATE TABLE `welcomes` (
   `createdAt` datetime DEFAULT NULL,
   `updatedAt` datetime DEFAULT NULL,
   KEY `Id` (`Id`)
-) ENGINE=InnoDB AUTO_INCREMENT=82 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=107 DEFAULT CHARSET=utf8 COLLATE=utf8_general_ci;
 
 /*Data for the table `welcomes` */
 
 insert  into `welcomes`(`formUrl`,`title`,`message`,`Id`,`createdAt`,`updatedAt`) values 
-('pSVgIO','Share a testimonial!','Do you love using our product?\n We\'d love to hear about it!\n- Share your experience with a quick video or text testimonial\n- Recording a video? Don\'t forget to smile ?',79,'2022-12-12 17:28:53','2022-12-12 17:28:53'),
-('gGOQtx','Share a testimonial!','Do you love using our product?\n We\'d love to hear about it!\n- Share your experience with a quick video or text testimonial\n- Recording a video? Don\'t forget to smile ?',80,'2022-12-12 17:29:01','2022-12-12 17:29:01'),
-('uQxIop','Share a testimonial!','Do you love using our product?\n We\'d love to hear about it!\n- Share your experience with a quick video or text testimonial\n- Recording a video? Don\'t forget to smile ?',81,'2022-12-12 17:30:02','2022-12-12 17:30:02');
+('MxwrFk','Share a testimonial!','Do you love using our product?\n We\'d love to hear about it!\n- Share your experience with a quick video or text testimonial\n- Recording a video? Don\'t forget to smile ?',106,'2022-12-15 18:15:23','2022-12-15 18:15:23');
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;

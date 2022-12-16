@@ -67,6 +67,9 @@ const MainButton = (ComponentName) => styled(ComponentName)`
       font-size: 0.82rem;
       border-radius: 0.375rem;
     }
+    &.MuiButton-text {
+      justify-content: center;
+    }
     &.MuiButton-root:hover {
       background: rgb(146, 50, 254);
     }
@@ -97,6 +100,10 @@ const StatusButton = (ComponentName) => styled(ComponentName)`
     &.MuiButton-root {
       cursor: pointer;
       border-radius: 1rem;
+      border: 1px solid transparent;
+    }
+    &.MuiButton-root:hover {
+      border: 1px solid #f59e0b00;
     }
   }
 `;
@@ -140,6 +147,39 @@ const ListButton = (ComponentName) => styled(ComponentName)`
   }
 `;
 
+const GroupButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiButtonBase-root {
+      width: 28rem;
+      align-items: inherit;
+      padding: unset;
+    }
+  }
+`;
+
+const DefaultButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiButtonBase-root {
+      margin-top: 1.5rem;
+      width: 100%;
+      background: ${(props) => (props.primary ? "#67e601" : "black")};
+      color: white;
+    }
+  }
+`;
+
+const UploadButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiButtonBase-root {
+      background: transparent;
+      font-weight: 700;
+      border: 0.1rem solid #ddd;
+      color: black;
+      margin-left: 1rem;
+      margin-right: 1rem;
+    }
+  }
+`;
 export {
   SiderButton,
   MenuButton,
@@ -150,4 +190,7 @@ export {
   DeleteButton,
   BackwardButton,
   ListButton,
+  GroupButton,
+  DefaultButton,
+  UploadButton,
 };

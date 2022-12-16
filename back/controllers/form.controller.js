@@ -1,4 +1,5 @@
 const db = require("../models");
+const fs = require("fs");
 const Form = db.form;
 const Design = db.design;
 const Welcome = db.welcome;
@@ -32,7 +33,10 @@ exports.getAll = (req, res) => {
 exports.getByUrl = (req, res) => {
   const formUrl = req.params.url.replace(":", "");
   const designInfo = {
-    logoUrl: "",
+    formName: "",
+    name: "",
+    type: "",
+    data: null,
     pColor: "",
     bColor: "",
     prompt: ``,
@@ -48,47 +52,61 @@ exports.getByUrl = (req, res) => {
     custom: 0,
     directUrl: "",
     key: [],
-    value: [],
-    avatar: "",
   };
-  Design.findAll({
+  Form.findAll({
     where: {
       formUrl: formUrl,
     },
   })
-    .then((data) => {
-      designInfo.logoUrl = data[0].dataValues.logoUrl;
-      designInfo.pColor = data[0].dataValues.pColor;
-      designInfo.bColor = data[0].dataValues.bColor;
-      Welcome.findAll({
+    .then((fdata) => {
+      designInfo.formName = fdata[0].dataValues.formName;
+      Design.findAll({
         where: {
           formUrl: formUrl,
         },
-      }).then((Ddata) => {
-        designInfo.title = Ddata[0].dataValues.title;
-        designInfo.message = Ddata[0].dataValues.message;
-        Response.findAll({
+      }).then((data) => {
+        designInfo.data = data[0].dataValues.data;
+        designInfo.type = data[0].dataValues.data;
+        designInfo.name = data[0].dataValues.fileName;
+        designInfo.pColor = data[0].dataValues.pColor;
+        designInfo.bColor = data[0].dataValues.bColor;
+        Welcome.findAll({
           where: {
             formUrl: formUrl,
           },
-        }).then((Rdata) => {
-          designInfo.prompt = Rdata[0].dataValues.prompt;
-          designInfo.rating = Rdata[0].dataValues.rating;
-          designInfo.collect = Rdata[0].dataValues.collect;
-          Thank.findAll({
+        }).then((Ddata) => {
+          designInfo.title = Ddata[0].dataValues.title;
+          designInfo.message = Ddata[0].dataValues.message;
+          Response.findAll({
             where: {
               formUrl: formUrl,
             },
-          }).then((result) => {
-            designInfo.thankTitle = result[0].dataValues.title;
-            designInfo.thankMessage = result[0].dataValues.message;
-            designInfo.call = result[0].dataValues.call;
-            designInfo.textBtn = result[0].dataValues.text_btn;
-            designInfo.linkUrl = result[0].dataValues.linkUrl;
-            designInfo.custom = result[0].dataValues.custom;
-            designInfo.directUrl = result[0].dataValues.directUrl;
+          }).then((Rdata) => {
+            designInfo.prompt = Rdata[0].dataValues.prompt;
+            designInfo.rating = Rdata[0].dataValues.rating;
+            designInfo.collect = Rdata[0].dataValues.collect;
+            Attribution.findAll({
+              where: {
+                formUrl: formUrl,
+              },
+            }).then((Adata) => {
+              designInfo.key = Adata[0].dataValues.key;
+              Thank.findAll({
+                where: {
+                  formUrl: formUrl,
+                },
+              }).then((result) => {
+                designInfo.thankTitle = result[0].dataValues.title;
+                designInfo.thankMessage = result[0].dataValues.message;
+                designInfo.call = result[0].dataValues.call;
+                designInfo.textBtn = result[0].dataValues.text_btn;
+                designInfo.linkUrl = result[0].dataValues.linkUrl;
+                designInfo.custom = result[0].dataValues.custom;
+                designInfo.directUrl = result[0].dataValues.directUrl;
 
-            res.status(200).send({ data: designInfo });
+                res.status(200).send({ data: designInfo });
+              });
+            });
           });
         });
       });
@@ -109,7 +127,9 @@ exports.create = (req, res) => {
     .then(() => {
       Design.create({
         formUrl: req.query.url,
-        logoUrl: "./heart.svg",
+        name: null,
+        type: null,
+        data: null,
         pColor: "#6701e6",
         bColor: "#ffffff",
       }).then(() => {
@@ -126,18 +146,23 @@ exports.create = (req, res) => {
             collect: 0,
             Rating: 0,
           }).then(() => {
-            Thank.create({
+            Attribution.create({
               formUrl: req.query.url,
-              title: "Thank you",
-              message:
-                "Thank you so much for your support! We appreciate your support and we hope you enjoy using our product.",
-              call: 0,
-              custom: 0,
-            }).then((result) => {
-              return res.json({
-                CODE: 200,
-                message: "Success Form",
-                data: result,
+              key: "Your Name,Email Address,Headline,Your Website",
+            }).then(() => {
+              Thank.create({
+                formUrl: req.query.url,
+                title: "Thank you",
+                message:
+                  "Thank you so much for your support! We appreciate your support and we hope you enjoy using our product.",
+                call: 0,
+                custom: 0,
+              }).then((result) => {
+                return res.json({
+                  CODE: 200,
+                  message: "Success Form",
+                  data: result,
+                });
               });
             });
           });
@@ -149,42 +174,204 @@ exports.create = (req, res) => {
     });
 };
 
+exports.update = (req, res) => {
+  const data = req.query.info;
+  if (req.file !== undefined) {
+    Form.update(
+      {
+        formName: data.formName,
+      },
+      {
+        where: {
+          formUrl: data.formUrl,
+        },
+      }
+    ).then(() => {
+      Design.update(
+        {
+          pColor: data.pColor,
+          bColor: data.bColor,
+          type: data.fileType,
+          name: data.fileName,
+          data: fs.readFileSync("../upload/" + req.file.filename),
+        },
+        {
+          where: {
+            formUrl: data.formUrl,
+          },
+        }
+      ).then((image) => {
+        fs.writeFileSync("../tmp/" + image.name, image.data);
+        Welcome.update(
+          {
+            title: data.title,
+            message: data.message,
+          },
+          {
+            where: {
+              formUrl: data.formUrl,
+            },
+          }
+        ).then(() => {
+          Response.update(
+            {
+              prompt: data.prompt,
+            },
+            {
+              where: {
+                formUrl: data.formUrl,
+              },
+            }
+          ).then(() => {
+            Attribution.update(
+              {
+                key: data.key.toString(),
+              },
+              {
+                where: {
+                  formUrl: data.formUrl,
+                },
+              }
+            ).then(() => {
+              Thank.update(
+                {
+                  title: data.thankTitle,
+                  message: data.thankMessage,
+                },
+                {
+                  where: {
+                    formUrl: data.formUrl,
+                  },
+                }
+              );
+            });
+          });
+        });
+      });
+    });
+  } else {
+    Form.update(
+      {
+        formName: data.formName,
+      },
+      {
+        where: {
+          formUrl: data.formUrl,
+        },
+      }
+    ).then(() => {
+      Design.update(
+        {
+          pColor: data.pColor,
+          bColor: data.bColor,
+          type: data.fileType,
+          name: data.fileName,
+        },
+        {
+          where: {
+            formUrl: data.formUrl,
+          },
+        }
+      ).then(() => {
+        Welcome.update(
+          {
+            title: data.title,
+            message: data.message,
+          },
+          {
+            where: {
+              formUrl: data.formUrl,
+            },
+          }
+        ).then(() => {
+          Response.update(
+            {
+              prompt: data.prompt,
+            },
+            {
+              where: {
+                formUrl: data.formUrl,
+              },
+            }
+          ).then(() => {
+            Attribution.update(
+              {
+                key: data.key.toString(),
+              },
+              {
+                where: {
+                  formUrl: data.formUrl,
+                },
+              }
+            ).then(() => {
+              Thank.update(
+                {
+                  title: data.thankTitle,
+                  message: data.thankMessage,
+                },
+                {
+                  where: {
+                    formUrl: data.formUrl,
+                  },
+                }
+              );
+            });
+          });
+        });
+      });
+    });
+  }
+};
+
 exports.delete = (req, res) => {
   const Ids = req.query.ids;
   console.log("ids=", Ids);
   Ids.map((value) => {
-    Form.destroy({
+    Form.findAll({
       where: {
         Id: value,
       },
-    }).then(() => {
-      Welcome.destroy({
+    }).then((form) => {
+      let formUrl = form[0].dataValues.formUrl;
+      Form.destroy({
         where: {
-          Id: value,
+          formUrl: formUrl,
         },
       }).then(() => {
-        Design.destroy({
+        Welcome.destroy({
           where: {
-            Id: value,
+            formUrl: formUrl,
           },
         }).then(() => {
-          Response.destroy({
+          Design.destroy({
             where: {
-              Id: value,
+              formUrl: formUrl,
             },
           }).then(() => {
-            Thank.destroy({
+            Response.destroy({
               where: {
-                Id: value,
+                formUrl: formUrl,
               },
-            })
-              .then((result) => {
-                return res.status(200).send({ message: "Empty" });
-              })
-              .catch((err) => {
-                console.log("err=", err);
-                res.status(500).send({ message: err.message });
+            }).then(() => {
+              Attribution.destroy({
+                where: {
+                  formUrl: formUrl,
+                },
+              }).then(() => {
+                Thank.destroy({
+                  where: {
+                    formUrl: formUrl,
+                  },
+                })
+                  .then((result) => {
+                    return res.status(200).send({ message: "Empty" });
+                  })
+                  .catch((err) => {
+                    console.log("err=", err);
+                    res.status(500).send({ message: err.message });
+                  });
               });
+            });
           });
         });
       });

@@ -5,10 +5,10 @@ import {
   Fade,
   Box,
   Button,
-  Backdrop,
   InputBase,
   IconButton,
 } from "@mui/material";
+import moment from "moment";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
 import ListItemButton from "../../components/uielements/buttons/listItemButton";
@@ -52,7 +52,6 @@ const style = {
 const Forms = () => {
   const dispatch = useDispatch();
   const forms = useSelector((state) => state.form.payload);
-  // const forms = [1, 2, 3, 4];
   const [checked, setChecked] = React.useState([]);
   const [open, setOpen] = React.useState(false);
   const [formName, setFormName] = React.useState("New Form");
@@ -83,7 +82,6 @@ const Forms = () => {
     setFormName(text);
   }, [text]);
   useEffect(() => {
-    console.log("here");
     dispatch(getAll());
   }, []);
 
@@ -140,7 +138,7 @@ const Forms = () => {
         <Grid item>
           {isEmpty(checked) === true ? null : (
             <DeleteButton onClick={handleDelete}>
-              <DeleteIcon />
+              <DeleteIcon fill="white" stroke="red" />
               <span style={{ marginLeft: "1rem" }}>Delete</span>
             </DeleteButton>
           )}
@@ -207,7 +205,8 @@ const Forms = () => {
                         {value.formName}
                       </div>
                       <div>
-                        {value.response} responses,created on {value.crearedAt}
+                        {value.response} responses,created on{" "}
+                        {moment(value.crearedAt).format("LL")}
                       </div>
                     </ListItemText>
                     <IconContainer>
@@ -249,7 +248,7 @@ const Forms = () => {
                           });
                         }}
                       >
-                        <DeleteIcon />
+                        <DeleteIcon fill="white" stroke="red"/>
                       </IconButton>
                     </IconContainer>
                   </ListItemButton>
@@ -265,10 +264,6 @@ const Forms = () => {
         open={open}
         onClose={handleClose}
         closeAfterTransition
-        BackdropComponent={Backdrop}
-        BackdropProps={{
-          timeout: 500,
-        }}
         style={{ borderRadius: "2rem" }}
       >
         <Fade in={open}>

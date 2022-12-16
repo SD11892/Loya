@@ -32,6 +32,10 @@ export const createForm = (name) => {
   return FormService.create(url, parentId, fname);
 };
 
+export const saveForm = (info, data) => {
+  return FormService.update(info, data);
+};
+
 export const deleteForm = (Ids) => {
   console.log("Ids=", Ids);
   return FormService.deleteForms(Ids);

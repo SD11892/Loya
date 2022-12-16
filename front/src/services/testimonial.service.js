@@ -1,19 +1,28 @@
 import axios from "axios";
 import { isEmpty } from "../util/isEmpty";
 
-const API_URL = "http://localhost:8080/api/form/";
+const API_URL = "http://localhost:8080/api/testimonial/";
 
-const create = (url, parentId, name) => {
-  return axios.post(API_URL + "create", null, {
-    params: {
-      url,
-      parentId,
-      name,
+const create = (info, data) => {
+  console.log("info=", info);
+  const formData = new FormData();
+  if (data) {
+    formData.append("file", data, data.name);
+  }
+  return axios.post(
+    API_URL + "create",
+    formData,
+    {
+      params: { info },
     },
-  });
+    {
+      headers: { "Content-Type": "multi-part/form-data" },
+    }
+  );
 };
 
 const update = (info, data) => {
+  console.log("update=", info);
   const formData = new FormData();
   if (data) {
     formData.append("file", data, data.name);
@@ -32,6 +41,7 @@ const getAll = () => {
   return axios
     .get(API_URL + `all`)
     .then((response) => {
+      console.log("response=", response);
       if (isEmpty(response.data)) {
         return {
           CODE: "200",
@@ -46,7 +56,6 @@ const getAll = () => {
       }
     })
     .catch((err) => {
-      console.log("jere");
       if (err.code === "ERR_BAD_REQUEST") {
         return { CODE: "404", message: "Failed getting forms" };
       }
@@ -66,10 +75,10 @@ const getByFormUrl = async (url) => {
   }
 };
 
-const deleteForms = (ids) => {
+const deleteTest = (id) => {
   return axios.post(API_URL + "delete", null, {
     params: {
-      ids,
+      id,
     },
   });
 };
@@ -78,6 +87,6 @@ export default {
   create,
   getAll,
   getByFormUrl,
-  deleteForms,
+  deleteTest,
   update,
 };

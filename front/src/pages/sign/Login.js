@@ -32,17 +32,14 @@ const Login = () => {
   };
 
   const submit = () => {
-    dispatch(login(state.email, state.password))
-      .then((res) => {
+    dispatch(login(state.email, state.password)).then((res) => {
+      if (res.CODE === "200") {
         localStorage.setItem("signIn", true);
-        localStorage.setItem("forms", []);
         navigate("/testimonials");
-      })
-      .catch((err) => {
-        alert("Invalid User or Password");
-        navigate("/");
-        setLoading(false);
-      });
+      } else {
+        alert("Invalid User or password");
+      }
+    });
   };
   const { handleChange, handleSubmit, handleBlur, state, errors } = useForm({
     initState,
