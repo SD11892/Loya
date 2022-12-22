@@ -85,6 +85,12 @@ const PlusButton = (ComponentName) => styled(ComponentName)`
     }
   }
 `;
+const AddButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiButton-root {
+    }
+  }
+`;
 const EmbedButton = (ComponentName) => styled(ComponentName)`
    {
     &.MuiButton-root {
@@ -162,7 +168,7 @@ const DefaultButton = (ComponentName) => styled(ComponentName)`
     &.MuiButtonBase-root {
       margin-top: 1.5rem;
       width: 100%;
-      background: ${(props) => (props.primary ? "#67e601" : "black")};
+      background: ${(props) => (props.primary ? "#67e601" : props.secondary ? "#f0f0f0" : "black")};
       color: white;
     }
   }
@@ -180,6 +186,35 @@ const UploadButton = (ComponentName) => styled(ComponentName)`
     }
   }
 `;
+const LinkButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiButtonBase-root {
+      border-radius: 9999px;
+      background: #fff;
+      line-height: 1.5rem;
+      padding-top: 0.625rem;
+      padding-bottom: 0.625rem;
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
+    }
+    &.MuiButton-textPrimary {
+      color: black;
+      font-weight: 900;
+      font-size: 1rem;
+    }
+  }
+`;
+const ImageButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiButtonBase-root {
+      transform:translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y));
+                font-family: inherit;
+                font-size: 100%;
+                font-weight: inherit;
+                line-height: inherit;
+                color: inherit;
+  }
+`;
 export {
   SiderButton,
   MenuButton,
@@ -193,4 +228,7 @@ export {
   GroupButton,
   DefaultButton,
   UploadButton,
+  LinkButton,
+  AddButton,
+  ImageButton,
 };

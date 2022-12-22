@@ -18,14 +18,20 @@
     "dayjs": "^1.11.6",
     "http": "0.0.1-security",
     "material-ui-color": "^1.2.0",
+    "material-ui-notifications": "^0.1.4",
     "moment": "^2.29.4",
     "react": "^17.0.2",
+    "react-beautiful-dnd": "^13.1.1",
     "react-dom": "^17.0.2",
+    "react-draggable": "^4.4.5",
     "react-google-login": "^5.2.2",
+    "react-highlight.js": "^1.0.7",
     "react-redux": "^8.0.5",
     "react-router-dom": "^6.4.3",
     "react-scripts": "5.0.1",
+    "react-simple-code-editor": "^0.13.1",
     "react-svg": "^15.1.14",
+    "react-syntax-highlighter": "^15.5.0",
     "react-validation": "^3.0.7",
     "redux": "^4.2.0",
     "redux-devtools-extension": "^2.13.9",
@@ -58,5 +64,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@constantindjm/react-beautiful-dnd-grid": "^1.0.31"
   }
 }

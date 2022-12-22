@@ -5,12 +5,12 @@ const Design = db.design;
 const Welcome = db.welcome;
 const Response = db.response;
 const Attribution = db.attribution;
+const Testimonial = db.testimonial;
 const Thank = db.thank;
 
 const Op = db.Sequelize.Op;
 
 exports.getAll = (req, res) => {
-  console.log("here");
   Form.findAll({
     where: {
       projectId: 1,
@@ -40,8 +40,7 @@ exports.getByUrl = (req, res) => {
     pColor: "",
     bColor: "",
     prompt: ``,
-    collect: 0,
-    rating: 0,
+    checked: [],
     title: "",
     message: ``,
     thankTitle: "",
@@ -65,6 +64,7 @@ exports.getByUrl = (req, res) => {
           formUrl: formUrl,
         },
       }).then((data) => {
+        designInfo.checked = data[0].dataValues.checked.split(",");
         designInfo.data = data[0].dataValues.data;
         designInfo.type = data[0].dataValues.data;
         designInfo.name = data[0].dataValues.fileName;
@@ -132,19 +132,19 @@ exports.create = (req, res) => {
         data: null,
         pColor: "#6701e6",
         bColor: "#ffffff",
+        checked: [true, true, false, false].toString(),
       }).then(() => {
         Welcome.create({
           formUrl: req.query.url,
           title: "Share a testimonial!",
           message:
-            "Do you love using our product?\n We'd love to hear about it!\n- Share your experience with a quick video or text testimonial\n- Recording a video? Don't forget to smile 😊",
+            "Do you love using our product?\nWe'd love to hear about it!\n- Share your experience with a quick video or text testimonial\n- Recording a video? Don't forget to smile 😊",
         }).then(() => {
           Response.create({
             formUrl: req.query.url,
             prompt:
               "- What do you like most about us?\n- Would you recommend us to a friend?",
             collect: 0,
-            Rating: 0,
           }).then(() => {
             Attribution.create({
               formUrl: req.query.url,
@@ -193,6 +193,7 @@ exports.update = (req, res) => {
           bColor: data.bColor,
           type: data.fileType,
           name: data.fileName,
+          checked: data.checked.toString(),
           data: fs.readFileSync("../upload/" + req.file.filename),
         },
         {
@@ -362,14 +363,20 @@ exports.delete = (req, res) => {
                   where: {
                     formUrl: formUrl,
                   },
-                })
-                  .then((result) => {
-                    return res.status(200).send({ message: "Empty" });
+                }).then(() => {
+                  Testimonial.destroy({
+                    where: {
+                      url: formUrl,
+                    },
                   })
-                  .catch((err) => {
-                    console.log("err=", err);
-                    res.status(500).send({ message: err.message });
-                  });
+                    .then((result) => {
+                      return res.status(200).send({ message: "Empty" });
+                    })
+                    .catch((err) => {
+                      console.log("err=", err);
+                      res.status(500).send({ message: err.message });
+                    });
+                });
               });
             });
           });

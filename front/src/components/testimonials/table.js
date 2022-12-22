@@ -27,9 +27,7 @@ import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import Input from "../uielements/form/FormInput";
 import GroupButton from "../uielements/buttons/groupButton";
 import DefaultButton from "../uielements/buttons/defaultButton";
-import { isEmpty } from "../../util/isEmpty";
 
-import { Starsm as StarIcon } from "../../icons/star_sm";
 import { Pencil as PencilIcon } from "../../icons/pencil";
 import { Delete as DeleteIcon } from "../../icons/delete";
 import { Image as ImageIcon } from "../../icons/image";
@@ -50,9 +48,6 @@ import PageTitle from "../uielements/pageTitle";
 import FormLabel from "../uielements/form/FormLabel";
 import FormGrid from "../uielements/form/FormGrid";
 
-// import Title1 from "../../assets/images/title1.png";
-// import Title2 from "../../assets/images/title2.png";
-
 const TestTable = () => {
   const dispatch = useDispatch();
   const testimonials = useSelector((state) => state.testimonial.testimonial);
@@ -68,9 +63,8 @@ const TestTable = () => {
   const [contentState, setContentState] = useState("");
   const [url, setUrl] = useState("");
   const [date, setDate] = useState("");
-  const [rateState, setRateState] = useState(0);
+  const [rateState, setRateState] = useState(null);
   const hiddenFileInput = React.useRef(null);
-  const [day, setDay] = useState(null);
 
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -335,14 +329,19 @@ const TestTable = () => {
                         color: "#000",
                       }}
                     >
-                      {row.value.split(",").slice(0, 1)}
-                      {row.key.split(",").indexOf("Headline") === -1 ? null : (
-                        <span>
-                          {row.value
-                            .split(",")
-                            .slice(row.key.split(",").indexOf("Headline"), 1)}
-                        </span>
-                      )}
+                      <div>{row.value.split(",").slice(0, 1)}</div>
+                      <div>
+                        {row.key.split(",").indexOf("Headline") ===
+                        -1 ? null : (
+                          <span>
+                            {
+                              row.value.split(",")[
+                                row.key.split(",").indexOf("Headline")
+                              ]
+                            }
+                          </span>
+                        )}
+                      </div>
                     </Grid>
                   </Grid>
                 </TableCell>
@@ -355,13 +354,13 @@ const TestTable = () => {
                   align="left"
                 >
                   <div style={{ color: "rgb(107,114,128)", maxWidth: "28rem" }}>
-                    {row.rate === null ? null : (
+                    {row.rating === null ? null : (
                       <div>
-                        <StarIcon />
-                        <StarIcon />
-                        <StarIcon />
-                        <StarIcon />
-                        <StarIcon />
+                        <Rating
+                          value={row.rating}
+                          readOnly
+                          style={{ fontSize: "1rem" }}
+                        />
                       </div>
                     )}
                   </div>
@@ -663,7 +662,7 @@ const TestTable = () => {
               <FormLabel>Tagline</FormLabel>
               <Input
                 value={
-                  key.indexOf("Headline") !== -1
+                  key.indexOf("Headline") === -1
                     ? null
                     : value[key.indexOf("Headline")]
                 }
@@ -752,7 +751,7 @@ const TestTable = () => {
               <FormLabel>Website URL</FormLabel>
               <Input
                 value={
-                  key.indexOf("Your Website") !== -1
+                  key.indexOf("Your Website") === -1
                     ? null
                     : value[key.indexOf("Your Website")]
                 }
@@ -817,8 +816,7 @@ const TestTable = () => {
                   inf.updatedAt = date;
                   inf.url = url;
                   inf.value = value;
-                  updateTestimonial(inf, selectedImage).then(() => {
-                    console.log("here");
+                  updateTestimonial(inf, selectedImage).then((e) => {
                     dispatch(getAll());
                     setEditState(false);
                   });

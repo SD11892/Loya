@@ -88,7 +88,7 @@ function NewForm() {
     "Your Website",
   ]);
   const [toggled, setToggled] = React.useState([false, false, false]);
-  const [checked, setChecked] = React.useState([true, true, false, false]);
+  const [checked, setChecked] = React.useState([]);
   const [rating, setRating] = React.useState(0);
   const infor = {
     formName: "",
@@ -98,8 +98,7 @@ function NewForm() {
     pColor: "",
     bColor: "",
     prompt: ``,
-    collect: 0,
-    rating: 0,
+    checked: [],
     title: "",
     message: ``,
     thankTitle: "",
@@ -159,7 +158,7 @@ function NewForm() {
     infor.pColor = priColor;
     infor.bColor = bgColor;
     infor.prompt = prompt;
-    infor.rating = rating;
+    infor.checked = checked;
     infor.title = title;
     infor.message = message;
     infor.thankTitle = thankTitle;
@@ -175,15 +174,17 @@ function NewForm() {
 
   useEffect(() => {
     getByFormUrl(url).then((res) => {
-      setPriColor(res.data.data.data.pColor);
-      setBgColor(res.data.data.data.bColor);
-      setMessage(`${res.data.data.data.message}`);
-      setTitle(res.data.data.data.title);
-      setPrompt(`${res.data.data.data.prompt}`);
-      setThankTitle(`${res.data.data.data.thankTitle}`);
-      setThankMessage(`${res.data.data.data.thankMessage}`);
-      setKey(res.data.data.data.key.split(","));
-      setFormName(res.data.data.data.formName);
+      const result = res.data.data.data;
+      setPriColor(result.pColor);
+      setBgColor(result.bColor);
+      setMessage(`${result.message}`);
+      setTitle(result.title);
+      setPrompt(`${result.prompt}`);
+      setThankTitle(`${result.thankTitle}`);
+      setThankMessage(`${result.thankMessage}`);
+      setKey(result.key.split(","));
+      setFormName(result.formName);
+      setChecked(result.checked);
       setData(
         btoa(
           String.fromCharCode(...new Uint8Array(res.data.data.data.data.data))
@@ -191,9 +192,7 @@ function NewForm() {
       );
     });
   }, []);
-  useEffect(() => {
-    console.log("addingFields=", addingFields);
-  }, [
+  useEffect(() => {}, [
     priColor,
     bgColor,
     message,
@@ -335,7 +334,7 @@ function NewForm() {
                                     width={"48px"}
                                     alt="not found"
                                   />
-                                ) : data !== null ? (
+                                ) : selectedImage === null && data !== "" ? (
                                   <img
                                     src={`data:image/png;base64,${data}`}
                                     alt=""
@@ -1089,7 +1088,7 @@ function NewForm() {
                         width={"48px"}
                         alt="not found"
                       />
-                    ) : data !== null ? (
+                    ) : data !== "" ? (
                       <img
                         src={`data:image/png;base64,${data}`}
                         alt=""
@@ -1178,7 +1177,7 @@ function NewForm() {
                         width={"48px"}
                         alt="not found"
                       />
-                    ) : data !== null ? (
+                    ) : data !== "" ? (
                       <img
                         src={`data:image/png;base64,${data}`}
                         alt=""
@@ -1276,7 +1275,7 @@ function NewForm() {
                           width={"48px"}
                           alt="not found"
                         />
-                      ) : data !== null ? (
+                      ) : data !== "" ? (
                         <img
                           src={`data:image/png;base64,${data}`}
                           alt=""
@@ -1490,7 +1489,7 @@ function NewForm() {
                         width={"48px"}
                         alt="not found"
                       />
-                    ) : data !== null ? (
+                    ) : selectedImage === null && data !== "" ? (
                       <img
                         src={`data:image/png;base64,${data}`}
                         alt=""

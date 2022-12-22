@@ -18,6 +18,9 @@ module.exports = (sequelize, Sequelize) => {
     bColor: {
       type: Sequelize.STRING,
     },
+    checked: {
+      type: Sequelize.STRING,
+    },
   });
 
   return Design;

@@ -1,5 +1,5 @@
 import testimonialService from "../services/testimonial.service";
-import { ALL_SUCCESS } from "./types";
+import { ALL_SUCCESS, SAVE_INDEX } from "./types";
 
 export const getAll = () => (dispatch) => {
   return testimonialService.getAll().then(
@@ -33,4 +33,31 @@ export const updateTestimonial = (info, data) => {
 
 export const deleteTestimonial = (id) => {
   return testimonialService.deleteTest(id);
+};
+
+export const getByFormUrl = (url) => {
+  return testimonialService.getByFormUrl(url).then(
+    (data) => {
+      console.log("data=", data);
+      return Promise.resolve(data);
+    },
+    (error) => {
+      const message =
+        (error.response &&
+          error.response.data &&
+          error.response.data.message) ||
+        error.message ||
+        error.toString();
+
+      return Promise.reject();
+    }
+  );
+};
+
+export const saveIndex = (info) => (dispatch) => {
+  console.log("info=", info);
+  dispatch({
+    type: SAVE_INDEX,
+    payload: info,
+  });
 };

@@ -3,14 +3,14 @@ import { useState } from "react";
 import { Button } from "@mui/material";
 import { createColor } from "material-ui-color";
 import Picker from "../uielements/picker";
+import ImageButton from "../uielements/buttons/imageButton";
 
-export const DesignPane = () => {
-  const [color, setColor] = useState(createColor("#000"));
+const DesignPane = ({ theme, setTheme, pColor, setPColor }) => {
   const handleChange = (value) => {
-    setColor(value);
+    setPColor(value.css.backgroundColor);
   };
   return (
-    <>
+    <div style={{ width: "inherit" }}>
       <div
         style={{
           overflowX: "scroll",
@@ -32,19 +32,13 @@ export const DesignPane = () => {
               twScaleY: "1.05",
             }}
           >
-            <Button
-              style={{
-                transform:
-                  "translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
-                fontFamily: "inherit",
-                fontSize: "100%",
-                fontWeight: "inherit",
-                lineHeight: "inherit",
-                color: "inherit",
+            <ImageButton
+              onClick={() => {
+                setTheme(1);
               }}
             >
-              <img src="design1.png" alt="design1" />
-            </Button>
+              <img src="../design1.png" alt="design1" />
+            </ImageButton>
           </div>
           <div
             style={{
@@ -53,19 +47,13 @@ export const DesignPane = () => {
               twScaleY: "1.05",
             }}
           >
-            <Button
-              style={{
-                transform:
-                  "translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
-                fontFamily: "inherit",
-                fontSize: "100%",
-                fontWeight: "inherit",
-                lineHeight: "inherit",
-                color: "inherit",
+            <ImageButton
+              onClick={() => {
+                setTheme(2);
               }}
             >
-              <img src="design2.png" alt="design2" />
-            </Button>
+              <img src="../design2.png" alt="design2" />
+            </ImageButton>
           </div>
           <div
             style={{
@@ -74,19 +62,13 @@ export const DesignPane = () => {
               twScaleY: "1.05",
             }}
           >
-            <Button
-              style={{
-                transform:
-                  "translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
-                fontFamily: "inherit",
-                fontSize: "100%",
-                fontWeight: "inherit",
-                lineHeight: "inherit",
-                color: "inherit",
+            <ImageButton
+              onClick={() => {
+                setTheme(3);
               }}
             >
-              <img src="design3.png" alt="design3" />
-            </Button>
+              <img src="../design3.png" alt="design3" />
+            </ImageButton>
           </div>
           <div
             style={{
@@ -95,19 +77,13 @@ export const DesignPane = () => {
               twScaleY: "1.05",
             }}
           >
-            <Button
-              style={{
-                transform:
-                  "translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
-                fontFamily: "inherit",
-                fontSize: "100%",
-                fontWeight: "inherit",
-                lineHeight: "inherit",
-                color: "inherit",
+            <ImageButton
+              onClick={() => {
+                setTheme(4);
               }}
             >
-              <img src="design4.png" alt="design4" />
-            </Button>
+              <img src="../design4.png" alt="design4" />
+            </ImageButton>
           </div>
           <div
             style={{
@@ -116,19 +92,13 @@ export const DesignPane = () => {
               twScaleY: "1.05",
             }}
           >
-            <Button
-              style={{
-                transform:
-                  "translate(var(--tw-translate-x),var(--tw-translate-y)) rotate(var(--tw-rotate)) skew(var(--tw-skew-x)) skewY(var(--tw-skew-y)) scaleX(var(--tw-scale-x)) scaleY(var(--tw-scale-y))",
-                fontFamily: "inherit",
-                fontSize: "100%",
-                fontWeight: "inherit",
-                lineHeight: "inherit",
-                color: "inherit",
+            <ImageButton
+              onClick={() => {
+                setTheme(5);
               }}
             >
-              <img src="design5.png" alt="design5" />
-            </Button>
+              <img src="../design5.png" alt="design5" />
+            </ImageButton>
           </div>
         </div>
       </div>
@@ -143,8 +113,9 @@ export const DesignPane = () => {
           borderRadius: "1rem",
         }}
       >
-        <Picker value={color} onChange={handleChange} />
+        <Picker value={createColor(pColor)} onChange={handleChange} />
       </div>
-    </>
+    </div>
   );
 };
+export default DesignPane;

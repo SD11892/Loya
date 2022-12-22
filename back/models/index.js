@@ -29,10 +29,15 @@ db.testimonial = require("../models/testimonial.model.js")(
   sequelize,
   Sequelize
 );
+db.testimonialForm = require("../models/testimonialForm.model.js")(
+  sequelize,
+  Sequelize
+);
 db.attribution = require("../models/attribution.model.js")(
   sequelize,
   Sequelize
 );
 db.thank = require("../models/thank.model.js")(sequelize, Sequelize);
+db.wall = require("../models/wall.model.js")(sequelize, Sequelize);
 
 module.exports = db;

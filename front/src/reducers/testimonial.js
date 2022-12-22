@@ -1,4 +1,4 @@
-import { ALL_SUCCESS } from "../actions/types";
+import { ALL_SUCCESS, SAVE_INDEX } from "../actions/types";
 
 const initialState = {
   testimonial: [],
@@ -12,6 +12,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         testimonial: payload.testimonials,
+      };
+    case SAVE_INDEX:
+      return {
+        ...state,
+        testimonial: payload,
       };
     default:
       return state;

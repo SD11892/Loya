@@ -14,6 +14,8 @@ app.use(cors(corsOptions));
 app.use(require("./routes/auth.routes"));
 app.use(require("./routes/form.routes"));
 app.use(require("./routes/testimonial.routes"));
+app.use(require("./routes/wall.routes"));
+app.use(require("./routes/testimonialForm.routes"));
 
 app.use(bodyParser.json());
 

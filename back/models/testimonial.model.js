@@ -24,6 +24,12 @@ module.exports = (sequelize, Sequelize) => {
     type: {
       type: Sequelize.STRING,
     },
+    rating: {
+      type: Sequelize.INTEGER,
+    },
+    index: {
+      type: Sequelize.INTEGER,
+    },
   });
 
   return Testimonial;

@@ -24,4 +24,6 @@ router.post(
 );
 router.post("/api/testimonial/delete", controller.delete);
 
+router.get("/api/testimonial/:url", controller.getByUrl);
+
 module.exports = router;

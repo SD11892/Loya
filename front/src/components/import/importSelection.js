@@ -5,6 +5,9 @@ import PageTitle from "../uielements/pageTitle";
 import MenuButton from "../uielements/buttons/menuButton";
 import { Google } from "../../icons/google";
 import { Facebook } from "../../icons/facebook";
+import SiderText from "../uielements/siderText";
+import { Pencil as PencilIcon } from "../../icons/pencil";
+import { Camera as CameraIcon } from "../../icons/camera";
 
 export const ImportSelection = () => {
   const navigate = useNavigate();
@@ -22,7 +25,7 @@ export const ImportSelection = () => {
             navigate("/testimonials");
           }}
         >
-          ← Testimonials
+          <SiderText>← Testimonials</SiderText>
         </BackwardButton>
         <Grid item xs={12} style={{ marginBottom: "1rem" }}>
           <PageTitle>Import your testimonials</PageTitle>
@@ -33,12 +36,20 @@ export const ImportSelection = () => {
           style={{ paddingTop: "1rem", borderTop: "1px solid #ddd" }}
         >
           <MenuButton active="true">
-            <Facebook />
-            Facebook
+            <PencilIcon />
+            <SiderText>Text Testimonial</SiderText>
+          </MenuButton>
+          <MenuButton>
+            <CameraIcon />
+            <SiderText>Video Testimonial</SiderText>
           </MenuButton>
           <MenuButton>
             <Google />
-            Google
+            <SiderText>Google</SiderText>
+          </MenuButton>
+          <MenuButton>
+            <Facebook />
+            <SiderText>Facebook</SiderText>
           </MenuButton>
         </Grid>
       </Grid>

@@ -7,6 +7,7 @@ import {
   Button,
   InputBase,
   IconButton,
+  Tooltip,
 } from "@mui/material";
 import moment from "moment";
 import List from "@mui/material/List";
@@ -143,10 +144,12 @@ const Forms = () => {
             </DeleteButton>
           )}
 
-          <PlusButton onClick={handleOpen}>
-            <PlusIcon style={{ background: "rgb(146,58,254)" }} />
-            Create New
-          </PlusButton>
+          <Tooltip title="A name to identify this form">
+            <PlusButton onClick={handleOpen}>
+              <PlusIcon fill="#923AFE" stroke="white" />
+              Create New
+            </PlusButton>
+          </Tooltip>
         </Grid>
       </Grid>
       <div
@@ -248,7 +251,7 @@ const Forms = () => {
                           });
                         }}
                       >
-                        <DeleteIcon fill="white" stroke="red"/>
+                        <DeleteIcon fill="white" stroke="red" />
                       </IconButton>
                     </IconContainer>
                   </ListItemButton>

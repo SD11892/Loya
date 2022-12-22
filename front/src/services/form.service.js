@@ -54,6 +54,7 @@ const getAll = () => {
 };
 
 const getByFormUrl = async (url) => {
+  console.log("formurl=", url);
   try {
     const res = await axios.get(API_URL + ":" + url + "/");
     return {

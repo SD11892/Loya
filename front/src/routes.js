@@ -3,9 +3,12 @@ import Testimonials from "./pages/manage/Testimonials";
 import Forms from "./pages/collect/Forms";
 import ImportTest from "./pages/collect/ImportTest";
 import Search from "./pages/manage/Search";
-import Wall from "./pages/share/Wall";
+import WallDesign from "./pages/share/WallDesign";
+import Walls from "./pages/share/Walls";
 import Widgets from "./pages/share/Widgets";
+import WallView from "./pages/share/WallView";
 import CreateWidget from "./pages/share/Widgets/createWidget";
+import WidgetView from "./pages/share/Widgets/WidgetView";
 import Login from "./pages/sign/Login";
 import Register from "./pages/sign/Register";
 import Profile from "./pages/sign/Profile";
@@ -42,6 +45,10 @@ export const routes = [
         path: "/widgets",
         element: <Widgets />,
       },
+      {
+        path: "/walls",
+        element: <Walls />,
+      },
     ],
   },
   {
@@ -53,11 +60,11 @@ export const routes = [
     element: <Search />,
   },
   {
-    path: "/wall",
-    element: <Wall />,
+    path: "/walls/:id",
+    element: <WallDesign />,
   },
   {
-    path: "/widgets/0954e718-4c50-44ed-af17-92dda61edae3",
+    path: "/testimonialforms/:id",
     element: <CreateWidget />,
   },
   {
@@ -67,5 +74,13 @@ export const routes = [
   {
     path: "/forms/p/:id/r/:id",
     element: <FormView />,
+  },
+  {
+    path: "/widgets/p/:id",
+    element: <WidgetView />,
+  },
+  {
+    path: "/walls/p/1/testimonials/:id",
+    element: <WallView />,
   },
 ];

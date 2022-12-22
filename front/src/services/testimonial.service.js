@@ -22,7 +22,6 @@ const create = (info, data) => {
 };
 
 const update = (info, data) => {
-  console.log("update=", info);
   const formData = new FormData();
   if (data) {
     formData.append("file", data, data.name);
@@ -41,7 +40,6 @@ const getAll = () => {
   return axios
     .get(API_URL + `all`)
     .then((response) => {
-      console.log("response=", response);
       if (isEmpty(response.data)) {
         return {
           CODE: "200",

@@ -2,10 +2,9 @@ export const Google = () => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
-      width="24px"
-      height="24px"
+      width="18px"
+      height="18px"
       preserveAspectRatio="xMidYMid"
-      style={{ marginRight: "0.6rem" }}
       viewBox="0 0 256 262"
     >
       <path

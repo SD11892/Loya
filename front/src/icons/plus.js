@@ -1,15 +1,14 @@
-export const Plus = () => {
+export const Plus = (props) => {
   return (
     <svg
       xmlns="http://www.w3.org/2000/svg"
       width="18"
       height="18"
       viewBox="0 0 24 24"
-      stroke="currentColor"
-      fill="none"
+      stroke={props.stroke}
+      fill={props.fill}
       style={{
         padding: "5px",
-        background: "rgb(146,50,254)",
         marginRight: "5px",
       }}
       strokeWidth="2"

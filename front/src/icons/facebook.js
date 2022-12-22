@@ -3,9 +3,8 @@ export const Facebook = () => {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       data-name="Ebene 1"
-      width="24px"
-      height="24px"
-      style={{ marginRight: "0.6rem" }}
+      width="18px"
+      height="18px"
       viewBox="0 0 1024 1024"
     >
       <path

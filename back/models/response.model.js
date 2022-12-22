@@ -6,12 +6,6 @@ module.exports = (sequelize, Sequelize) => {
     prompt: {
       type: Sequelize.STRING,
     },
-    collect: {
-      type: Sequelize.INTEGER,
-    },
-    rating: {
-      type: Sequelize.INTEGER,
-    },
   });
 
   return Response;

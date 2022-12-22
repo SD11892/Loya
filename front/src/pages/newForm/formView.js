@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
 import { getByFormUrl } from "../../actions/form";
 import { createColor } from "material-ui-color";
-import { Grid, TextField } from "@mui/material";
+import { Grid, TextField, Rating } from "@mui/material";
 import MainButton from "../../components/uielements/buttons/mainButton";
 import PageTitle from "../../components/uielements/pageTitle";
-import { Camera } from "../../icons/camera";
+import { Camera as CameraIcon } from "../../icons/camera";
 import PreviewContainer from "../../components/uielements/previewContainer";
 import TopLinkContainer from "../../components/uielements/topLinkContainer";
 import { FormStyle } from "./index.style";
-import { createTestimonial } from "../../actions/testimonial";
+import { createTestimonial, getAll } from "../../actions/testimonial";
+import { useDispatch, useSelector } from "react-redux";
+import { DefaultButton } from "../../components/uielements/styles/Button.style";
 
 const FormView = () => {
   const url = window.location.pathname.slice(-6);
@@ -31,6 +33,8 @@ const FormView = () => {
   const [thankMessage, setThankMessage] = React.useState(``);
   const [content, setContent] = React.useState(``);
   const [values, setValues] = React.useState([]);
+  const [rating, setRating] = React.useState(0);
+  const [checked, setChecked] = React.useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
   const hiddenFileInput = React.useRef(null);
   const infor = {
@@ -38,13 +42,13 @@ const FormView = () => {
     content: "",
     key: [],
     value: [],
-    state: 0,
+    rating: 0,
     name: "",
     type: "",
   };
-
+  const testimonials = useSelector((state) => state.testimonial.testimonial);
+  const dispatch = useDispatch();
   const onSubmit = () => {
-    console.log("here");
     if (selectedImage) {
       infor.name = selectedImage.name;
       infor.type = selectedImage.type;
@@ -53,20 +57,25 @@ const FormView = () => {
     infor.content = content;
     infor.key = key;
     infor.value = values;
+    infor.rating = rating;
+    infor.index = testimonials.length;
     createTestimonial(infor, selectedImage);
     setVisible(4);
   };
 
   useEffect(() => {
+    dispatch(getAll());
     getByFormUrl(url).then((res) => {
-      setPriColor(res.data.data.data.pColor);
-      setBgColor(res.data.data.data.bColor);
-      setMessage(`${res.data.data.data.message}`);
-      setTitle(res.data.data.data.title);
-      setPrompt(`${res.data.data.data.prompt}`);
-      setThankTitle(`${res.data.data.data.thankTitle}`);
-      setThankMessage(`${res.data.data.data.thankMessage}`);
-      setKey(res.data.data.data.key.split(","));
+      const result = res.data.data.data;
+      setPriColor(result.pColor);
+      setBgColor(result.bColor);
+      setMessage(`${result.message}`);
+      setTitle(result.title);
+      setPrompt(`${result.prompt}`);
+      setThankTitle(`${result.thankTitle}`);
+      setThankMessage(`${result.thankMessage}`);
+      setKey(result.key.split(","));
+      setChecked([...result.checked]);
       setData(
         btoa(
           String.fromCharCode(...new Uint8Array(res.data.data.data.data.data))
@@ -103,48 +112,35 @@ const FormView = () => {
             Powered by Loya
           </a>
         </TopLinkContainer>
-        <Grid container style={{ marginBottom: "1rem" }}>
+        <Grid container style={{ marginBottom: "1rem", padding: "1.5rem" }}>
           <img src={`data:image/png;base64,${data}`} alt="" width={"48px"} />
         </Grid>
-        <Grid container style={{ marginBottom: "1rem" }}>
+        <Grid container style={{ marginBottom: "1rem", padding: "1.5rem" }}>
           <PageTitle>{title}</PageTitle>
         </Grid>
         <Grid
           container
           style={{
+            padding: "1.5rem",
             marginBottom: "1rem",
             whiteSpace: "pre-wrap",
           }}
         >
           {message}
         </Grid>
+        <DefaultButton primary>
+          <CameraIcon />
+          Record a Video
+        </DefaultButton>
         <Grid container style={{ marginBottom: "1rem" }}>
-          <MainButton
-            style={{
-              width: "100%",
-              alignItem: "center",
-              background: { priColor },
-              justifyContent: "center",
-            }}
-          >
-            <Camera />
-            Record a video
-          </MainButton>
-        </Grid>
-        <Grid container style={{ marginBottom: "1rem" }}>
-          <MainButton
-            style={{
-              width: "100%",
-              background: "#f0f0f0",
-              justifyContent: "center",
-              color: "#222",
-            }}
+          <DefaultButton
+            secondary
             onClick={() => {
               setVisible(2);
             }}
           >
             Write a review
-          </MainButton>
+          </DefaultButton>
         </Grid>
       </PreviewContainer>
       <PreviewContainer style={{ display: visible === 2 ? "flex" : "none" }}>
@@ -179,6 +175,17 @@ const FormView = () => {
         >
           {prompt}
         </Grid>
+        {checked[2] === true ? (
+          <Grid container style={{ marginTop: "1rem" }}>
+            <Rating
+              value={rating}
+              onChange={(event, newValue) => {
+                setRating(newValue);
+              }}
+            />
+          </Grid>
+        ) : null}
+
         <Grid
           container
           style={{
@@ -221,7 +228,6 @@ const FormView = () => {
               setVisible(3);
             }}
           >
-            <Camera />
             Submit
           </MainButton>
         </Grid>

@@ -2,7 +2,6 @@ import FormService from "../services/form.service";
 import { GETALL_SUCCESS } from "./types";
 
 export const getAll = () => (dispatch) => {
-  console.log("here");
   return FormService.getAll().then(
     (data) => {
       console.log(data.data);

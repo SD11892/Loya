@@ -7,7 +7,6 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
   const data = req.query.info;
-  console.log("data=", data);
   if (req.file !== undefined) {
     Form.findAll({
       where: {
@@ -32,7 +31,9 @@ exports.create = (req, res) => {
           status: 0,
           type: data.type,
           name: data.name,
+          rating: data.rating,
           data: fs.readFileSync("../upload/" + req.file.filename),
+          index: data.index,
         });
       });
     });
@@ -58,6 +59,7 @@ exports.create = (req, res) => {
           value: data.value.toString(),
           content: data.content,
           status: 0,
+          index: data.index,
         });
       });
     });
@@ -66,17 +68,21 @@ exports.create = (req, res) => {
 
 exports.update = (req, res) => {
   const data = req.query.info;
+  console.log("data=", data);
   if (req.file !== undefined) {
     Testimonial.update(
       {
         url: data.url,
-        key: data.key.toString(),
-        value: data.value.toString(),
+        key: typeof data.key === "string" ? data.key : data.key.toString(),
+        value:
+          typeof data.value === "string" ? data.value : data.value.toString(),
         content: data.content,
         status: data.status,
         type: data.type,
         name: data.name,
+        rating: data.rating,
         data: fs.readFileSync("../upload/" + req.file.filename),
+        index: data.index,
       },
       {
         where: {
@@ -88,9 +94,13 @@ exports.update = (req, res) => {
     Testimonial.update(
       {
         url: data.url,
-        value: data.value.toString(),
+        key: typeof data.key === "string" ? data.key : data.key.toString(),
+        value:
+          typeof data.value === "string" ? data.value : data.value.toString(),
         content: data.content,
         status: data.status,
+        rating: data.rating,
+        index: data.index,
       },
       {
         where: {
@@ -104,7 +114,7 @@ exports.update = (req, res) => {
 };
 
 exports.getAll = (req, res) => {
-  Testimonial.findAll()
+  Testimonial.findAll({ order: [["index", "ASC"]] })
     .then((testimonials) => {
       if (!testimonials) {
         console.log("Testimonials Not Found");
@@ -129,4 +139,34 @@ exports.delete = (req, res) => {
     console.log("res=", res);
     res.json({ result });
   });
+};
+
+exports.getByUrl = (req, res) => {
+  const formUrl = req.params.url.replace(":", "");
+  console.log("f=", formUrl);
+  const info = {
+    key: [],
+    value: [],
+    content: "",
+    data: "",
+    rating: 0,
+  };
+  Testimonial.findAll({
+    where: {
+      url: formUrl,
+    },
+  })
+    .then((fdata) => {
+      console.log("fdata=", fdata);
+      info.key = fdata.key;
+      info.value = fdata.value;
+      info.content = fdata.content;
+      info.data = fdata.data;
+      info.rating = fdata.rating;
+      res.status(200).send({ data: info });
+    })
+    .catch((err) => {
+      console.log("err=", err);
+      res.status(500).send({ message: err.message });
+    });
 };

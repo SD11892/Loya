@@ -108,7 +108,7 @@ export const Sidebar = () => {
         <Grid xs={12}>
           <MenuButton
             onClick={() => {
-              navigate("/wall");
+              navigate("/walls");
             }}
           >
             <WallIcon />
