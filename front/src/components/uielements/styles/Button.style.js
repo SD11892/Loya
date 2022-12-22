@@ -168,7 +168,7 @@ const DefaultButton = (ComponentName) => styled(ComponentName)`
     &.MuiButtonBase-root {
       margin-top: 1.5rem;
       width: 100%;
-      background: ${(props) => (props.primary ? "#67e601" : props.secondary ? "#f0f0f0" : "black")};
+      background: ${(props) => (props.primary ? "#67e601" : "black")};
       color: white;
     }
   }

@@ -128,13 +128,12 @@ const FormView = () => {
         >
           {message}
         </Grid>
-        <DefaultButton primary>
+        <DefaultButton>
           <CameraIcon />
           Record a Video
         </DefaultButton>
         <Grid container style={{ marginBottom: "1rem" }}>
           <DefaultButton
-            secondary
             onClick={() => {
               setVisible(2);
             }}
