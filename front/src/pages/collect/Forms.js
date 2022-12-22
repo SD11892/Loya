@@ -171,7 +171,6 @@ const Forms = () => {
                 <ListItem key={value.formId} style={{ marginTop: "1rem" }}>
                   <ListItemButton
                     onClick={(e) => {
-                      console.log(e);
                       if (isEmpty(e.target.id)) {
                         navigate(`/forms/${value.formUrl}`);
                       }
@@ -184,10 +183,8 @@ const Forms = () => {
                         color: "#ddd",
                         borderRadius: "10px",
                       }}
-                      edge="end"
                       onChange={handleToggle(value)}
                       checked={checked.indexOf(value) !== -1}
-                      inputProps={{ "aria-labelledby": labelId }}
                     />
                     <ListItemAvatar>
                       <Avatar

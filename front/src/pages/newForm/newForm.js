@@ -342,7 +342,7 @@ function NewForm() {
                                   />
                                 ) : (
                                   <img
-                                    src={`http://localhost:3000/heart.svg`}
+                                    src={`http://35.170.73.191:3000/heart.svg`}
                                     width={"48px"}
                                   />
                                 )}
@@ -1067,13 +1067,13 @@ function NewForm() {
                 >
                   <TopLinkContainer>
                     <img
-                      src={`http://localhost:3000/heart.svg`}
+                      src={`http://35.170.73.191:3000/heart.svg`}
                       width="16px"
                       height="16px"
                       style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                     />
                     <a
-                      href="http://localhost:3000"
+                      href="http://35.170.73.191:3000"
                       style={{
                         textDecoration: "unset",
                       }}
@@ -1096,7 +1096,7 @@ function NewForm() {
                       />
                     ) : (
                       <img
-                        src={`http://localhost:3000/heart.svg`}
+                        src={`http://35.170.73.191:3000/heart.svg`}
                         width={"48px"}
                       />
                     )}
@@ -1156,13 +1156,13 @@ function NewForm() {
                 >
                   <TopLinkContainer>
                     <img
-                      src={`http://localhost:3000/heart.svg`}
+                      src={`http://35.170.73.191:3000/heart.svg`}
                       width="16px"
                       height="16px"
                       style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                     />
                     <a
-                      href="http://localhost:3000"
+                      href="http://35.170.73.191:3000"
                       style={{
                         textDecoration: "unset",
                       }}
@@ -1185,7 +1185,7 @@ function NewForm() {
                       />
                     ) : (
                       <img
-                        src={`http://localhost:3000/heart.svg`}
+                        src={`http://35.170.73.191:3000/heart.svg`}
                         width={"48px"}
                       />
                     )}
@@ -1253,13 +1253,13 @@ function NewForm() {
                 >
                   <TopLinkContainer>
                     <img
-                      src={`http://localhost:3000/heart.svg`}
+                      src={`http://35.170.73.191:3000/heart.svg`}
                       width="16px"
                       height="16px"
                       style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                     />
                     <a
-                      href="http://localhost:3000"
+                      href="http://35.170.73.191:3000"
                       style={{
                         textDecoration: "unset",
                       }}
@@ -1283,7 +1283,7 @@ function NewForm() {
                         />
                       ) : (
                         <img
-                          src={`http://localhost:3000/heart.svg`}
+                          src={`http://35.170.73.191:3000/heart.svg`}
                           width={"48px"}
                         />
                       )}
@@ -1468,13 +1468,13 @@ function NewForm() {
                 >
                   <TopLinkContainer>
                     <img
-                      src={`http://localhost:3000/heart.svg`}
+                      src={`http://35.170.73.191:3000/heart.svg`}
                       width="16px"
                       height="16px"
                       style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                     />
                     <a
-                      href="http://localhost:3000"
+                      href="http://35.170.73.191:3000"
                       style={{
                         textDecoration: "unset",
                       }}
@@ -1497,7 +1497,7 @@ function NewForm() {
                       />
                     ) : (
                       <img
-                        src={`http://localhost:3000/heart.svg`}
+                        src={`http://35.170.73.191:3000/heart.svg`}
                         width={"48px"}
                       />
                     )}

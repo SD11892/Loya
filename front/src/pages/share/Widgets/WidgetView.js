@@ -137,7 +137,7 @@ export default function CreateWidget() {
                       sx={{ width: 56, height: 56 }}
                     >
                       <img
-                        src={`http://localhost:3000/user.png`}
+                        src={`http://35.170.73.191:3000/user.png`}
                         width={"60px"}
                       />
                     </Avatar>

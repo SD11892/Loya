@@ -7,7 +7,7 @@ const app = express();
 var corsOptions = {
   credentials: true, //access-control-allow-credentials:true
   optionSuccessStatus: 200,
-  AccessControlAllowOrigin: "http://localhost:8080",
+  AccessControlAllowOrigin: "http://35.170.73.191:8080",
 };
 app.use(cors(corsOptions));
 

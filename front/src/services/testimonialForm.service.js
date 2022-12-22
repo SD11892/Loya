@@ -1,7 +1,7 @@
 import axios from "axios";
 import { isEmpty } from "../util/isEmpty";
 
-const API_URL = "http://localhost:8080/api/testimonialform/";
+const API_URL = "http://35.170.73.191:8080/api/testimonialform/";
 
 const getAll = () => {
   return axios

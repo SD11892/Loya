@@ -1,7 +1,7 @@
 import axios from "axios";
 import { isEmpty } from "../util/isEmpty";
 
-const API_URL = "http://localhost:8080/api/form/";
+const API_URL = "http://35.170.73.191:8080/api/form/";
 
 const create = (url, parentId, name) => {
   return axios.post(API_URL + "create", null, {

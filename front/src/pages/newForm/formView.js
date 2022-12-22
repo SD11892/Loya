@@ -10,7 +10,7 @@ import TopLinkContainer from "../../components/uielements/topLinkContainer";
 import { FormStyle } from "./index.style";
 import { createTestimonial, getAll } from "../../actions/testimonial";
 import { useDispatch, useSelector } from "react-redux";
-import { DefaultButton } from "../../components/uielements/styles/Button.style";
+import DefaultButton from "../../components/uielements/buttons/defaultButton";
 
 const FormView = () => {
   const url = window.location.pathname.slice(-6);
@@ -98,13 +98,13 @@ const FormView = () => {
       <PreviewContainer style={{ display: visible === 1 ? "flex" : "none" }}>
         <TopLinkContainer>
           <img
-            src={`http://localhost:3000/heart.svg`}
+            src={`http://35.170.73.191:3000/heart.svg`}
             width="16px"
             height="16px"
             style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
           />
           <a
-            href="http://localhost:3000"
+            href="http://35.170.73.191:3000"
             style={{
               textDecoration: "unset",
             }}
@@ -145,13 +145,13 @@ const FormView = () => {
       <PreviewContainer style={{ display: visible === 2 ? "flex" : "none" }}>
         <TopLinkContainer>
           <img
-            src={`http://localhost:3000/heart.svg`}
+            src={`http://35.170.73.191:3000/heart.svg`}
             width="16px"
             height="16px"
             style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
           />
           <a
-            href="http://localhost:3000"
+            href="http://35.170.73.191:3000"
             style={{
               textDecoration: "unset",
             }}
@@ -234,13 +234,13 @@ const FormView = () => {
       <PreviewContainer style={{ display: visible === 3 ? "flex" : "none" }}>
         <TopLinkContainer>
           <img
-            src={`http://localhost:3000/heart.svg`}
+            src={`http://35.170.73.191:3000/heart.svg`}
             width="16px"
             height="16px"
             style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
           />
           <a
-            href="http://localhost:3000"
+            href="http://35.170.73.191:3000"
             style={{
               textDecoration: "unset",
             }}
@@ -302,7 +302,7 @@ const FormView = () => {
                   <div class="flex items-center gap-2">
                     {selectedImage === null ? (
                       <img
-                        src={`http://localhost:3000/user.png`}
+                        src={`http://35.170.73.191:3000/user.png`}
                         alt=""
                         class="h-10 w-10 rounded-full object-cover"
                       />
@@ -383,13 +383,13 @@ const FormView = () => {
       <PreviewContainer style={{ display: visible === 4 ? "flex" : "none" }}>
         <TopLinkContainer>
           <img
-            src={`http://localhost:3000/heart.svg`}
+            src={`http://35.170.73.191:3000/heart.svg`}
             width="16px"
             height="16px"
             style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
           />
           <a
-            href="http://localhost:3000"
+            href="http://35.170.73.191:3000"
             style={{
               textDecoration: "unset",
             }}
@@ -399,7 +399,7 @@ const FormView = () => {
         </TopLinkContainer>
         <Grid container style={{ marginTop: "1rem" }}>
           <img
-            src={`http://localhost:3000/heart.svg`}
+            src={`http://35.170.73.191:3000/heart.svg`}
             width="48px"
             height="48px"
           />
