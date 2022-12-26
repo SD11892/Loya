@@ -112,8 +112,8 @@ export default function CreateWidget() {
   const [itemList, setItemList] = React.useState([]);
   const [drawerState, setDrawerState] = React.useState(false);
   const [code, setCode] = React.useState(
-    `<div class="senja-frame-embed" data-id="ea6efa18-e0a0-42cd-9928-1ecc2b63c8a5"></div>
-    <script defer type="text/javascript" src="https://widget.senja.io/embed/frame.js"></script>`
+    `<div class="loya-frame-embed" data-id="${url}"></div>
+<script defer type="text/javascript" src="http://192.168.105.43:3000/embedTemplate.js"></script>`
   );
 
   const handleChange = (even, nextView) => {
@@ -490,7 +490,7 @@ export default function CreateWidget() {
         <div
           style={{
             width: "100%",
-            background: "rgb(243,244,246)",
+            background: "transparent",
           }}
         >
           <div

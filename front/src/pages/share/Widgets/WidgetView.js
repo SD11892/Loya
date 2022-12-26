@@ -23,6 +23,7 @@ export default function CreateWidget() {
     getByFormUrl(url)
       .then((res) => {
         const result = res.data.data.data;
+        console.log(result.shadow);
         setSpace(result.spacing);
         setShadow(result.shadow);
         setRadius(result.border);
@@ -34,13 +35,21 @@ export default function CreateWidget() {
         alert("Invalid Form");
       });
   }, []);
+  React.useEffect(() => {}, [
+    space,
+    shadow,
+    radius,
+    ratingColor,
+    txtColor,
+    bgColor,
+  ]);
 
   return (
     <div
       style={{
         width: "100%",
         height: "100vh",
-        background: "rgb(243,244,246)",
+        background: "transparent",
       }}
     >
       <div

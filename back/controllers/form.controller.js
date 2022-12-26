@@ -177,6 +177,7 @@ exports.create = (req, res) => {
 
 exports.update = (req, res) => {
   const data = req.query.info;
+  console.log("file=", req.file);
   if (req.file !== undefined) {
     Form.update(
       {
@@ -202,8 +203,7 @@ exports.update = (req, res) => {
             formUrl: data.formUrl,
           },
         }
-      ).then((image) => {
-        fs.writeFileSync("../tmp/" + image.name, image.data);
+      ).then(() => {
         Welcome.update(
           {
             title: data.title,
