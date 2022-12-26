@@ -202,8 +202,7 @@ exports.update = (req, res) => {
             formUrl: data.formUrl,
           },
         }
-      ).then((image) => {
-        fs.writeFileSync("../tmp/" + image.name, image.data);
+      ).then(() => {
         Welcome.update(
           {
             title: data.title,

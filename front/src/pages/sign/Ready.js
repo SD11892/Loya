@@ -127,7 +127,7 @@ const Ready = () => {
             </ButtonBase>
           </div>
           <DefaultButton
-            primary
+            primary="#6701e6"
             onClick={() => {
               let email = localStorage.getItem("email");
               let password = localStorage.getItem("password");

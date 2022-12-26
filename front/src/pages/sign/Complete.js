@@ -169,7 +169,7 @@ function Complete() {
     console.log("newAlignment=", newAlignment);
     setMobile(newAlignment);
   };
-  const onFInish = () => {
+  const onFinish = () => {
     if (selectedImage) {
       infor.fileName = selectedImage.name;
       infor.fileType = selectedImage.type;
@@ -239,6 +239,7 @@ function Complete() {
             style={{
               width: "100%",
               height: "100vh",
+              overflowY:"auto",
             }}
           >
             <Grid container pt={"2rem"}>
@@ -695,7 +696,7 @@ function Complete() {
             <FormGrid>
               <DefaultButton
                 style={{ padding: "0.5rem", borderRadius: "9999px" }}
-                onClick={onFInish}
+                onClick={onFinish}
               >
                 Finish
               </DefaultButton>
@@ -814,7 +815,7 @@ function Complete() {
                   display: checked[0] === true ? "flex" : "none",
                 }}
               >
-                <DefaultButton primary>
+                <DefaultButton primary={priColor}>
                   <Camera />
                   Record a video
                 </DefaultButton>
@@ -907,7 +908,7 @@ function Complete() {
                 />
               </Grid>
               <Grid container style={{ marginTop: "1rem" }}>
-                <DefaultButton primary>Submit</DefaultButton>
+                <DefaultButton primary={priColor}>Submit</DefaultButton>
               </Grid>
             </PreviewContainer>
             <PreviewContainer
@@ -1058,7 +1059,7 @@ function Complete() {
                         </FormGrid>
                       );
                     })}
-                <DefaultButton primary>Submit</DefaultButton>
+                <DefaultButton primary={priColor}>Submit</DefaultButton>
               </FormGrid>
             </PreviewContainer>
             <PreviewContainer
@@ -1184,7 +1185,7 @@ function Complete() {
                   display: checked[0] === true ? "flex" : "none",
                 }}
               >
-                <DefaultButton style={{ background: `${priColor} !important` }}>
+                <DefaultButton primary={priColor}>
                   <Camera />
                   Record a video
                 </DefaultButton>
@@ -1428,7 +1429,7 @@ function Complete() {
                         </FormGrid>
                       );
                     })}
-                <DefaultButton primary>Submit</DefaultButton>
+                <DefaultButton primary={priColor}>Submit</DefaultButton>
               </FormGrid>
             </PreviewContainer>
             <PreviewContainer
