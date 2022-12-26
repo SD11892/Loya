@@ -14,10 +14,7 @@ import { Search as SearchIcon } from "../icons/search";
 import { Tags as TagsIcon } from "../icons/tags";
 import { Wall as WallIcon } from "../icons/wall";
 import { Widget as WidgetIcon } from "../icons/widget";
-import { Rich as RichIcon } from "../icons/rich";
 import { DownArrow } from "../icons/downArrow";
-import { REGISTER_SUCCESS } from "../actions/types";
-import { useDispatch, useSelector } from "react-redux";
 
 export const Sidebar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
@@ -123,12 +120,6 @@ export const Sidebar = () => {
           >
             <WidgetIcon />
             <SiderText>Widgets</SiderText>
-          </MenuButton>
-        </Grid>
-        <Grid xs={12}>
-          <MenuButton>
-            <RichIcon />
-            <SiderText>Rich Snippet</SiderText>
           </MenuButton>
         </Grid>
       </Grid>

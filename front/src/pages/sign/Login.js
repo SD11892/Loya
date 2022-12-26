@@ -33,11 +33,14 @@ const Login = () => {
 
   const submit = () => {
     dispatch(login(state.email, state.password)).then((res) => {
+      console.log("res=", res);
       if (res.CODE === "200") {
         localStorage.setItem("signIn", true);
         navigate("/testimonials");
       } else {
         alert("Invalid User or password");
+        // console.log("Invalid");
+
       }
     });
   };

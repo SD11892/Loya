@@ -89,7 +89,9 @@ exports.update = (req, res) => {
           id: data.id,
         },
       }
-    );
+    ).then((result) => {
+      res.json({ code: 200, data: result, message: "success" });
+    });
   } else {
     Testimonial.update(
       {

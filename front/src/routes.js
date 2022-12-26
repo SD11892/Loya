@@ -11,6 +11,8 @@ import CreateWidget from "./pages/share/Widgets/createWidget";
 import WidgetView from "./pages/share/Widgets/WidgetView";
 import Login from "./pages/sign/Login";
 import Register from "./pages/sign/Register";
+import Complete from "./pages/sign/Complete";
+import Ready from "./pages/sign/Ready";
 import Profile from "./pages/sign/Profile";
 import NewForm from "./pages/newForm/newForm";
 import FormView from "./pages/newForm/formView";
@@ -28,6 +30,14 @@ export const routes = [
   {
     path: "/profile",
     element: <Profile />,
+  },
+  {
+    path: "/complete",
+    element: <Complete />,
+  },
+  {
+    path: "/forms/:id/ready",
+    element: <Ready />,
   },
   {
     path: "",

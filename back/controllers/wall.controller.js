@@ -59,6 +59,7 @@ exports.delete = (req, res) => {
 
 exports.update = (req, res) => {
   const data = req.query.info;
+  console.log("info=", req.query.info);
   Wall.update(
     {
       name: data.name,
@@ -68,7 +69,7 @@ exports.update = (req, res) => {
       key: data.key.toString(),
       value: data.value.toString(),
       pColor: data.pColor,
-      pTItle: data.pTItle,
+      pTitle: data.pTitle,
       subTitle: data.subTitle,
     },
     {

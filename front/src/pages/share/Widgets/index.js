@@ -54,11 +54,18 @@ const style = {
 };
 const copyContent = async (info) => {
   let text = window.location.href + `/p/${info.url}`;
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch (err) {
-    console.error("Failed to copy: ", err);
-  }
+    
+    try {
+      console.log("text=", text);
+      var inputc = document.body.appendChild(document.createElement("input"));
+      inputc.value = text;
+      inputc.select();
+      document.execCommand('copy');
+      inputc.parentNode.removeChild(inputc);
+      alert("Page URL Copied to Clipboard");
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
 };
 
 const Widgets = () => {

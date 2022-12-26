@@ -158,10 +158,11 @@ exports.create = (req, res) => {
                 call: 0,
                 custom: 0,
               }).then((result) => {
+                console.log("result=", result.dataValues.formUrl);
                 return res.json({
                   CODE: 200,
                   message: "Success Form",
-                  data: result,
+                  data: result.dataValues.formUrl,
                 });
               });
             });
@@ -244,7 +245,9 @@ exports.update = (req, res) => {
                     formUrl: data.formUrl,
                   },
                 }
-              );
+              ).then((result) => {
+                res.json({ result });
+              });
             });
           });
         });
@@ -267,6 +270,7 @@ exports.update = (req, res) => {
           bColor: data.bColor,
           type: data.fileType,
           name: data.fileName,
+          checked: data.checked.toString(),
         },
         {
           where: {
@@ -315,7 +319,9 @@ exports.update = (req, res) => {
                     formUrl: data.formUrl,
                   },
                 }
-              );
+              ).then((result) => {
+                res.json({ result });
+              });
             });
           });
         });

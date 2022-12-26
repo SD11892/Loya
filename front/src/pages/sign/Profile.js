@@ -7,6 +7,9 @@ import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import { validator } from "./Validator";
 import { Button } from "@mui/material";
+import DefaultButton from "../../components/uielements/buttons/defaultButton";
+import FormGrid from "../../components/uielements/form/FormGrid";
+import { createForm } from "../../actions/form";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -29,15 +32,19 @@ const Profile = () => {
   };
 
   const submit = () => {
+    localStorage.setItem("project", state.projectName);
+    localStorage.setItem("username", state.fname + " " + state.lname);
     const data = {
       email: localStorage.getItem("email"),
       password: localStorage.getItem("password"),
       username: state.fname + " " + state.lname,
+      project: state.projectName,
     };
     console.log("proData=", data);
-    dispatch(register(data.username, data.email, data.password))
+    dispatch(register(data.username, data.email, data.password, data.project))
       .then((res) => {
-        navigate("/");
+        console.log("here");
+        navigate("/complete");
       })
       .catch((err) => {
         alert("Already in");
@@ -254,13 +261,11 @@ const Profile = () => {
                     className=" focus:ring-primary focus:border-primary mt-2 block w-full appearance-none rounded-md border-gray-300 py-2-5 text-sm shadow-sm"
                   ></textarea>
                 </div>{" "}
-                <Button
-                  type="submit"
-                  className="hover:shadow-primary-600/20 mt-2 bg-black text-white duration-200 hover:scale-[1.01] hover:shadow-lg block appearance-none rounded-lg text-sm font-medium duration-100 focus:outline-none px-4 py-2.5"
-                  disabled={!isValidForm}
-                >
-                  Next
-                </Button>
+                <FormGrid>
+                  <DefaultButton disabled={!isValidForm} onClick={submit}>
+                    Next
+                  </DefaultButton>
+                </FormGrid>
               </form>
             </div>
           </div>{" "}

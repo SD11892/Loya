@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getByFormUrl, saveForm } from "../../actions/form";
+import { createForm, getByFormUrl, saveForm } from "../../actions/form";
 import { styled } from "@mui/material/styles";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
@@ -85,22 +85,30 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   overflowX: "auto",
 }));
 
-function NewForm() {
+const project = localStorage.getItem("project");
+function Complete() {
   const navigate = useNavigate();
   const [visible, setVisible] = React.useState(1);
   const [formName, setFormName] = React.useState("");
   const [selectedImage, setSelectedImage] = useState(null);
   const [data, setData] = useState("");
   const [expanded, setExpanded] = React.useState("panel1");
-  const [priColor, setPriColor] = React.useState("");
-  const [bgColor, setBgColor] = React.useState("");
-  const [title, setTitle] = React.useState("");
+  const [priColor, setPriColor] = React.useState("#6701e6");
+  const [bgColor, setBgColor] = React.useState("white");
+  const [title, setTitle] = React.useState(`Share a testimonial!`);
   const [directUrl, setDirectUrl] = React.useState("");
-  const [message, setMessage] = React.useState(``);
-  const [prompt, setPrompt] = React.useState(``);
-  const [thankTitle, setThankTitle] = React.useState(``);
-  const [thankMessage, setThankMessage] = React.useState(``);
+  const [message, setMessage] =
+    React.useState(`Do you love using our product? We'd love to hear about it!\n- Share your experience with a quick video or text testimonial\n- Recording a video? Don't forget to smile 😊
+  `);
+  const [prompt, setPrompt] = React.useState(
+    `- What do you like most about us?\n- Would you recommend us to a friend?`
+  );
+  const [thankTitle, setThankTitle] = React.useState(`Thank you 🙏`);
+  const [thankMessage, setThankMessage] = React.useState(
+    `Thank you so much for your support! We appreciate your support and we hope you enjoy using our product.`
+  );
   const [mobile, setMobile] = React.useState("laptop");
+  const [formUrl, setFormUrl] = React.useState("");
   const [addingFields, setAddingFields] = React.useState([]);
   const [key, setKey] = React.useState([]);
   const [inputingFields, setInputingFields] = React.useState([
@@ -110,7 +118,7 @@ function NewForm() {
     "Your Website",
   ]);
   const [toggled, setToggled] = React.useState([false, false, false]);
-  const [checked, setChecked] = React.useState([]);
+  const [checked, setChecked] = React.useState([true, true, false, false]);
   const [rating, setRating] = React.useState(0);
   const hiddenFileInput = React.useRef(null);
   const [open, setOpen] = React.useState(false);
@@ -136,13 +144,6 @@ function NewForm() {
     key: [],
   };
 
-  const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
-      return;
-    }
-
-    setOpen(false);
-  };
   const handlepriColorChange = (value) => {
     setPriColor(value.css.backgroundColor);
   };
@@ -150,7 +151,6 @@ function NewForm() {
     setBgColor(value.css.backgroundColor);
   };
   const handleChange = (panel) => (event, newExpanded) => {
-    let len = 1;
     if (panel === "panel1") {
       setVisible(1);
     } else if (panel === "panel2") {
@@ -169,8 +169,7 @@ function NewForm() {
     console.log("newAlignment=", newAlignment);
     setMobile(newAlignment);
   };
-
-  const onSave = () => {
+  const onFInish = () => {
     if (selectedImage) {
       infor.fileName = selectedImage.name;
       infor.fileType = selectedImage.type;
@@ -186,51 +185,24 @@ function NewForm() {
     infor.thankMessage = thankMessage;
     infor.directUrl = directUrl;
     infor.key = inputingFields.concat(addingFields);
-    infor.formUrl = url;
+    infor.formUrl = formUrl;
+    console.log("herre");
     saveForm(infor, selectedImage).then(() => {
-      setOpen(true);
+      navigate(`/forms/${formUrl}/ready`);
     });
   };
-  const url = window.location.pathname.slice(-6);
 
   useEffect(() => {
-    getByFormUrl(url).then((res) => {
-      const result = res.data.data.data;
-      setPriColor(result.pColor);
-      setBgColor(result.bColor);
-      setMessage(`${result.message}`);
-      setTitle(result.title);
-      setPrompt(`${result.prompt}`);
-      setThankTitle(`${result.thankTitle}`);
-      setThankMessage(`${result.thankMessage}`);
-      setKey(result.key.split(","));
-      setFormName(result.formName);
-      setChecked(result.checked);
-      setData(
-        btoa(
-          String.fromCharCode(...new Uint8Array(res.data.data.data.data.data))
-        )
-      );
-      var len = 0;
-      if (result.key.split(",").indexOf("Email Address") !== -1) {
-        toggled[0] = true;
-        setToggled([...toggled]);
-        len += 1;
+    setFormName(`${localStorage.getItem("project")} testimonials Form`);
+    createForm(`${localStorage.getItem("project")} testimonials Form`).then(
+      (res) => {
+        console.log("formUrl=", res.data.data);
+        setFormUrl(res.data.data);
       }
-      if (result.key.split(",").indexOf("Headline") !== -1) {
-        toggled[1] = true;
-        setToggled([...toggled]);
-        len += 1;
-      }
-      if (result.key.split(",").indexOf("Your Website") !== -1) {
-        toggled[2] = true;
-        setToggled([...toggled]);
-        len += 1;
-      }
-      setAddingFields(key.slice(len, key.length));
-    });
+    );
   }, []);
   useEffect(() => {}, [
+    formUrl,
     priColor,
     bgColor,
     message,
@@ -269,33 +241,6 @@ function NewForm() {
               height: "100vh",
             }}
           >
-            <Grid
-              container
-              pt={"2rem"}
-              justifyContent="space-between"
-              style={{ alignItems: "center" }}
-            >
-              <Grid item>
-                <BackwardButton
-                  onClick={() => {
-                    navigate("/forms");
-                  }}
-                >
-                  ← Dashboard
-                </BackwardButton>
-              </Grid>
-              <Grid item>
-                <IconButton
-                  style={{ border: "1px solid #ddd" }}
-                  onClick={() => {
-                    let path = `/forms/p/1/r/${url}`;
-                    navigate(path);
-                  }}
-                >
-                  <ShareIcon />
-                </IconButton>
-              </Grid>
-            </Grid>
             <Grid container pt={"2rem"}>
               <Grid item xs={12} style={{ marginBottom: "1rem" }}>
                 <Input
@@ -459,10 +404,10 @@ function NewForm() {
                     <SiderText>Markdown supported</SiderText>
                     <div>
                       <Checkbox
-                        checked={checked[0] === "true" ? true : false}
-                        disabled={checked[1] === "false" ? true : false}
+                        checked={checked[0] === true ? true : false}
+                        disabled={checked[1] === false ? true : false}
                         onChange={(e) => {
-                          checked[0] = e.target.checked.toString();
+                          checked[0] = e.target.checked;
                           setChecked([...checked]);
                         }}
                       />
@@ -470,10 +415,10 @@ function NewForm() {
                     </div>
                     <div>
                       <Checkbox
-                        checked={checked[1] === "true" ? true : false}
-                        disabled={checked[0] === "false" ? true : false}
+                        checked={checked[1] === true ? true : false}
+                        disabled={checked[0] === false ? true : false}
                         onChange={(e) => {
-                          checked[1] = e.target.checked.toString();
+                          checked[1] = e.target.checked;
                           setChecked([...checked]);
                         }}
                       />
@@ -750,9 +695,9 @@ function NewForm() {
             <FormGrid>
               <DefaultButton
                 style={{ padding: "0.5rem", borderRadius: "9999px" }}
-                onClick={onSave}
+                onClick={onFInish}
               >
-                Save Changes
+                Finish
               </DefaultButton>
             </FormGrid>
           </div>
@@ -866,10 +811,10 @@ function NewForm() {
               <Grid
                 container
                 style={{
-                  display: checked[0] === "true" ? "flex" : "none",
+                  display: checked[0] === true ? "flex" : "none",
                 }}
               >
-                <DefaultButton primary={priColor}>
+                <DefaultButton primary>
                   <Camera />
                   Record a video
                 </DefaultButton>
@@ -878,7 +823,7 @@ function NewForm() {
                 container
                 style={{
                   marginBottom: "0.5rem",
-                  display: checked[1] === "true" ? "flex" : "none",
+                  display: checked[1] === true ? "flex" : "none",
                 }}
               >
                 <DefaultButton>Write a review</DefaultButton>
@@ -939,7 +884,7 @@ function NewForm() {
                 }}
               >
                 <Rating
-                  style={{ display: checked[2] === "true" ? "flex" : "none" }}
+                  style={{ display: checked[2] === true ? "flex" : "none" }}
                   value={rating}
                   onChange={(event, newValue) => {
                     setRating(rating);
@@ -962,7 +907,7 @@ function NewForm() {
                 />
               </Grid>
               <Grid container style={{ marginTop: "1rem" }}>
-                <DefaultButton primary={priColor}>Submit</DefaultButton>
+                <DefaultButton primary>Submit</DefaultButton>
               </Grid>
             </PreviewContainer>
             <PreviewContainer
@@ -1113,7 +1058,7 @@ function NewForm() {
                         </FormGrid>
                       );
                     })}
-                <DefaultButton primary={priColor}>Submit</DefaultButton>
+                <DefaultButton primary>Submit</DefaultButton>
               </FormGrid>
             </PreviewContainer>
             <PreviewContainer
@@ -1236,10 +1181,10 @@ function NewForm() {
                 container
                 style={{
                   marginBottom: "1rem",
-                  display: checked[0] === "true" ? "flex" : "none",
+                  display: checked[0] === true ? "flex" : "none",
                 }}
               >
-                <DefaultButton primary={priColor}>
+                <DefaultButton style={{ background: `${priColor} !important` }}>
                   <Camera />
                   Record a video
                 </DefaultButton>
@@ -1248,7 +1193,7 @@ function NewForm() {
                 container
                 style={{
                   marginBottom: "1rem",
-                  display: checked[1] === "true" ? "flex" : "none",
+                  display: checked[1] === true ? "flex" : "none",
                 }}
               >
                 <DefaultButton>Write a review</DefaultButton>
@@ -1309,7 +1254,7 @@ function NewForm() {
                 }}
               >
                 <Rating
-                  style={{ display: checked[2] === "true" ? "flex" : "none" }}
+                  style={{ display: checked[2] === true ? "flex" : "none" }}
                   value={rating}
                   onChange={(event, newValue) => {
                     setRating(rating);
@@ -1483,7 +1428,7 @@ function NewForm() {
                         </FormGrid>
                       );
                     })}
-                <DefaultButton primary={priColor}>Submit</DefaultButton>
+                <DefaultButton primary>Submit</DefaultButton>
               </FormGrid>
             </PreviewContainer>
             <PreviewContainer
@@ -1538,22 +1483,8 @@ function NewForm() {
           </div>
         )}
       </Grid>
-      <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-        open={open}
-        autoHideDuration={6000}
-        onClose={handleCloseSnack}
-      >
-        <Alert
-          onClose={handleCloseSnack}
-          severity="success"
-          sx={{ width: "100%" }}
-        >
-          Save Changed
-        </Alert>
-      </Snackbar>
     </div>
   );
 }
 
-export default NewForm;
+export default Complete;

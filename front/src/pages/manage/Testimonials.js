@@ -98,7 +98,7 @@ const Testimonials = () => {
             }}
           >
             <Link
-              to="/"
+              to="/testimonials"
               style={{
                 textDecoration: "unset",
                 color: "#52525b",
@@ -112,7 +112,7 @@ const Testimonials = () => {
               Google
             </Link>
             <Link
-              to="/"
+              to="/testimonials"
               style={{
                 textDecoration: "unset",
                 color: "#52525b",

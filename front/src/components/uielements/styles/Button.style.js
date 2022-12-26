@@ -83,6 +83,9 @@ const PlusButton = (ComponentName) => styled(ComponentName)`
       color: white;
       border-radius: 0.25rem;
     }
+    &.MuiButton-root:hover {
+      background: rgb(146, 50, 254);
+    }
   }
 `;
 const AddButton = (ComponentName) => styled(ComponentName)`
@@ -166,10 +169,15 @@ const GroupButton = (ComponentName) => styled(ComponentName)`
 const DefaultButton = (ComponentName) => styled(ComponentName)`
    {
     &.MuiButtonBase-root {
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       width: 100%;
-      background: ${(props) => (props.primary ? "#67e601" : "black")};
+      background: ${(props) => (props.primary ? `${props.primary}` : "black")};
       color: white;
+      gap: 0.5rem;
+      line-height: 1.5rem;
+    }
+    &.MuiButtonBase-root:hover {
+      background: ${(props) => (props.primary ? "rgb(146, 50, 254)" : "#222")};
     }
   }
 `;
@@ -215,6 +223,19 @@ const ImageButton = (ComponentName) => styled(ComponentName)`
                 color: inherit;
   }
 `;
+const TabButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiToggleButton-root {
+      padding: 4px;
+      .Mui-selected {
+        background-color: #fff;
+      }
+    }
+    &.MuiToggleButton-root.Mui-selected {
+      background-color: #fff;
+    }
+  }
+`;
 export {
   SiderButton,
   MenuButton,
@@ -231,4 +252,5 @@ export {
   LinkButton,
   AddButton,
   ImageButton,
+  TabButton,
 };

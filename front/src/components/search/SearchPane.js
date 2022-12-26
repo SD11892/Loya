@@ -1,5 +1,6 @@
 import { useNavigate, Link } from "react-router-dom";
 import BackwardButton from "../uielements/buttons/backwardButton";
+import SiderText from "../uielements/siderText";
 import { Grid, InputBase, Button } from "@mui/material";
 import PageTitle from "../uielements/pageTitle";
 import { Googlesm } from "../../icons/google_sm";
@@ -21,7 +22,7 @@ export const SearchPane = () => {
             navigate("/testimonials");
           }}
         >
-          ← Testimonials
+          <SiderText>← Testimonials</SiderText>
         </BackwardButton>
         <Grid item xs={12} style={{ marginBottom: "1rem" }}>
           <PageTitle>Search</PageTitle>
@@ -134,18 +135,6 @@ export const SearchPane = () => {
           >
             Founder 2
           </Button>
-        </Grid>
-        <Grid item xs={12} style={{ marginBottom: "1rem" }}>
-          <div style={{ marginTop: "1rem", fontWeight: "500" }}>Word Cloud</div>
-        </Grid>
-        <Grid item xs={12} style={{ marginBottom: "1rem" }}>
-          <img
-            alt="wordCloud"
-            src="wordCloud.png"
-            width="100%"
-            height="100%"
-            style={{}}
-          />
         </Grid>
       </Grid>
     </div>

@@ -21,6 +21,9 @@ import {
   ButtonBase,
   TextField,
 } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
+
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -48,6 +51,10 @@ import PageTitle from "../uielements/pageTitle";
 import FormLabel from "../uielements/form/FormLabel";
 import FormGrid from "../uielements/form/FormGrid";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const TestTable = () => {
   const dispatch = useDispatch();
   const testimonials = useSelector((state) => state.testimonial.testimonial);
@@ -65,6 +72,7 @@ const TestTable = () => {
   const [date, setDate] = useState("");
   const [rateState, setRateState] = useState(null);
   const hiddenFileInput = React.useRef(null);
+  const [open, setOpen] = React.useState(false);
 
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -84,6 +92,13 @@ const TestTable = () => {
     value: [],
   };
 
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpen(false);
+  };
   const handleClose = () => {
     setEditState(false);
   };
@@ -508,7 +523,20 @@ const TestTable = () => {
               top: "-1.75rem",
             }}
           >
-            {avatarState !== "" ? (
+            {selectedImage !== null ? (
+              <Avatar
+                style={{
+                  borderRadius: "50%",
+                  border: "1px solid #ddd",
+                }}
+              >
+                <img
+                  src={URL.createObjectURL(selectedImage)}
+                  width={"48px"}
+                  alt="not found"
+                />
+              </Avatar>
+            ) : selectedImage === null && avatarState !== "" ? (
               <Avatar
                 style={{
                   borderRadius: "50%",
@@ -710,11 +738,7 @@ const TestTable = () => {
                       border: "1px solid #ddd",
                     }}
                   >
-                    <img
-                      src={`http://35.170.73.191:3000/user.png`}
-                      alt=""
-                      width={"48px"}
-                    />
+                    <img src={`../user.png`} alt="" width={"48px"} />
                   </Avatar>
                 )}
                 <UploadButton
@@ -817,7 +841,9 @@ const TestTable = () => {
                   inf.url = url;
                   inf.value = value;
                   updateTestimonial(inf, selectedImage).then((e) => {
+                    console.log("e=", e);
                     dispatch(getAll());
+                    setOpen(true);
                     setEditState(false);
                   });
                 }}
@@ -828,6 +854,20 @@ const TestTable = () => {
           </Grid>
         </div>
       </Drawer>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert
+          onClose={handleCloseSnack}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Save Changed
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

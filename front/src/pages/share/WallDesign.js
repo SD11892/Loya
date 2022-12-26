@@ -1,5 +1,6 @@
 import * as React from "react";
 import Site from "../../components/wall/Site";
+import Sitetwo from "../../components/wall/Sitetwo";
 import { getAll } from "../../actions/testimonial";
 import { useDispatch, useSelector } from "react-redux";
 import { getByWallUrl, saveWall } from "../../actions/wall";
@@ -12,6 +13,8 @@ import { styled } from "@mui/material/styles";
 import MuiAccordion from "@mui/material/Accordion";
 import MuiAccordionSummary from "@mui/material/AccordionSummary";
 import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import Typography from "@mui/material/Typography";
 import { DownArrow } from "../../icons/downArrow";
 import { Design as DesignIcon } from "../../icons/wall/design";
@@ -23,6 +26,13 @@ import DesignPane from "../../components/wall/DesignPane";
 import NavigationPane from "../../components/wall/NavigationPane";
 import CopyPane from "../../components/wall/CopyPane";
 import CTAPane from "../../components/wall/CTAPane";
+import SiderText from "../../components/uielements/siderText";
+import DefaultButton from "../../components/uielements/buttons/defaultButton";
+import FormGrid from "../../components/uielements/form/FormGrid";
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
@@ -73,6 +83,7 @@ const WallDesign = () => {
   const [fileName, setFileName] = React.useState("");
   const [type, setType] = React.useState("");
   const [expanded, setExpanded] = React.useState("panel1");
+  const [open, setOpen] = React.useState(false);
 
   const infor = {
     url: "",
@@ -89,7 +100,13 @@ const WallDesign = () => {
     key: [],
     value: [],
   };
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
 
+    setOpen(false);
+  };
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
@@ -120,6 +137,21 @@ const WallDesign = () => {
     dispatch(getAll());
   }, []);
 
+  const onSave = () => {
+    infor.url = url;
+    infor.name = name;
+    infor.theme = theme;
+    infor.pColor = pColor;
+    infor.pTitle = pTitle;
+    infor.subTitle = subTitle;
+    infor.ctaTitle = ctaTitle;
+    infor.ctaUrl = ctaUrl;
+    infor.key = key;
+    infor.value = value;
+    saveWall(infor).then(() => {
+      setOpen(true);
+    });
+  };
   React.useEffect(() => {}, [theme, pColor, key, value]);
 
   return (
@@ -153,7 +185,7 @@ const WallDesign = () => {
                   navigate("/walls");
                 }}
               >
-                ← Dashboard
+                <SiderText>← Dashboard</SiderText>
               </BackwardButton>
             </Grid>
             <Grid item>
@@ -297,6 +329,14 @@ const WallDesign = () => {
               </AccordionDetails>
             </Accordion>
           </Grid>
+          <FormGrid>
+            <DefaultButton
+              style={{ padding: "0.5rem", borderRadius: "9999px" }}
+              onClick={onSave}
+            >
+              Save Changes
+            </DefaultButton>
+          </FormGrid>
         </div>
       </Grid>
       <Grid
@@ -307,17 +347,43 @@ const WallDesign = () => {
           overflowX: "unset",
         }}
       >
-        <Site
-          testimonials={testimonials}
-          pColor={pColor}
-          keys={key}
-          values={value}
-          pTitle={pTitle}
-          subTitle={subTitle}
-          ctaTitle={ctaTitle}
-          ctaUrl={ctaUrl}
-        />
+        {theme === 1 ? (
+          <Site
+            testimonials={testimonials}
+            pColor={pColor}
+            keys={key}
+            values={value}
+            pTitle={pTitle}
+            subTitle={subTitle}
+            ctaTitle={ctaTitle}
+            ctaUrl={ctaUrl}
+          />
+        ) : (
+          <Sitetwo
+            testimonials={testimonials}
+            keys={key}
+            values={value}
+            pTitle={pTitle}
+            subTitle={subTitle}
+            ctaTitle={ctaTitle}
+            ctaUrl={ctaUrl}
+          />
+        )}
       </Grid>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={open}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert
+          onClose={handleCloseSnack}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Save Changed
+        </Alert>
+      </Snackbar>
     </Grid>
   );
 };

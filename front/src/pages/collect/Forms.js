@@ -9,6 +9,8 @@ import {
   IconButton,
   Tooltip,
 } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import moment from "moment";
 import List from "@mui/material/List";
 import ListItem from "@mui/material/ListItem";
@@ -35,6 +37,9 @@ import { CopyUrl } from "../../icons/copyUrl";
 import { Edit } from "../../icons/edit";
 import FileCopyOutlinedIcon from "@mui/icons-material/FileCopyOutlined";
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 const style = {
   position: "absolute",
   top: "50%",
@@ -55,13 +60,20 @@ const Forms = () => {
   const forms = useSelector((state) => state.form.payload);
   const [checked, setChecked] = React.useState([]);
   const [open, setOpen] = React.useState(false);
+  const [openSnack, setOpenSnack] = React.useState(false);
   const [formName, setFormName] = React.useState("New Form");
   const [text, setText] = React.useState("New Form");
-
   const navigate = useNavigate();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
   const handleCreate = () => {
     createForm(formName)
       .then((res) => {
@@ -110,8 +122,15 @@ const Forms = () => {
 
   const copyContent = async (info) => {
     let text = window.location.href + `/p/${info.projectId}/r/${info.formUrl}`;
+
     try {
-      await navigator.clipboard.writeText(text);
+      console.log("text=", text);
+      var inputc = document.body.appendChild(document.createElement("input"));
+      inputc.value = text;
+      inputc.select();
+      document.execCommand("copy");
+      inputc.parentNode.removeChild(inputc);
+      setOpenSnack(true);
     } catch (err) {
       console.error("Failed to copy: ", err);
     }
@@ -144,12 +163,10 @@ const Forms = () => {
             </DeleteButton>
           )}
 
-          <Tooltip title="A name to identify this form">
-            <PlusButton onClick={handleOpen}>
-              <PlusIcon fill="#923AFE" stroke="white" />
-              Create New
-            </PlusButton>
-          </Tooltip>
+          <PlusButton onClick={handleOpen}>
+            <PlusIcon fill="#923AFE" stroke="white" />
+            Create New
+          </PlusButton>
         </Grid>
       </Grid>
       <div
@@ -261,6 +278,7 @@ const Forms = () => {
           </List>
         )}
       </div>
+
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -325,6 +343,20 @@ const Forms = () => {
           </Box>
         </Fade>
       </Modal>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert
+          onClose={handleCloseSnack}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Copied to Clipboard
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

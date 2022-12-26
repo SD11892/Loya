@@ -259,7 +259,6 @@ export default function CreateWidget() {
       <div style={{ display: "flex", flexDirection: "row" }}>
         <div style={{ display: "flex" }}>
           <div
-            id="vertexAppbar"
             style={{
               float: "left",
               borderStyle: "ridge",
@@ -589,10 +588,7 @@ export default function CreateWidget() {
                           }}
                           sx={{ width: 56, height: 56 }}
                         >
-                          <img
-                            src={`http://35.170.73.191:3000/user.png`}
-                            width={"60px"}
-                          />
+                          <img src={`../../../../../user.png`} width={"60px"} />
                         </Avatar>
                       )}
 
@@ -781,7 +777,7 @@ export default function CreateWidget() {
                                             sx={{ width: 56, height: 56 }}
                                           >
                                             <img
-                                              src={`http://35.170.73.191:3000/user.png`}
+                                              src={`../../../../../user.png`}
                                               width={"60px"}
                                             />
                                           </Avatar>

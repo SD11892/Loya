@@ -1,16 +1,19 @@
 import React, { useEffect, useState } from "react";
 import { getByFormUrl } from "../../actions/form";
 import { createColor } from "material-ui-color";
-import { Grid, TextField, Rating } from "@mui/material";
+import { Grid, TextField, Rating, Avatar } from "@mui/material";
 import MainButton from "../../components/uielements/buttons/mainButton";
 import PageTitle from "../../components/uielements/pageTitle";
 import { Camera as CameraIcon } from "../../icons/camera";
 import PreviewContainer from "../../components/uielements/previewContainer";
 import TopLinkContainer from "../../components/uielements/topLinkContainer";
-import { FormStyle } from "./index.style";
 import { createTestimonial, getAll } from "../../actions/testimonial";
 import { useDispatch, useSelector } from "react-redux";
 import DefaultButton from "../../components/uielements/buttons/defaultButton";
+import UploadButton from "../../components/uielements/buttons/uploadButton";
+import FormLabel from "../../components/uielements/form/FormLabel";
+import FormInput from "../../components/uielements/form/FormInput";
+import FormGrid from "../../components/uielements/form/FormGrid";
 
 const FormView = () => {
   const url = window.location.pathname.slice(-6);
@@ -65,6 +68,7 @@ const FormView = () => {
 
   useEffect(() => {
     dispatch(getAll());
+
     getByFormUrl(url).then((res) => {
       const result = res.data.data.data;
       setPriColor(result.pColor);
@@ -83,28 +87,33 @@ const FormView = () => {
       );
     });
   }, []);
-  useEffect(() => {}, [visible, selectedImage]);
+  useEffect(() => {}, [visible, selectedImage, checked]);
 
   return (
     <div
       style={{
-        background: `${bgColor}`,
-        width: "100%",
-        height: "100vh",
+        alignItems: "center",
         display: "flex",
+        height: "100vh",
+        width: "100%",
         justifyContent: "center",
       }}
     >
-      <PreviewContainer style={{ display: visible === 1 ? "flex" : "none" }}>
+      <PreviewContainer
+        style={{
+          display: visible === 1 ? "flex" : "none",
+          flexDirection: "column",
+        }}
+      >
         <TopLinkContainer>
           <img
-            src={`http://35.170.73.191:3000/heart.svg`}
+            src={`../../../../../heart.png`}
             width="16px"
             height="16px"
             style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
           />
           <a
-            href="http://35.170.73.191:3000"
+            href="http://tryloya.com"
             style={{
               textDecoration: "unset",
             }}
@@ -112,27 +121,50 @@ const FormView = () => {
             Powered by Loya
           </a>
         </TopLinkContainer>
-        <Grid container style={{ marginBottom: "1rem", padding: "1.5rem" }}>
-          <img src={`data:image/png;base64,${data}`} alt="" width={"48px"} />
+        <Grid container style={{ marginBottom: "1rem" }}>
+          {selectedImage !== null ? (
+            <img
+              src={URL.createObjectURL(selectedImage)}
+              width={"48px"}
+              alt="not found"
+            />
+          ) : data !== "" ? (
+            <img src={`data:image/png;base64,${data}`} alt="" width={"48px"} />
+          ) : (
+            <img src={`../../../../../heart.png`} width={"32px"} />
+          )}
         </Grid>
-        <Grid container style={{ marginBottom: "1rem", padding: "1.5rem" }}>
+        <Grid container style={{ marginBottom: "1rem" }}>
           <PageTitle>{title}</PageTitle>
         </Grid>
         <Grid
           container
           style={{
-            padding: "1.5rem",
             marginBottom: "1rem",
             whiteSpace: "pre-wrap",
           }}
         >
           {message}
         </Grid>
-        <DefaultButton>
-          <CameraIcon />
-          Record a Video
-        </DefaultButton>
-        <Grid container style={{ marginBottom: "1rem" }}>
+        <Grid
+          container
+          style={{
+            marginBottom: "0.5rem",
+            display: checked[0] === "true" ? "flex" : "none",
+          }}
+        >
+          <DefaultButton primary={priColor}>
+            <CameraIcon />
+            Record a video
+          </DefaultButton>
+        </Grid>
+        <Grid
+          container
+          style={{
+            marginBottom: "1rem",
+            display: checked[1] === "true" ? "flex" : "none",
+          }}
+        >
           <DefaultButton
             onClick={() => {
               setVisible(2);
@@ -145,13 +177,13 @@ const FormView = () => {
       <PreviewContainer style={{ display: visible === 2 ? "flex" : "none" }}>
         <TopLinkContainer>
           <img
-            src={`http://35.170.73.191:3000/heart.svg`}
+            src={`../../../../../heart.png`}
             width="16px"
             height="16px"
             style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
           />
           <a
-            href="http://35.170.73.191:3000"
+            href="http://tryloya.com"
             style={{
               textDecoration: "unset",
             }}
@@ -160,7 +192,17 @@ const FormView = () => {
           </a>
         </TopLinkContainer>
         <Grid container style={{ marginTop: "1rem" }}>
-          <img src={`data:image/png;base64,${data}`} alt="" width={"48px"} />
+          {selectedImage !== null ? (
+            <img
+              src={URL.createObjectURL(selectedImage)}
+              width={"48px"}
+              alt="not found"
+            />
+          ) : data !== "" ? (
+            <img src={`data:image/png;base64,${data}`} alt="" width={"48px"} />
+          ) : (
+            <img src={`../../../../../heart.png`} width={"32px"} />
+          )}
         </Grid>
         <Grid container style={{ marginTop: "1rem" }}>
           <PageTitle>Write a text textimonial</PageTitle>
@@ -174,17 +216,20 @@ const FormView = () => {
         >
           {prompt}
         </Grid>
-        {checked[2] === true ? (
-          <Grid container style={{ marginTop: "1rem" }}>
-            <Rating
-              value={rating}
-              onChange={(event, newValue) => {
-                setRating(newValue);
-              }}
-            />
-          </Grid>
-        ) : null}
-
+        <Grid
+          container
+          style={{
+            marginTop: "1rem",
+          }}
+        >
+          <Rating
+            style={{ display: checked[2] === "true" ? "flex" : "none" }}
+            value={rating}
+            onChange={(event, newValue) => {
+              setRating(newValue);
+            }}
+          />
+        </Grid>
         <Grid
           container
           style={{
@@ -195,22 +240,14 @@ const FormView = () => {
           <TextField
             id="outlined-multiline-static"
             multiline
-            rows={8}
+            rows={4}
             placeholder="Write something nice ✨"
             style={{ width: "100%" }}
-            onChange={(e) => {
-              setContent(e.target.value);
-            }}
           />
         </Grid>
         <Grid container style={{ marginTop: "1rem" }}>
-          <MainButton
-            style={{
-              width: "100%",
-              alignItem: "center",
-              background: { priColor },
-              justifyContent: "center",
-            }}
+          <DefaultButton
+            primary={priColor}
             onClick={() => {
               let len = 0;
               if (key.indexOf("Email Address") !== -1) {
@@ -228,168 +265,24 @@ const FormView = () => {
             }}
           >
             Submit
-          </MainButton>
+          </DefaultButton>
         </Grid>
       </PreviewContainer>
-      <PreviewContainer style={{ display: visible === 3 ? "flex" : "none" }}>
+      <PreviewContainer
+        style={{
+          display: visible === 3 ? "flex" : "none",
+          alignSelf: "center",
+        }}
+      >
         <TopLinkContainer>
           <img
-            src={`http://35.170.73.191:3000/heart.svg`}
+            src={`../../../../../heart.png`}
             width="16px"
             height="16px"
             style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
           />
           <a
-            href="http://35.170.73.191:3000"
-            style={{
-              textDecoration: "unset",
-            }}
-          >
-            Powered by Loya
-          </a>
-        </TopLinkContainer>
-        <FormStyle style={{ height: "unset" }}>
-          <Grid container style={{ marginTop: "1rem" }}>
-            <img src={`data:image/png;base64,${data}`} alt="" width={"48px"} />
-          </Grid>
-          <Grid container style={{ marginTop: "1rem" }}>
-            <PageTitle>{title}</PageTitle>
-          </Grid>
-          <form class="mt-5 flex flex-col gap-4 text-black">
-            {inputingFields.map((value) => (
-              <div class="w-full">
-                <label
-                  for="name"
-                  class="block text-sm font-medium text-gray-800"
-                >
-                  <div class="flex items-center gap-2">
-                    {value}
-                    <div></div>
-                  </div>
-                </label>
-                <div class="flex w-full rounded-md text-sm shadow-sm duration-200 mt-2 ">
-                  <input
-                    name="name"
-                    id=""
-                    type="text"
-                    required=""
-                    spellcheck="false"
-                    placeholder="ex. John Smith"
-                    onChange={(e) => {
-                      values[key.indexOf(value)] = e.target.value;
-                      setValues([...values]);
-                    }}
-                    class=" block flex-grow rounded-r-md border disabled:opacity-60 py-2-5 px-2 text-sm focus:ring-ug-primary focus:border-ug-primary border-gray-300 rounded-md"
-                  />
-                </div>
-              </div>
-            ))}
-
-            <div class="flex flex-col gap-2">
-              <label
-                for="avatar"
-                class="block text-sm font-medium text-gray-800"
-              >
-                <div class="flex items-center gap-2">
-                  Your Avatar <div></div>
-                </div>
-              </label>
-              <div class="flex items-center gap-2">
-                <label tabindex="0">
-                  <span class="sr-only" aria-label="required">
-                    required
-                  </span>
-                  <div class="flex items-center gap-2">
-                    {selectedImage === null ? (
-                      <img
-                        src={`http://35.170.73.191:3000/user.png`}
-                        alt=""
-                        class="h-10 w-10 rounded-full object-cover"
-                      />
-                    ) : (
-                      <img
-                        src={URL.createObjectURL(selectedImage)}
-                        width={"48px"}
-                        alt="not found"
-                      />
-                    )}
-
-                    <button
-                      type="button"
-                      class="border shadow-sm rounded-md px-4 py-2 text-sm font-semibold"
-                      htmlFor="icon-button-file"
-                      onClick={() => {
-                        hiddenFileInput.current.click();
-                      }}
-                    >
-                      Pick an image
-                    </button>
-                  </div>
-                  <input
-                    ref={hiddenFileInput}
-                    type="file"
-                    multiple=""
-                    accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
-                    autocomplete="off"
-                    style={{ display: "none" }}
-                    onChange={(e) => {
-                      console.log(e.target.files[0]);
-                      setSelectedImage(e.target.files[0]);
-                    }}
-                  />
-                </label>
-                <div class="ml-2 text-gray-600"> </div>
-              </div>
-            </div>
-            {addingFields.map((value) => (
-              <div class="w-full">
-                <label
-                  for="name"
-                  class="block text-sm font-medium text-gray-800"
-                >
-                  <div class="flex items-center gap-2">
-                    {value}
-                    <div></div>
-                  </div>
-                </label>
-                <div class="flex w-full rounded-md text-sm shadow-sm duration-200 mt-2 ">
-                  <input
-                    name="name"
-                    id=""
-                    type="text"
-                    required=""
-                    spellcheck="false"
-                    placeholder="Enter a Label"
-                    onChange={(e) => {
-                      values[key.indexOf(value)] = e.target.value;
-                      setValues([...values]);
-                    }}
-                    class=" block flex-grow rounded-r-md border disabled:opacity-60 py-2-5 px-2 text-sm focus:ring-ug-primary focus:border-ug-primary border-gray-300 rounded-md"
-                  />
-                </div>
-              </div>
-            ))}
-            <Grid container style={{ marginTop: "1rem" }}>
-              <MainButton
-                style={{ justifyContent: "center", width: "100%" }}
-                onClick={onSubmit}
-              >
-                Submit
-              </MainButton>
-            </Grid>
-          </form>
-        </FormStyle>
-      </PreviewContainer>
-      <PreviewContainer style={{ display: visible === 4 ? "flex" : "none" }}>
-        <TopLinkContainer>
-          <img
-            src={`http://35.170.73.191:3000/heart.svg`}
-            width="16px"
-            height="16px"
-            style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
-          />
-          <a
-            href="http://35.170.73.191:3000"
+            href="http://tryloya.com"
             style={{
               textDecoration: "unset",
             }}
@@ -398,11 +291,135 @@ const FormView = () => {
           </a>
         </TopLinkContainer>
         <Grid container style={{ marginTop: "1rem" }}>
+          {selectedImage !== null ? (
+            <img
+              src={URL.createObjectURL(selectedImage)}
+              width={"48px"}
+              alt="not found"
+            />
+          ) : data !== "" ? (
+            <img src={`data:image/png;base64,${data}`} alt="" width={"48px"} />
+          ) : (
+            <img src={`../../../../../heart.png`} width={"32px"} />
+          )}
+        </Grid>
+        <Grid container style={{ marginTop: "1rem" }}>
+          <PageTitle>Almost done</PageTitle>
+        </Grid>
+        <FormGrid>
+          {inputingFields.map((value) => (
+            <>
+              <FormLabel>{value}</FormLabel>
+              <FormInput
+                onChange={(e) => {
+                  values[key.indexOf(value)] = e.target.value;
+                  setValues([...values]);
+                }}
+              />
+            </>
+          ))}
+
+          <div>
+            <FormLabel>Avatar</FormLabel>
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              {selectedImage !== null ? (
+                <Avatar
+                  style={{
+                    borderRadius: "50%",
+                    border: "1px solid #ddd",
+                  }}
+                >
+                  <img
+                    src={URL.createObjectURL(selectedImage)}
+                    width={"48px"}
+                    alt="not found"
+                  />
+                </Avatar>
+              ) : selectedImage === null && data !== "" ? (
+                <Avatar
+                  style={{
+                    borderRadius: "50%",
+                    border: "1px solid #ddd",
+                  }}
+                >
+                  <img src={`data:image/png;base64,${data}`} width={"48px"} />
+                </Avatar>
+              ) : (
+                <Avatar
+                  style={{
+                    borderRadius: "50%",
+                    border: "1px solid #ddd",
+                  }}
+                >
+                  <img src={`../../../../../user.png`} alt="" width={"48px"} />
+                </Avatar>
+              )}
+              <UploadButton
+                htmlFor="icon-button-file"
+                onClick={() => {
+                  hiddenFileInput.current.click();
+                }}
+              >
+                Pick an image
+              </UploadButton>
+            </div>
+            <input
+              ref={hiddenFileInput}
+              type="file"
+              multiple=""
+              accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
+              autocomplete="off"
+              style={{ display: "none" }}
+              onChange={(e) => {
+                console.log(e.target.files[0]);
+                setSelectedImage(e.target.files[0]);
+              }}
+            />
+          </div>
+          {addingFields.length === 0
+            ? null
+            : addingFields.map((value, index) => {
+                return (
+                  <FormGrid>
+                    <FormLabel>{addingFields[index]}</FormLabel>
+                    <FormInput placeholder="Enter details here" />
+                  </FormGrid>
+                );
+              })}
+          <DefaultButton primary={priColor} onClick={onSubmit}>
+            Submit
+          </DefaultButton>
+        </FormGrid>
+      </PreviewContainer>
+      <PreviewContainer style={{ display: visible === 4 ? "flex" : "none" }}>
+        <TopLinkContainer>
           <img
-            src={`http://35.170.73.191:3000/heart.svg`}
-            width="48px"
-            height="48px"
+            src={`../../../../../heart.png`}
+            width="16px"
+            height="16px"
+            style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
           />
+          <a
+            href="http://tryloya.com"
+            style={{
+              textDecoration: "unset",
+            }}
+          >
+            Powered by Loya
+          </a>
+        </TopLinkContainer>
+        <Grid container style={{ marginTop: "1rem" }}>
+          {selectedImage !== null ? (
+            <img
+              src={URL.createObjectURL(selectedImage)}
+              width={"48px"}
+              alt="not found"
+            />
+          ) : selectedImage === null && data !== "" ? (
+            <img src={`data:image/png;base64,${data}`} alt="" width={"48px"} />
+          ) : (
+            <img src={`../../../../../heart.png`} width={"32px"} />
+          )}
         </Grid>
         <Grid container style={{ marginTop: "1rem" }}>
           <PageTitle>{thankTitle}</PageTitle>

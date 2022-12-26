@@ -14,6 +14,7 @@ exports.signup = (req, res) => {
     username: req.query.username,
     email: req.query.email,
     password: bcrypt.hashSync(req.query.password, 8),
+    project: req.query.project,
   })
     .then((user) => {
       res.send({ message: "User was registered successfully!" });
@@ -43,6 +44,7 @@ exports.verify = (req, res) => {
 };
 
 exports.signin = (req, res) => {
+  console.log("signinAction herer");
   User.findOne({
     where: {
       email: req.query.email,

@@ -4,12 +4,8 @@ const bodyParser = require("body-parser");
 global.__basedir = __dirname;
 const app = express();
 
-var corsOptions = {
-  credentials: true, //access-control-allow-credentials:true
-  optionSuccessStatus: 200,
-  AccessControlAllowOrigin: "http://35.170.73.191:8080",
-};
-app.use(cors(corsOptions));
+
+app.use(cors());
 
 app.use(require("./routes/auth.routes"));
 app.use(require("./routes/form.routes"));

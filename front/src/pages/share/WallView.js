@@ -1,5 +1,6 @@
 import * as React from "react";
 import Site from "../../components/wall/Site";
+import Sitetwo from "../../components/wall/Sitetwo";
 import { getAll } from "../../actions/testimonial";
 import { useDispatch, useSelector } from "react-redux";
 import { getByWallUrl, saveWall } from "../../actions/wall";
@@ -63,16 +64,28 @@ const WallView = () => {
           overflowX: "unset",
         }}
       >
-        <Site
-          testimonials={testimonials}
-          pColor={pColor}
-          keys={key}
-          values={value}
-          pTitle={pTitle}
-          subTitle={subTitle}
-          ctaTitle={ctaTitle}
-          ctaUrl={ctaUrl}
-        />
+        {theme === 1 ? (
+          <Site
+            testimonials={testimonials}
+            pColor={pColor}
+            keys={key}
+            values={value}
+            pTitle={pTitle}
+            subTitle={subTitle}
+            ctaTitle={ctaTitle}
+            ctaUrl={ctaUrl}
+          />
+        ) : (
+          <Sitetwo
+            testimonials={testimonials}
+            keys={key}
+            values={value}
+            pTitle={pTitle}
+            subTitle={subTitle}
+            ctaTitle={ctaTitle}
+            ctaUrl={ctaUrl}
+          />
+        )}
       </Grid>
     </Grid>
   );

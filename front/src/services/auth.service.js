@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://35.170.73.191:8080/api/auth/";
+const API_URL = "/api/auth/";
 
 const register = (username, email, password) => {
   return axios.post(API_URL + "signup", null, {
@@ -44,6 +44,7 @@ const login = (email, password) => {
       },
     })
     .then((response) => {
+      console.log("response=", response);
       localStorage.setItem("user", JSON.stringify(response.data));
       return {
         CODE: "200",
@@ -52,6 +53,7 @@ const login = (email, password) => {
       };
     })
     .catch((err) => {
+      console.log(err);
       if (err.code === "ERR_BAD_REQUEST") {
         return { CODE: "404", message: "Incorrect User or Password" };
       }
