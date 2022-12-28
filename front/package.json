@@ -2,7 +2,7 @@
   "name": "front",
   "version": "0.1.0",
   "private": true,
-  "proxy": "http://35.170.73.191:8080",
+  "proxy": "http://192.168.105.43:8080",
   "dependencies": {
     "@emotion/react": "^11.10.5",
     "@emotion/styled": "^11.10.5",
@@ -23,6 +23,7 @@
     "moment": "^2.29.4",
     "react": "^17.0.2",
     "react-beautiful-dnd": "^13.1.1",
+    "react-copy-to-clipboard": "^5.1.0",
     "react-dom": "^17.0.2",
     "react-draggable": "^4.4.5",
     "react-google-login": "^5.2.2",

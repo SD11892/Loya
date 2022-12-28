@@ -20,7 +20,7 @@ const SiderButton = (ComponentName) => styled(ComponentName)`
 `;
 const MenuButton = (ComponentName) => styled(ComponentName)`
    {
-    &.MuiButton-root {
+    &.MuiToggleButton-root {
       display: flex;
       flex-direction: row;
       width: 100%;
@@ -34,11 +34,18 @@ const MenuButton = (ComponentName) => styled(ComponentName)`
       padding-left: 0.5rem;
       padding-right: 0.5rem;
       letter-spacing: 0.02rem;
+      border: unset;
     }
-    &.MuiButton-root:hover {
+    &.MuiToggleButton-root:hover {
       background: #e4e4e7b3;
+      border-radius: 6px;
     }
-    &.MuiButton-root:focus {
+    &.MuiToggleButton-root:focus {
+      background: #e4e4e7b3;
+      border-radius: 6px;
+    }
+    &.MuiToggleButton-root.Mui-selected {
+      border-radius: 6px;
       background: #e4e4e7b3;
     }
   }
@@ -227,12 +234,34 @@ const TabButton = (ComponentName) => styled(ComponentName)`
    {
     &.MuiToggleButton-root {
       padding: 4px;
-      .Mui-selected {
-        background-color: #fff;
-      }
     }
     &.MuiToggleButton-root.Mui-selected {
       background-color: #fff;
+    }
+  }
+`;
+const EmbedToolButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiToggleButton-root {
+      border: unset;
+      color: white;
+      font-size: 0.75rem;
+      margin-right: 0.5rem;
+    }
+    &.MuiToggleButton-root.Mui-selected {
+      background-color: rgb(75, 85, 99);
+      border-radius: 0.5rem;
+      color: white;
+    }
+    &.MuiToggleButton-root:hover {
+      background-color: rgb(75, 85, 99);
+      border-radius: 0.5rem;
+      color: white;
+    }
+    &.MuiToggleButton-root:focus {
+      background-color: rgb(75, 85, 99);
+      border-radius: 0.5rem;
+      color: white;
     }
   }
 `;
@@ -253,4 +282,5 @@ export {
   AddButton,
   ImageButton,
   TabButton,
+  EmbedToolButton,
 };

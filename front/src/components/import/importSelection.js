@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import BackwardButton from "../uielements/buttons/backwardButton";
-import { Grid } from "@mui/material";
+import { Grid, ToggleButtonGroup } from "@mui/material";
 import PageTitle from "../uielements/pageTitle";
 import MenuButton from "../uielements/buttons/menuButton";
 import { Google } from "../../icons/google";
@@ -9,7 +9,7 @@ import SiderText from "../uielements/siderText";
 import { Pencil as PencilIcon } from "../../icons/pencil";
 import { Camera as CameraIcon } from "../../icons/camera";
 
-export const ImportSelection = () => {
+export const ImportSelection = (props) => {
   const navigate = useNavigate();
   return (
     <div
@@ -19,7 +19,7 @@ export const ImportSelection = () => {
         overflowY: "auto",
       }}
     >
-      <Grid container pt={"2rem"}>
+      <Grid container>
         <BackwardButton
           onClick={() => {
             navigate("/testimonials");
@@ -35,22 +35,47 @@ export const ImportSelection = () => {
           xs={12}
           style={{ paddingTop: "1rem", borderTop: "1px solid #ddd" }}
         >
-          <MenuButton active="true">
-            <PencilIcon />
-            <SiderText>Text Testimonial</SiderText>
-          </MenuButton>
-          <MenuButton>
-            <CameraIcon />
-            <SiderText>Video Testimonial</SiderText>
-          </MenuButton>
-          <MenuButton>
-            <Google />
-            <SiderText>Google</SiderText>
-          </MenuButton>
-          <MenuButton>
-            <Facebook />
-            <SiderText>Facebook</SiderText>
-          </MenuButton>
+          <ToggleButtonGroup
+            value={props.select}
+            style={{ flexDirection: "column", width: "100%" }}
+          >
+            <MenuButton
+              value="text"
+              onClick={() => {
+                props.setSelect("text");
+              }}
+            >
+              <PencilIcon />
+              <SiderText>Text Testimonial</SiderText>
+            </MenuButton>
+            <MenuButton
+              value="video"
+              onClick={() => {
+                props.setSelect("video");
+              }}
+            >
+              <CameraIcon />
+              <SiderText>Video Testimonial</SiderText>
+            </MenuButton>
+            <MenuButton
+              value="google"
+              onClick={() => {
+                props.setSelect("google");
+              }}
+            >
+              <Google />
+              <SiderText>Google</SiderText>
+            </MenuButton>
+            <MenuButton
+              value="facebook"
+              onClick={() => {
+                props.setSelect("facebook");
+              }}
+            >
+              <Facebook />
+              <SiderText>Facebook</SiderText>
+            </MenuButton>
+          </ToggleButtonGroup>
         </Grid>
       </Grid>
     </div>

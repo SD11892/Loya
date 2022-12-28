@@ -18,11 +18,23 @@ module.exports = (sequelize, Sequelize) => {
     bgColor: {
       type: Sequelize.STRING,
     },
+    blColor: {
+      type: Sequelize.STRING,
+    },
+    bfColor: {
+      type: Sequelize.STRING,
+    },
+    fgColor: {
+      type: Sequelize.STRING,
+    },
     txtColor: {
       type: Sequelize.STRING,
     },
     ratingColor: {
       type: Sequelize.STRING,
+    },
+    theme: {
+      type: Sequelize.INTEGER,
     },
   });
 

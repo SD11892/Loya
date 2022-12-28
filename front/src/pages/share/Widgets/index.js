@@ -16,6 +16,8 @@ import ListItemText from "@mui/material/ListItemText";
 import ListItemAvatar from "@mui/material/ListItemAvatar";
 import Checkbox from "@mui/material/Checkbox";
 import Avatar from "@mui/material/Avatar";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 import PlusButton from "../../../components/uielements/buttons/plusButton";
 import PageTitle from "../../../components/uielements/pageTitle";
 import Description from "../../../components/uielements/description";
@@ -52,21 +54,10 @@ const style = {
   pr: 4,
   pb: 4,
 };
-const copyContent = async (info) => {
-  let text = window.location.href + `/p/${info.url}`;
-    
-    try {
-      console.log("text=", text);
-      var inputc = document.body.appendChild(document.createElement("input"));
-      inputc.value = text;
-      inputc.select();
-      document.execCommand('copy');
-      inputc.parentNode.removeChild(inputc);
-      alert("Page URL Copied to Clipboard");
-    } catch (err) {
-      console.error("Failed to copy: ", err);
-    }
-};
+
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
 
 const Widgets = () => {
   const dispatch = useDispatch();
@@ -77,10 +68,26 @@ const Widgets = () => {
   const [open, setOpen] = React.useState(false);
   const [formName, setFormName] = React.useState("New Testimonial Form");
   const [text, setText] = React.useState("New Testimonial Form");
+  const [openSnack, setOpenSnack] = React.useState(false);
 
   const navigate = useNavigate();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+
+  const copyContent = async (info) => {
+    let text = window.location.href + `/p/${info.url}`;
+
+    try {
+      var inputc = document.body.appendChild(document.createElement("input"));
+      inputc.value = text;
+      inputc.select();
+      document.execCommand("copy");
+      inputc.parentNode.removeChild(inputc);
+      setOpenSnack(true);
+    } catch (err) {
+      console.error("Failed to copy: ", err);
+    }
+  };
 
   const handleCreate = () => {
     createForm(formName)
@@ -99,6 +106,15 @@ const Widgets = () => {
         console.log("createErr=", err);
       });
   };
+
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+  };
+
   useEffect(() => {
     setFormName(text);
   }, [text]);
@@ -328,6 +344,20 @@ const Widgets = () => {
           </Box>
         </Fade>
       </Modal>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert
+          onClose={handleCloseSnack}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Copied to Clipboard
+        </Alert>
+      </Snackbar>
     </div>
   );
 };

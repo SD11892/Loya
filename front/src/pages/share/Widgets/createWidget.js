@@ -6,7 +6,7 @@ import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
 import Editor from "react-simple-code-editor";
 import SyntaxHighlighter from "react-syntax-highlighter";
 import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-// import Link from '@mui/material/Link';
+import { CopyToClipboard } from "react-copy-to-clipboard";
 
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
@@ -18,7 +18,6 @@ import IconButton from "@mui/material/IconButton";
 import Grid from "@mui/material/Grid";
 import Rating from "@mui/material/Rating";
 import Avatar from "@mui/material/Avatar";
-import Card from "@mui/material/Card";
 import Select from "@mui/material/Select";
 import MenuItem from "@mui/material/MenuItem";
 import { purple } from "@mui/material/colors";
@@ -30,10 +29,14 @@ import Slide from "@mui/material/Slide";
 import Dialog from "@mui/material/Dialog";
 import Badge from "@mui/material/Badge";
 import { Drawer } from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
 import Picker from "../../../components/uielements/picker";
 import EmbedButton from "../../../components/uielements/buttons/embedButton";
+import EmbedToolButton from "../../../components/uielements/buttons/embedToolButton";
 import ImageCard from "../../../components/uielements/imageCard";
+import WidgetCard from "../../../components/uielements/widgetCard";
 import FormLabel from "../../../components/uielements/form/FormLabel";
 import PageTitle from "../../../components/uielements/pageTitle";
 import Description from "../../../components/uielements/description";
@@ -45,6 +48,7 @@ import { Pencil as PencilIcon } from "../../../icons/pencil";
 import { MagicPencil as MagicPencilIcon } from "../../../icons/magicPencil";
 import { Switch as SwitchIcon } from "../../../icons/switch";
 import { Close as CloseIcon } from "../../../icons/close";
+import { CopyEmbed as CopyEmbedIcon } from "../../../icons/copyEmbed";
 
 import {
   getAll,
@@ -55,7 +59,7 @@ import {
 import { getByFormUrl, saveForm } from "../../../actions/testimonialForm";
 
 import { createColor } from "material-ui-color";
-import { isEmpty } from "../../../util/isEmpty";
+import WidgetBubble from "../../../components/widgets/widgetBubble";
 
 const Div = styled("div")(({ theme }) => ({
   ...theme.typography.button,
@@ -84,6 +88,10 @@ const Transition = React.forwardRef(function Transition(props, ref) {
   return <Slide direction="up" ref={ref} {...props} />;
 });
 
+const Alert = React.forwardRef(function Alert(props, ref) {
+  return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
+});
+
 const infor = {
   url: "",
   spacing: "",
@@ -92,6 +100,10 @@ const infor = {
   bgColor: "",
   txtColor: "",
   ratingColor: "",
+  bfColor: "",
+  blColor: "",
+  fgColor: "",
+  theme: 1,
 };
 
 export default function CreateWidget() {
@@ -102,10 +114,15 @@ export default function CreateWidget() {
     .replace("//", "");
 
   const [view, setView] = React.useState("theme");
+  const [embed, setEmbed] = React.useState("js");
   const [bgColor, setBgColor] = React.useState("");
+  const [bfColor, setBfColor] = React.useState("");
+  const [blColor, setBlColor] = React.useState("");
+  const [fgColor, setFgColor] = React.useState("");
   const [txtColor, setTxtColor] = React.useState("");
   const [ratingColor, setRatingColor] = React.useState("");
   const [space, setSpace] = React.useState("");
+  const [theme, setTheme] = React.useState(1);
   const [shadow, setShadow] = React.useState("");
   const [radius, setRadius] = React.useState("");
   const [open, setOpen] = React.useState(false);
@@ -115,15 +132,20 @@ export default function CreateWidget() {
     `<div class="loya-frame-embed" data-id="${url}"></div>
 <script defer type="text/javascript" src="http://192.168.105.43:3000/embedTemplate.js"></script>`
   );
+  const [openSnack, setOpenSnack] = React.useState(false);
+  const [openCopySnack, setOpenCopySnack] = React.useState(false);
 
   const handleChange = (even, nextView) => {
     setView(nextView);
+  };
+  const handleEmbedChange = (even, nextView) => {
+    setEmbed(nextView);
   };
   const handleSave = () => {
     itemList.map((row, index) => {
       updateTestimonial(row, row.data);
       if (index === itemList.length - 1) {
-        alert("Save Changed");
+        setOpenSnack(true);
       }
     });
     infor.url = url;
@@ -133,6 +155,10 @@ export default function CreateWidget() {
     infor.bgColor = bgColor;
     infor.txtColor = txtColor;
     infor.ratingColor = ratingColor;
+    infor.theme = theme;
+    infor.bfColor = bfColor;
+    infor.blColor = blColor;
+    infor.fgColor = fgColor;
     saveForm(infor);
   };
 
@@ -176,6 +202,15 @@ export default function CreateWidget() {
     setItemList(updatedList);
   };
 
+  const handleCloseSnack = (event, reason) => {
+    if (reason === "clickaway") {
+      return;
+    }
+
+    setOpenSnack(false);
+    setOpenCopySnack(false);
+  };
+
   React.useEffect(() => {
     dispatch(getAll());
     getByFormUrl(url)
@@ -187,6 +222,10 @@ export default function CreateWidget() {
         setBgColor(result.bgColor);
         setTxtColor(result.txtColor);
         setRatingColor(result.ratingColor);
+        setTheme(result.theme);
+        setBlColor(result.blColor);
+        setBfColor(result.bfColor);
+        setFgColor(result.fgColor);
       })
       .catch((err) => {
         alert("Invalid Form");
@@ -209,6 +248,10 @@ export default function CreateWidget() {
     itemList,
     testimonials,
     code,
+    theme,
+    fgColor,
+    bfColor,
+    blColor,
   ]);
 
   const navigate = useNavigate();
@@ -318,6 +361,7 @@ export default function CreateWidget() {
                       setBgColor("white");
                       setTxtColor("black");
                       setRatingColor("#FBBF24");
+                      setTheme(1);
                     }}
                   >
                     <img
@@ -333,6 +377,7 @@ export default function CreateWidget() {
                       setBgColor("black");
                       setTxtColor("white");
                       setRatingColor("#FBBF24");
+                      setTheme(1);
                     }}
                   >
                     <img
@@ -348,6 +393,7 @@ export default function CreateWidget() {
                       setBgColor("#234A46");
                       setTxtColor("white");
                       setRatingColor("#B9E1D8");
+                      setTheme(1);
                     }}
                   >
                     <img
@@ -363,6 +409,7 @@ export default function CreateWidget() {
                       setBgColor("#260D5C");
                       setTxtColor("white");
                       setRatingColor("violet");
+                      setTheme(1);
                     }}
                   >
                     <img
@@ -375,9 +422,12 @@ export default function CreateWidget() {
                 <ImageCard>
                   <ButtonBase
                     onClick={() => {
-                      setBgColor("white");
+                      setFgColor("white");
+                      setBfColor("#6701e6");
+                      setBlColor("#85fc78");
                       setTxtColor("black");
-                      setRatingColor("transparent");
+                      setRatingColor("#FBBF24");
+                      setTheme(2);
                     }}
                   >
                     <img
@@ -390,9 +440,12 @@ export default function CreateWidget() {
                 <ImageCard>
                   <ButtonBase
                     onClick={() => {
-                      setBgColor("#1E51EF");
+                      setFgColor("#1E51EF");
+                      setBfColor("#9ffd95");
+                      setBlColor("#85fc78");
                       setTxtColor("white");
-                      setRatingColor("transparent");
+                      setRatingColor("#FBB24");
+                      setTheme(2);
                     }}
                   >
                     <img
@@ -462,7 +515,7 @@ export default function CreateWidget() {
                 <FormLabel>Shadow Size</FormLabel>
                 <Select
                   onChange={handleShadowChange}
-                  value={shadow}
+                  value={`${shadow}`}
                   displayEmpty
                 >
                   <MenuItem value="none">None</MenuItem>
@@ -474,7 +527,7 @@ export default function CreateWidget() {
                 <FormLabel>Border Radius</FormLabel>
                 <Select
                   onChange={handleRadiusChange}
-                  value={radius}
+                  value={`${radius}`}
                   displayEmpty
                 >
                   <MenuItem value="none">None</MenuItem>
@@ -513,35 +566,12 @@ export default function CreateWidget() {
             }}
           >
             {itemList.map((row) =>
-              row.status === 1 ? (
-                <Card
-                  style={{
-                    width: "20rem",
-                    padding: "1rem",
-                    height: "min-content",
-                    background: bgColor,
-                    color: txtColor,
-                    borderRadius:
-                      radius === "small"
-                        ? "0.375rem"
-                        : radius === "medium"
-                        ? "0.5rem"
-                        : radius === "large"
-                        ? "0.75rem"
-                        : radius === "extra large"
-                        ? "1rem"
-                        : "unset",
-                    boxShadow:
-                      shadow === "small"
-                        ? "0 1px 2px 0 rgb(0, 0, 0 / 0.05)"
-                        : shadow === "medium"
-                        ? "0 1px 3px 0 rgb(0, 0, 0 / 0.1), 0 1px 2px -1px rgb(0, 0, 0 / 0.1)"
-                        : shadow === "large"
-                        ? "0 4px 6px -1px rgb(0, 0, 0 / 0.1), 0 2px 4px -2px rgb(0, 0, 0 / 0.1)"
-                        : shadow === "extra large"
-                        ? "0 10px 15px -3px rgb(0, 0, 0 / 0.1), 0 4px 6px -4px rgb(0, 0, 0 / 0.1)"
-                        : "unset",
-                  }}
+              row.status === 1 && theme === 1 ? (
+                <WidgetCard
+                  bgColor={bgColor}
+                  txtColor={txtColor}
+                  radius={radius}
+                  shadow={shadow}
                 >
                   <Grid
                     container
@@ -619,7 +649,27 @@ export default function CreateWidget() {
                       {moment(row.date).format("ll")}
                     </Grid>
                   </Grid>
-                </Card>
+                </WidgetCard>
+              ) : row.status === 1 && theme === 2 ? (
+                <WidgetBubble
+                  fgColor={fgColor}
+                  bgColor={bgColor}
+                  ratingColor={ratingColor}
+                  content={row.content}
+                  rating={row.rating}
+                  bfColor={bfColor}
+                  blColor={blColor}
+                  name={row.value.split(",")[0]}
+                  txtColor={txtColor}
+                  headline={
+                    row.key.indexOf("Headline") !== -1
+                      ? row.value.split(",")[
+                          row.key.split(",").indexOf("Headline")
+                        ]
+                      : null
+                  }
+                  data={row.data !== null ? row.data.data : null}
+                />
               ) : null
             )}
           </div>
@@ -700,34 +750,11 @@ export default function CreateWidget() {
                                   badgeContent={index + 1}
                                   color="secondary"
                                 >
-                                  <Card
-                                    style={{
-                                      width: "20rem",
-                                      padding: "1rem",
-                                      height: "min-content",
-                                      background: bgColor,
-                                      color: txtColor,
-                                      borderRadius:
-                                        radius === "small"
-                                          ? "0.375rem"
-                                          : radius === "medium"
-                                          ? "0.5rem"
-                                          : radius === "large"
-                                          ? "0.75rem"
-                                          : radius === "extra large"
-                                          ? "1rem"
-                                          : "unset",
-                                      boxShadow:
-                                        shadow === "small"
-                                          ? "0 1px 2px 0 rgb(0, 0, 0 / 0.05)"
-                                          : shadow === "medium"
-                                          ? "0 1px 3px 0 rgb(0, 0, 0 / 0.1), 0 1px 2px -1px rgb(0, 0, 0 / 0.1)"
-                                          : shadow === "large"
-                                          ? "0 4px 6px -1px rgb(0, 0, 0 / 0.1), 0 2px 4px -2px rgb(0, 0, 0 / 0.1)"
-                                          : shadow === "extra large"
-                                          ? "0 10px 15px -3px rgb(0, 0, 0 / 0.1), 0 4px 6px -4px rgb(0, 0, 0 / 0.1)"
-                                          : "unset",
-                                    }}
+                                  <WidgetCard
+                                    bgColor={bgColor}
+                                    txtColor={txtColor}
+                                    radius={radius}
+                                    shadow={shadow}
                                   >
                                     <Grid
                                       container
@@ -821,7 +848,7 @@ export default function CreateWidget() {
                                         {moment(item.date).format("ll")}
                                       </Grid>
                                     </Grid>
-                                  </Card>
+                                  </WidgetCard>
                                 </Badge>
                               </div>
                             )}
@@ -885,59 +912,48 @@ export default function CreateWidget() {
                   display: "flex",
                 }}
               >
-                <ButtonBase
-                  style={{
-                    fontWeight: 500,
-                    fontSize: "0.75rem",
-                    lineHeight: "1rem",
-                    padding: "0.125rem",
-                    background: "rgb(75,85,99)",
-                  }}
-                  onClick={() => {
-                    let url;
-                    setCode();
-                  }}
+                <ToggleButtonGroup
+                  value={embed}
+                  onChange={handleEmbedChange}
+                  exclusive
                 >
-                  Javascript
-                </ButtonBase>
-                <ButtonBase
-                  style={{
-                    fontWeight: 500,
-                    fontSize: "0.75rem",
-                    lineHeight: "1rem",
-                    padding: "0.125rem",
-                  }}
-                >
-                  URL
-                </ButtonBase>
-                <div style={{ flexGrow: 1 }}></div>
-                <button>
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="18"
-                    height="18"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                    fill="none"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    class=""
+                  <EmbedToolButton
+                    value="js"
+                    onClick={() => {
+                      setCode(
+                        `<div class="loya-frame-embed" data-id="${url}"></div>\n<script defer type="text/javascript" src="http://192.168.105.43:3000/embedTemplate.js"></script>`
+                      );
+                    }}
                   >
-                    <rect
-                      x="9"
-                      y="9"
-                      width="13"
-                      height="13"
-                      rx="2"
-                      ry="2"
-                    ></rect>
-                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                  </svg>
-                </button>
+                    Javascript
+                  </EmbedToolButton>
+                  <EmbedToolButton
+                    value="url"
+                    onClick={() => {
+                      setCode(window.location.href);
+                    }}
+                  >
+                    URL
+                  </EmbedToolButton>
+                </ToggleButtonGroup>
+                <div style={{ flexGrow: 1 }}></div>
+                <CopyToClipboard
+                  text={code}
+                  onCopy={() => {
+                    setOpenCopySnack(true);
+                  }}
+                >
+                  <IconButton>
+                    <CopyEmbedIcon stroke="white" />
+                  </IconButton>
+                </CopyToClipboard>
               </div>
               <div>
-                <SyntaxHighlighter language="javascript" style={docco}>
+                <SyntaxHighlighter
+                  id="myInput"
+                  language="javascript"
+                  style={docco}
+                >
                   {code}
                 </SyntaxHighlighter>
               </div>
@@ -945,6 +961,34 @@ export default function CreateWidget() {
           </Grid>
         </div>
       </Drawer>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openSnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert
+          onClose={handleCloseSnack}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Save Changed
+        </Alert>
+      </Snackbar>
+      <Snackbar
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        open={openCopySnack}
+        autoHideDuration={6000}
+        onClose={handleCloseSnack}
+      >
+        <Alert
+          onClose={handleCloseSnack}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Copied to Clipboard
+        </Alert>
+      </Snackbar>
     </Box>
   );
 }

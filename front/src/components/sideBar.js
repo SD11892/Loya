@@ -1,7 +1,14 @@
 import * as React from "react";
 import { useNavigate } from "react-router-dom";
 import { deepPurple } from "@mui/material/colors";
-import { Grid, Avatar, Popover, Typography } from "@mui/material";
+import {
+  Grid,
+  Avatar,
+  Popover,
+  Typography,
+  ToggleButton,
+  ToggleButtonGroup,
+} from "@mui/material";
 import SideDrawer from "./uielements/drawer";
 import SiderButton from "./uielements/buttons/siderButton";
 import MenuButton from "./uielements/buttons/menuButton";
@@ -18,6 +25,9 @@ import { DownArrow } from "../icons/downArrow";
 
 export const Sidebar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
+  const [menu, setMenu] = React.useState(
+    `${window.location.pathname.replace(/\//g, "")}`
+  );
   const navigate = useNavigate();
 
   const open = Boolean(anchorEl);
@@ -29,7 +39,11 @@ export const Sidebar = () => {
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+  const handleToggleChange = (event, newAlignment) => {
+    setMenu(newAlignment);
+  };
 
+  React.useEffect(() => {}, [menu]);
   return (
     <SideDrawer open variant="permanent" style={{ width: "14rem" }}>
       <SiderButton onClick={handleClick}>
@@ -48,81 +62,80 @@ export const Sidebar = () => {
         </div>
         <DownArrow />
       </SiderButton>
-      <Grid container mb={2}>
-        <Label>COLLECT</Label>
-        <Grid xs={12}>
-          <MenuButton
-            onClick={() => {
-              navigate("/forms");
-            }}
-          >
-            <FormIcon />
-            <SiderText>Forms</SiderText>
-          </MenuButton>
+
+      <ToggleButtonGroup
+        value={menu}
+        onChange={handleToggleChange}
+        style={{ flexDirection: "column" }}
+      >
+        <Grid container mb={2}>
+          <Label>COLLECT</Label>
         </Grid>
-        <Grid xs={12}>
-          <MenuButton
-            onClick={() => {
-              navigate("/import");
-            }}
-          >
-            <ImportIcon />
-            <SiderText>Import Testimonials</SiderText>
-          </MenuButton>
+        <MenuButton
+          value="forms"
+          onClick={() => {
+            navigate("/forms");
+          }}
+        >
+          <FormIcon />
+          <SiderText>Forms</SiderText>
+        </MenuButton>
+        <MenuButton
+          value="import"
+          onClick={() => {
+            navigate("/import");
+          }}
+        >
+          <ImportIcon />
+          <SiderText>Import Testimonials</SiderText>
+        </MenuButton>
+        <Grid container mb={2}>
+          <Label>MANAGE</Label>
         </Grid>
-      </Grid>
-      <Grid container mb={2}>
-        <Label>MANAGE</Label>
-        <Grid xs={12}>
-          <MenuButton
-            onClick={() => {
-              navigate("/testimonials");
-            }}
-          >
-            <TestimonialIcon />
-            <SiderText>Testmonials</SiderText>
-          </MenuButton>
+        <MenuButton
+          value="testimonial"
+          onClick={() => {
+            navigate("/testimonials");
+          }}
+        >
+          <TestimonialIcon />
+          <SiderText>Testmonials</SiderText>
+        </MenuButton>
+        <MenuButton
+          value="search"
+          onClick={() => {
+            navigate("/search");
+          }}
+        >
+          <SearchIcon />
+          <SiderText>Search</SiderText>
+        </MenuButton>
+        <MenuButton value="tags">
+          <TagsIcon />
+          <SiderText>Tags</SiderText>
+        </MenuButton>
+        <Grid container mb={2}>
+          <Label>SHARE</Label>
         </Grid>
-        <Grid xs={12}>
-          <MenuButton
-            onClick={() => {
-              navigate("/search");
-            }}
-          >
-            <SearchIcon />
-            <SiderText>Search</SiderText>
-          </MenuButton>
-        </Grid>
-        <Grid xs={12}>
-          <MenuButton>
-            <TagsIcon />
-            <SiderText>Tags</SiderText>
-          </MenuButton>
-        </Grid>
-      </Grid>
-      <Grid container mb={2}>
-        <Label>SHARE</Label>
-        <Grid xs={12}>
-          <MenuButton
-            onClick={() => {
-              navigate("/walls");
-            }}
-          >
-            <WallIcon />
-            <SiderText>Wall of Love</SiderText>
-          </MenuButton>
-        </Grid>
-        <Grid xs={12}>
-          <MenuButton
-            onClick={() => {
-              navigate("/widgets");
-            }}
-          >
-            <WidgetIcon />
-            <SiderText>Widgets</SiderText>
-          </MenuButton>
-        </Grid>
-      </Grid>
+        <MenuButton
+          value="walls"
+          onClick={() => {
+            navigate("/walls");
+          }}
+        >
+          <WallIcon />
+          <SiderText>Wall of Love</SiderText>
+        </MenuButton>
+        <MenuButton
+          value="widgets"
+          onClick={() => {
+            navigate("/widgets");
+          }}
+        >
+          <WidgetIcon />
+          <SiderText>Widgets</SiderText>
+        </MenuButton>
+      </ToggleButtonGroup>
       <Popover
         id={id}
         open={open}

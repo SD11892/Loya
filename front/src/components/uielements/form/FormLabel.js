@@ -7,6 +7,9 @@ const FormLabel = styled.div`
     line-height: 1.25rem;
     margin-top: 0.5rem;
     margin-bottom: 0.5rem;
+    gap: 0.5rem;
+    align-items: center;
+    display: flex;
   }
 `;
 

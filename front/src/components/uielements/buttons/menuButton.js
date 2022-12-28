@@ -1,4 +1,4 @@
 import { MenuButton } from "../styles/Button.style";
-import { Button } from "@mui/material";
+import { ToggleButton } from "@mui/material";
 
-export default MenuButton(Button);
+export default MenuButton(ToggleButton);

@@ -11,6 +11,7 @@ exports.getAll = (req, res) => {
         console.log("Forms Not Found");
         return res.status(200).send({ message: "Empty" });
       } else {
+        console.log("forms=", forms);
         res.status(200).send({ forms });
       }
     })
@@ -55,6 +56,7 @@ exports.delete = (req, res) => {
 
 exports.update = (req, res) => {
   const data = req.query;
+  console.log("req=", data);
   TestimonialForm.update(
     {
       spacing: data.info.spacing,
@@ -63,6 +65,10 @@ exports.update = (req, res) => {
       bgColor: data.info.bgColor,
       txtColor: data.info.txtColor,
       ratingColor: data.info.ratingColor,
+      theme: data.info.theme,
+      blColor: data.info.blColor,
+      bfColor: data.info.bfColor,
+      fgColor: data.info.fgColor,
     },
     {
       where: {
@@ -88,6 +94,10 @@ exports.getByUrl = (req, res) => {
     bgColor: "",
     txtColor: "",
     ratingColor: "",
+    theme: 0,
+    blColor: "",
+    bfColor: "",
+    fgColor: "",
   };
   TestimonialForm.findAll({
     where: {
@@ -102,6 +112,10 @@ exports.getByUrl = (req, res) => {
       designInfo.bgColor = fdata[0].dataValues.bgColor;
       designInfo.txtColor = fdata[0].dataValues.txtColor;
       designInfo.ratingColor = fdata[0].dataValues.ratingColor;
+      designInfo.bfColor = fdata[0].dataValues.bfColor;
+      designInfo.blColor = fdata[0].dataValues.blColor;
+      designInfo.fgColor = fdata[0].dataValues.fgColor;
+      designInfo.theme = fdata[0].dataValues.theme;
       res.status(200).send({ data: designInfo });
     })
     .catch((err) => {
