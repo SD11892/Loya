@@ -1,5 +1,5 @@
-import styled from "styled-components";
-import IconContainer from "../iconContainer";
+import styled from 'styled-components';
+import IconContainer from '../iconContainer';
 
 const SiderButton = (ComponentName) => styled(ComponentName)`
    {
@@ -178,13 +178,13 @@ const DefaultButton = (ComponentName) => styled(ComponentName)`
     &.MuiButtonBase-root {
       margin-top: 1rem;
       width: 100%;
-      background: ${(props) => (props.primary ? `${props.primary}` : "black")};
+      background: ${(props) => (props.primary ? `${props.primary}` : 'black')};
       color: white;
       gap: 0.5rem;
       line-height: 1.5rem;
     }
     &.MuiButtonBase-root:hover {
-      background: ${(props) => (props.primary ? "rgb(146, 50, 254)" : "#222")};
+      background: ${(props) => (props.primary ? 'rgb(146, 50, 254)' : '#222')};
     }
   }
 `;
@@ -240,6 +240,72 @@ const TabButton = (ComponentName) => styled(ComponentName)`
     }
   }
 `;
+const RecordButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiButton-root {
+      cursor: pointer;
+      background: rgb(220, 38, 38);
+      color: white;
+      border-radius: 9999px;
+      width: 3rem;
+      min-width: 3rem;
+      height: 3rem;
+      margin: 0;
+      padding: 0;
+      border-style: solid;
+      border-color: #e5e7eb;
+      border-width: 3px;
+      transition-duration: 0.15s;
+    }
+    &.MuiButton-root:hover {
+      box-shadow: 0 20px 25px -5px rgb(185, 28, 28, 0.6);
+      background: rgb(220, 38, 38);
+      border-width: 2px;
+    }
+  }
+`;
+const WhiteRadiusButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiButton-root {
+      cursor: pointer;
+      background: rgb(255, 255, 255);
+      color: white;
+      border-radius: 9999px;
+      width: 3rem;
+      min-width: 3rem;
+      height: 3rem;
+      margin: 0;
+      padding: 0;
+      border-style: solid;
+      border-color: #e5e7eb;
+      border-width: 3px;
+      transition-duration: 0.15s;
+    }
+    &.MuiButton-root:hover {
+      box-shadow: 0 20px 25px -5px rgb(185, 28, 28, 0.6);
+      background: rgb(255, 255, 255);
+    }
+  }
+`;
+const NoteButton = (ComponentName) => styled(ComponentName)`
+   {
+    &.MuiButton-root {
+      cursor: pointer;
+      color: white;
+      background-color: rgb(41 37 36);
+      border-radius: 9999px;
+      width: 2rem;
+      min-width: 2rem;
+      height: 2rem;
+      margin: 0;
+      padding: 0.5rem;
+      border-width: 0;
+      border-style: solid;
+      border-color: #e5e7eb;
+      transition-duration: 0.1s;
+    }
+    }
+  `;
 const EmbedToolButton = (ComponentName) => styled(ComponentName)`
    {
     &.MuiToggleButton-root {
@@ -282,5 +348,8 @@ export {
   AddButton,
   ImageButton,
   TabButton,
+  RecordButton,
+  NoteButton,
+  WhiteRadiusButton,
   EmbedToolButton,
 };
