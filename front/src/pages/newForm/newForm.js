@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { getByFormUrl, saveForm } from '../../actions/form';
-import { styled } from '@mui/material/styles';
-import MuiAccordion from '@mui/material/Accordion';
-import MuiAccordionSummary from '@mui/material/AccordionSummary';
-import MuiAccordionDetails from '@mui/material/AccordionDetails';
-import { createColor } from 'material-ui-color';
-import { useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from "react";
+import { getByFormUrl, saveForm } from "../../actions/form";
+import { styled } from "@mui/material/styles";
+import MuiAccordion from "@mui/material/Accordion";
+import MuiAccordionSummary from "@mui/material/AccordionSummary";
+import MuiAccordionDetails from "@mui/material/AccordionDetails";
+import { createColor } from "material-ui-color";
+import { useNavigate } from "react-router-dom";
 import {
   Avatar,
   ButtonBase,
@@ -18,39 +18,39 @@ import {
   Switch,
   TextField,
   ToggleButtonGroup,
-} from '@mui/material';
-import Snackbar from '@mui/material/Snackbar';
-import MuiAlert from '@mui/material/Alert';
+} from "@mui/material";
+import Snackbar from "@mui/material/Snackbar";
+import MuiAlert from "@mui/material/Alert";
 
-import { DownArrow } from '../../icons/downArrow';
-import { Design as DesignIcon } from '../../icons/wall/design';
-import { Share as ShareIcon } from '../../icons/wall/share';
-import { WelcomePage as WelcomeIcon } from '../../icons/welcomePage';
-import { Thank as ThankIcon } from '../../icons/thank';
-import { Response as ResponseIcon } from '../../icons/response';
-import { Attribution as AttributionIcon } from '../../icons/attribution';
-import { Localization as LocalizationIcon } from '../../icons/localization';
-import { Custom as CustomIcon } from '../../icons/custom';
-import { Camera } from '../../icons/camera';
-import { Delete as DeleteIcon } from '../../icons/delete';
-import { Plus as PlusIcon } from '../../icons/plus';
-import { Laptop as LaptopIcon } from '../../icons/laptop';
-import { Mobile as MobileIcon } from '../../icons/mobile';
+import { DownArrow } from "../../icons/downArrow";
+import { Design as DesignIcon } from "../../icons/wall/design";
+import { Share as ShareIcon } from "../../icons/wall/share";
+import { WelcomePage as WelcomeIcon } from "../../icons/welcomePage";
+import { Thank as ThankIcon } from "../../icons/thank";
+import { Response as ResponseIcon } from "../../icons/response";
+import { Attribution as AttributionIcon } from "../../icons/attribution";
+import { Localization as LocalizationIcon } from "../../icons/localization";
+import { Custom as CustomIcon } from "../../icons/custom";
+import { Camera } from "../../icons/camera";
+import { Delete as DeleteIcon } from "../../icons/delete";
+import { Plus as PlusIcon } from "../../icons/plus";
+import { Laptop as LaptopIcon } from "../../icons/laptop";
+import { Mobile as MobileIcon } from "../../icons/mobile";
 
-import Picker from '../../components/uielements/picker';
-import PreviewContainer from '../../components/uielements/previewContainer';
-import TopLinkContainer from '../../components/uielements/topLinkContainer';
-import DefaultButton from '../../components/uielements/buttons/defaultButton';
-import BackwardButton from '../../components/uielements/buttons/backwardButton';
-import AddButton from '../../components/uielements/buttons/addButton';
-import PageTitle from '../../components/uielements/pageTitle';
-import SiderText from '../../components/uielements/siderText';
-import FormLabel from '../../components/uielements/form/FormLabel';
-import FormInput from '../../components/uielements/form/FormInput';
-import FormGrid from '../../components/uielements/form/FormGrid';
-import TabButton from '../../components/uielements/buttons/tabButton';
-import UploadButton from '../../components/uielements/buttons/uploadButton';
-import VideoReview from '../../components/testimonials/videoReview';
+import Picker from "../../components/uielements/picker";
+import PreviewContainer from "../../components/uielements/previewContainer";
+import TopLinkContainer from "../../components/uielements/topLinkContainer";
+import DefaultButton from "../../components/uielements/buttons/defaultButton";
+import BackwardButton from "../../components/uielements/buttons/backwardButton";
+import AddButton from "../../components/uielements/buttons/addButton";
+import PageTitle from "../../components/uielements/pageTitle";
+import SiderText from "../../components/uielements/siderText";
+import FormLabel from "../../components/uielements/form/FormLabel";
+import FormInput from "../../components/uielements/form/FormInput";
+import FormGrid from "../../components/uielements/form/FormGrid";
+import TabButton from "../../components/uielements/buttons/tabButton";
+import UploadButton from "../../components/uielements/buttons/uploadButton";
+import VideoReview from "../../components/testimonials/videoReview";
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -59,56 +59,56 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(() => ({
-  borderBottom: '1px solid #e5e7eb',
-  '&:not(:last-child)': {},
-  '&:before': {},
+  borderBottom: "1px solid #e5e7eb",
+  "&:not(:last-child)": {},
+  "&:before": {},
 }));
 
 const AccordionSummary = styled((props) => (
   <MuiAccordionSummary expandIcon={<DownArrow />} {...props} />
 ))(({ theme }) => ({
-  backgroundColor: '#fff',
-  flexDirection: 'row-reverse',
-  '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
-    paddingTop: '1rem',
-    paddingBottom: '1rem',
-    transform: 'rotate(180deg)',
+  backgroundColor: "#fff",
+  flexDirection: "row-reverse",
+  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
+    paddingTop: "1rem",
+    paddingBottom: "1rem",
+    transform: "rotate(180deg)",
   },
-  '& .MuiAccordionSummary-content': {
+  "& .MuiAccordionSummary-content": {
     marginLeft: theme.spacing(1),
   },
 }));
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
-  borderTop: '1px solid rgba(0, 0, 0, .125)',
-  overflow: 'visible',
-  overflowX: 'auto',
+  borderTop: "1px solid rgba(0, 0, 0, .125)",
+  overflow: "visible",
+  overflowX: "auto",
 }));
 
 function NewForm() {
   const navigate = useNavigate();
   const [visible, setVisible] = React.useState(1);
-  const [formName, setFormName] = React.useState('');
+  const [formName, setFormName] = React.useState("");
   const [selectedImage, setSelectedImage] = useState(null);
-  const [data, setData] = useState('');
-  const [expanded, setExpanded] = React.useState('panel1');
-  const [priColor, setPriColor] = React.useState('');
-  const [bgColor, setBgColor] = React.useState('');
-  const [title, setTitle] = React.useState('');
-  const [directUrl, setDirectUrl] = React.useState('');
+  const [data, setData] = useState("");
+  const [expanded, setExpanded] = React.useState("panel1");
+  const [priColor, setPriColor] = React.useState("");
+  const [bgColor, setBgColor] = React.useState("");
+  const [title, setTitle] = React.useState("");
+  const [directUrl, setDirectUrl] = React.useState("");
   const [message, setMessage] = React.useState(``);
   const [prompt, setPrompt] = React.useState(``);
   const [thankTitle, setThankTitle] = React.useState(``);
   const [thankMessage, setThankMessage] = React.useState(``);
-  const [mobile, setMobile] = React.useState('laptop');
+  const [mobile, setMobile] = React.useState("laptop");
   const [addingFields, setAddingFields] = React.useState([]);
   const [key, setKey] = React.useState([]);
   const [inputingFields, setInputingFields] = React.useState([
-    'Your Name',
-    'Email Address',
-    'Headline',
-    'Your Website',
+    "Your Name",
+    "Email Address",
+    "Headline",
+    "Your Website",
   ]);
   const [toggled, setToggled] = React.useState([false, false, false]);
   const [checked, setChecked] = React.useState([]);
@@ -117,28 +117,28 @@ function NewForm() {
   const [open, setOpen] = React.useState(false);
 
   const infor = {
-    formName: '',
-    formUrl: '',
-    fileName: '',
-    fileType: '',
-    pColor: '',
-    bColor: '',
+    formName: "",
+    formUrl: "",
+    fileName: "",
+    fileType: "",
+    pColor: "",
+    bColor: "",
     prompt: ``,
     checked: [],
-    title: '',
+    title: "",
     message: ``,
-    thankTitle: '',
+    thankTitle: "",
     thankMessage: ``,
     call: 0,
-    textBtn: '',
-    linkUrl: '',
+    textBtn: "",
+    linkUrl: "",
     custom: 0,
-    directUrl: '',
+    directUrl: "",
     key: [],
   };
 
   const handleCloseSnack = (event, reason) => {
-    if (reason === 'clickaway') {
+    if (reason === "clickaway") {
       return;
     }
 
@@ -152,22 +152,22 @@ function NewForm() {
   };
   const handleChange = (panel) => (event, newExpanded) => {
     let len = 1;
-    if (panel === 'panel1') {
+    if (panel === "panel1") {
       setVisible(1);
-    } else if (panel === 'panel2') {
+    } else if (panel === "panel2") {
       setVisible(1);
-    } else if (panel === 'panel3') {
+    } else if (panel === "panel3") {
       setVisible(2);
-    } else if (panel === 'panel4') {
+    } else if (panel === "panel4") {
       setVisible(3);
-    } else if (panel === 'panel5') {
+    } else if (panel === "panel5") {
       setVisible(4);
     }
     setExpanded(newExpanded ? panel : false);
   };
 
   const handleToggleChange = (event, newAlignment) => {
-    console.log('newAlignment=', newAlignment);
+    console.log("newAlignment=", newAlignment);
     setMobile(newAlignment);
   };
 
@@ -204,7 +204,7 @@ function NewForm() {
       setPrompt(`${result.prompt}`);
       setThankTitle(`${result.thankTitle}`);
       setThankMessage(`${result.thankMessage}`);
-      setKey(result.key.split(','));
+      setKey(result.key.split(","));
       setFormName(result.formName);
       setChecked(result.checked);
       setData(
@@ -213,17 +213,17 @@ function NewForm() {
         )
       );
       var len = 0;
-      if (result.key.split(',').indexOf('Email Address') !== -1) {
+      if (result.key.split(",").indexOf("Email Address") !== -1) {
         toggled[0] = true;
         setToggled([...toggled]);
         len += 1;
       }
-      if (result.key.split(',').indexOf('Headline') !== -1) {
+      if (result.key.split(",").indexOf("Headline") !== -1) {
         toggled[1] = true;
         setToggled([...toggled]);
         len += 1;
       }
-      if (result.key.split(',').indexOf('Your Website') !== -1) {
+      if (result.key.split(",").indexOf("Your Website") !== -1) {
         toggled[2] = true;
         setToggled([...toggled]);
         len += 1;
@@ -256,8 +256,8 @@ function NewForm() {
       <Grid
         container
         style={{
-          marginTop: '1rem',
-          whiteSpace: 'pre-wrap',
+          marginTop: "1rem",
+          whiteSpace: "pre-wrap",
         }}
       >
         <TextField
@@ -265,45 +265,45 @@ function NewForm() {
           multiline
           rows={4}
           placeholder="Write something nice ✨"
-          style={{ width: '100%' }}
+          style={{ width: "100%" }}
         />
       </Grid>
-      <Grid container style={{ marginTop: '1rem' }}>
+      <Grid container style={{ marginTop: "1rem" }}>
         <DefaultButton primary={priColor}>Submit</DefaultButton>
       </Grid>
     </>
   );
 
   return (
-    <div style={{ display: 'flex', width: '100%' }}>
-      <Grid container style={{ width: 'unset' }}>
+    <div style={{ display: "flex", width: "100%" }}>
+      <Grid container style={{ width: "unset" }}>
         <Grid
           item
           style={{
-            background: '#fff',
-            paddingLeft: '2rem',
-            paddingRight: '2rem',
-            borderRight: '1px solid #e5e7eb',
-            width: '40rem',
-            overflow: 'auto',
+            background: "#fff",
+            paddingLeft: "2rem",
+            paddingRight: "2rem",
+            borderRight: "1px solid #e5e7eb",
+            width: "40rem",
+            overflow: "auto",
           }}
         >
           <div
             style={{
-              width: '100%',
-              height: '100vh',
+              width: "100%",
+              height: "100vh",
             }}
           >
             <Grid
               container
-              pt={'2rem'}
+              pt={"2rem"}
               justifyContent="space-between"
-              style={{ alignItems: 'center' }}
+              style={{ alignItems: "center" }}
             >
               <Grid item>
                 <BackwardButton
                   onClick={() => {
-                    navigate('/forms');
+                    navigate("/forms");
                   }}
                 >
                   ← Dashboard
@@ -311,9 +311,11 @@ function NewForm() {
               </Grid>
               <Grid item>
                 <IconButton
-                  style={{ border: '1px solid #ddd' }}
+                  style={{ border: "1px solid #ddd" }}
                   onClick={() => {
-                    let path = `/forms/p/1/r/${url}`;
+                    let path = `/forms/p/${
+                      localStorage.getItem("projects").slug
+                    }/r/${url}`;
                     navigate(path);
                   }}
                 >
@@ -321,8 +323,8 @@ function NewForm() {
                 </IconButton>
               </Grid>
             </Grid>
-            <Grid container pt={'2rem'}>
-              <Grid item xs={12} style={{ marginBottom: '1rem' }}>
+            <Grid container pt={"2rem"}>
+              <Grid item xs={12} style={{ marginBottom: "1rem" }}>
                 <Input
                   value={formName}
                   onChange={(e) => {
@@ -335,10 +337,10 @@ function NewForm() {
               container
               xs={12}
               style={{
-                padding: '1rem',
-                marginBottom: '1rem',
-                background: '#F3F4F6',
-                overflowY: 'auto',
+                padding: "1rem",
+                marginBottom: "1rem",
+                background: "#F3F4F6",
+                overflowY: "auto",
               }}
             >
               <Grid item xs={1}>
@@ -353,13 +355,13 @@ function NewForm() {
               container
               xs={12}
               style={{
-                marginBottom: '1rem',
+                marginBottom: "1rem",
               }}
             >
               <Accordion
-                expanded={expanded === 'panel1'}
-                onChange={handleChange('panel1')}
-                style={{ width: 'inherit' }}
+                expanded={expanded === "panel1"}
+                onChange={handleChange("panel1")}
+                style={{ width: "inherit" }}
               >
                 <AccordionSummary
                   aria-controls="panel1d-content"
@@ -369,13 +371,13 @@ function NewForm() {
                   Design
                 </AccordionSummary>
                 <AccordionDetails>
-                  <div style={{ width: 'inherit' }}>
+                  <div style={{ width: "inherit" }}>
                     <FormLabel>Logo</FormLabel>
                     <input
                       accept="image/*"
                       id="icon-button-file"
                       type="file"
-                      style={{ display: 'none' }}
+                      style={{ display: "none" }}
                       onChange={(e) => {
                         console.log(e.target.files[0]);
                         setSelectedImage(e.target.files[0]);
@@ -384,10 +386,10 @@ function NewForm() {
                     <label
                       htmlFor="icon-button-file"
                       style={{
-                        padding: '0.5rem',
-                        border: '0.1rem solid #ddd',
-                        borderRadius: '0.375rem',
-                        width: '25%',
+                        padding: "0.5rem",
+                        border: "0.1rem solid #ddd",
+                        borderRadius: "0.375rem",
+                        width: "25%",
                       }}
                     >
                       <IconButton
@@ -395,35 +397,35 @@ function NewForm() {
                         aria-label="upload picture"
                         component="span"
                         style={{
-                          alignItems: 'center',
-                          display: 'flex',
-                          flexDirection: 'column',
+                          alignItems: "center",
+                          display: "flex",
+                          flexDirection: "column",
                         }}
                       >
                         {selectedImage !== null ? (
                           <img
                             src={URL.createObjectURL(selectedImage)}
-                            width={'48px'}
+                            width={"48px"}
                             alt="not found"
                           />
-                        ) : selectedImage === null && data !== '' ? (
+                        ) : selectedImage === null && data !== "" ? (
                           <img
                             src={`data:image/png;base64,${data}`}
                             alt=""
-                            width={'48px'}
+                            width={"48px"}
                           />
                         ) : (
-                          <img src={`../../heart.png`} width={'32px'} />
+                          <img src={`../../heart.png`} width={"32px"} />
                         )}
                       </IconButton>
                     </label>
                     <FormLabel>Primary Color</FormLabel>
                     <div
                       style={{
-                        padding: '0.5rem',
-                        marginTop: '0.5rem',
-                        border: '1px solid #ddd',
-                        borderRadius: '1rem',
+                        padding: "0.5rem",
+                        marginTop: "0.5rem",
+                        border: "1px solid #ddd",
+                        borderRadius: "1rem",
                       }}
                     >
                       <Picker
@@ -434,10 +436,10 @@ function NewForm() {
                     <FormLabel>Background Color</FormLabel>
                     <div
                       style={{
-                        padding: '0.5rem',
-                        marginTop: '0.5rem',
-                        border: '1px solid #ddd',
-                        borderRadius: '1rem',
+                        padding: "0.5rem",
+                        marginTop: "0.5rem",
+                        border: "1px solid #ddd",
+                        borderRadius: "1rem",
                       }}
                     >
                       <Picker value={bgColor} onChange={handlebgColorChange} />
@@ -446,9 +448,9 @@ function NewForm() {
                 </AccordionDetails>
               </Accordion>
               <Accordion
-                expanded={expanded === 'panel2'}
-                onChange={handleChange('panel2')}
-                style={{ width: 'inherit' }}
+                expanded={expanded === "panel2"}
+                onChange={handleChange("panel2")}
+                style={{ width: "inherit" }}
               >
                 <AccordionSummary
                   aria-controls="panel2d-content"
@@ -473,7 +475,7 @@ function NewForm() {
                       multiline
                       rows={6}
                       placeholder="Write something nice ✨"
-                      style={{ width: '100%' }}
+                      style={{ width: "100%" }}
                       value={message}
                       onChange={(e) => {
                         setMessage(e.target.value);
@@ -484,8 +486,8 @@ function NewForm() {
                     <SiderText>Markdown supported</SiderText>
                     <div>
                       <Checkbox
-                        checked={checked[0] === 'true' ? true : false}
-                        disabled={checked[1] === 'false' ? true : false}
+                        checked={checked[0] === "true" ? true : false}
+                        disabled={checked[1] === "false" ? true : false}
                         onChange={(e) => {
                           checked[0] = e.target.checked.toString();
                           setChecked([...checked]);
@@ -495,8 +497,8 @@ function NewForm() {
                     </div>
                     <div>
                       <Checkbox
-                        checked={checked[1] === 'true' ? true : false}
-                        disabled={checked[0] === 'false' ? true : false}
+                        checked={checked[1] === "true" ? true : false}
+                        disabled={checked[0] === "false" ? true : false}
                         onChange={(e) => {
                           checked[1] = e.target.checked.toString();
                           setChecked([...checked]);
@@ -508,9 +510,9 @@ function NewForm() {
                 </AccordionDetails>
               </Accordion>
               <Accordion
-                expanded={expanded === 'panel3'}
-                onChange={handleChange('panel3')}
-                style={{ width: 'inherit' }}
+                expanded={expanded === "panel3"}
+                onChange={handleChange("panel3")}
+                style={{ width: "inherit" }}
               >
                 <AccordionSummary
                   aria-controls="panel3d-content"
@@ -524,7 +526,7 @@ function NewForm() {
                   <TextField
                     multiline
                     rows={6}
-                    style={{ width: '100%' }}
+                    style={{ width: "100%" }}
                     value={prompt}
                     onChange={(e) => {
                       setPrompt(e.target.value);
@@ -541,9 +543,9 @@ function NewForm() {
                 </AccordionDetails>
               </Accordion>
               <Accordion
-                expanded={expanded === 'panel4'}
-                onChange={handleChange('panel4')}
-                style={{ width: '100%' }}
+                expanded={expanded === "panel4"}
+                onChange={handleChange("panel4")}
+                style={{ width: "100%" }}
               >
                 <AccordionSummary
                   aria-controls="panel4d-content"
@@ -555,16 +557,16 @@ function NewForm() {
                 <AccordionDetails>
                   <div
                     style={{
-                      border: '1px solid #ddd',
-                      borderRadius: '0.5rem',
-                      padding: '1rem',
+                      border: "1px solid #ddd",
+                      borderRadius: "0.5rem",
+                      padding: "1rem",
                     }}
                   >
                     <div
                       style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
                       }}
                     >
                       <FormLabel>Ask For Email Address</FormLabel>
@@ -572,11 +574,11 @@ function NewForm() {
                         checked={toggled[0]}
                         onChange={(event) => {
                           if (event.target.checked === true) {
-                            inputingFields[1] = 'Email Address';
+                            inputingFields[1] = "Email Address";
                             setInputingFields([...inputingFields]);
                           } else {
                             inputingFields.splice(
-                              inputingFields.indexOf('Email Address'),
+                              inputingFields.indexOf("Email Address"),
                               1
                             );
                             setInputingFields([...inputingFields]);
@@ -588,9 +590,9 @@ function NewForm() {
                     </div>
                     <div
                       style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
                       }}
                     >
                       <FormLabel>Ask For Headline</FormLabel>
@@ -598,15 +600,15 @@ function NewForm() {
                         checked={toggled[1]}
                         onChange={(event) => {
                           if (event.target.checked === true) {
-                            inputingFields[2] = 'Headline';
+                            inputingFields[2] = "Headline";
                             setInputingFields([...inputingFields]);
                           } else {
-                            console.log('here');
+                            console.log("here");
                             inputingFields.splice(
-                              inputingFields.indexOf('Headline'),
+                              inputingFields.indexOf("Headline"),
                               1
                             );
-                            console.log('here=', inputingFields);
+                            console.log("here=", inputingFields);
                             setInputingFields([...inputingFields]);
                           }
                           toggled[1] = event.target.checked;
@@ -616,9 +618,9 @@ function NewForm() {
                     </div>
                     <div
                       style={{
-                        display: 'flex',
-                        flexDirection: 'row',
-                        justifyContent: 'space-between',
+                        display: "flex",
+                        flexDirection: "row",
+                        justifyContent: "space-between",
                       }}
                     >
                       <FormLabel>Ask For Website</FormLabel>
@@ -626,11 +628,11 @@ function NewForm() {
                         checked={toggled[2]}
                         onChange={(event) => {
                           if (event.target.checked === true) {
-                            inputingFields[3] = 'Your Website';
+                            inputingFields[3] = "Your Website";
                             setInputingFields([...inputingFields]);
                           } else {
                             inputingFields.splice(
-                              inputingFields.indexOf('Your Website'),
+                              inputingFields.indexOf("Your Website"),
                               1
                             );
                             setInputingFields([...inputingFields]);
@@ -643,15 +645,15 @@ function NewForm() {
                   </div>
                   <div
                     style={{
-                      display: 'flex',
-                      flexDirection: 'row',
-                      justifyContent: 'space-between',
+                      display: "flex",
+                      flexDirection: "row",
+                      justifyContent: "space-between",
                     }}
                   >
                     <FormLabel>Additional Fields</FormLabel>
                     <AddButton
                       onClick={() => {
-                        setAddingFields([...addingFields, '']);
+                        setAddingFields([...addingFields, ""]);
                       }}
                     >
                       <PlusIcon fill="#f3f3f6" stroke="#6701e6" />
@@ -660,12 +662,12 @@ function NewForm() {
                   {addingFields.length === 0 ? (
                     <ButtonBase
                       style={{
-                        width: '100%',
-                        border: '1px dashed #e5e7eb',
-                        padding: '1rem',
+                        width: "100%",
+                        border: "1px dashed #e5e7eb",
+                        padding: "1rem",
                       }}
                       onClick={() => {
-                        setAddingFields([...addingFields, '']);
+                        setAddingFields([...addingFields, ""]);
                       }}
                     >
                       ⚡ Collect more information from your users by adding an
@@ -676,20 +678,20 @@ function NewForm() {
                       return (
                         <div
                           style={{
-                            border: '1px solid #e5e7eb',
-                            padding: '0.5rem',
-                            marginTop: '0.25rem',
-                            borderRadius: '0.375rem',
-                            display: 'flex',
-                            flexDirection: 'row',
-                            gap: '1rem',
-                            alignItems: 'center',
+                            border: "1px solid #e5e7eb",
+                            padding: "0.5rem",
+                            marginTop: "0.25rem",
+                            borderRadius: "0.375rem",
+                            display: "flex",
+                            flexDirection: "row",
+                            gap: "1rem",
+                            alignItems: "center",
                           }}
                         >
                           <IconButton
                             onClick={() => {
                               addingFields.splice(index, 1);
-                              console.log('addingFields=', addingFields);
+                              console.log("addingFields=", addingFields);
                               setAddingFields([...addingFields]);
                             }}
                           >
@@ -716,9 +718,9 @@ function NewForm() {
                 </AccordionDetails>
               </Accordion>
               <Accordion
-                expanded={expanded === 'panel5'}
-                onChange={handleChange('panel5')}
-                style={{ width: '100%' }}
+                expanded={expanded === "panel5"}
+                onChange={handleChange("panel5")}
+                style={{ width: "100%" }}
               >
                 <AccordionSummary
                   aria-controls="panel4d-content"
@@ -774,7 +776,7 @@ function NewForm() {
             </Grid>
             <FormGrid>
               <DefaultButton
-                style={{ padding: '0.5rem', borderRadius: '9999px' }}
+                style={{ padding: "0.5rem", borderRadius: "9999px" }}
                 onClick={onSave}
               >
                 Save Changes
@@ -786,27 +788,27 @@ function NewForm() {
       <Grid
         containter
         style={{
-          width: '100%',
-          justifyContent: 'center',
-          display: 'flex',
-          flexDirection: 'column',
+          width: "100%",
+          justifyContent: "center",
+          display: "flex",
+          flexDirection: "column",
         }}
       >
         <Grid
           item
           style={{
-            display: 'flex',
-            justifyContent: 'center',
+            display: "flex",
+            justifyContent: "center",
           }}
         >
           <div
             style={{
-              display: 'flex',
-              gap: '0.5rem',
-              background: '#D1D5DB',
-              marginTop: '1rem',
-              borderRadius: '0.375rem',
-              padding: '0.5rem',
+              display: "flex",
+              gap: "0.5rem",
+              background: "#D1D5DB",
+              marginTop: "1rem",
+              borderRadius: "0.375rem",
+              padding: "0.5rem",
             }}
           >
             <ToggleButtonGroup
@@ -824,66 +826,66 @@ function NewForm() {
             </ToggleButtonGroup>
           </div>
         </Grid>
-        {mobile === 'laptop' ? (
+        {mobile === "laptop" ? (
           <div
             style={{
               background: bgColor,
-              height: '600px',
-              display: 'flex',
-              justifyContent: 'center',
-              padding: '1rem',
-              borderColor: '#ddd',
-              borderWidth: '0.2rem',
-              overflowY: 'auto',
-              border: '3px solid #111',
-              margin: '1rem',
-              borderRadius: '1rem',
+              height: "600px",
+              display: "flex",
+              justifyContent: "center",
+              padding: "1rem",
+              borderColor: "#ddd",
+              borderWidth: "0.2rem",
+              overflowY: "auto",
+              border: "3px solid #111",
+              margin: "1rem",
+              borderRadius: "1rem",
             }}
           >
             <PreviewContainer
-              style={{ display: visible === 1 ? 'flex' : 'none' }}
+              style={{ display: visible === 1 ? "flex" : "none" }}
             >
               <TopLinkContainer>
                 <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
-                  style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
+                  style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                 />
                 <a
                   href="http://tryloya.com"
                   style={{
-                    textDecoration: 'unset',
+                    textDecoration: "unset",
                   }}
                 >
                   Powered by Loya
                 </a>
               </TopLinkContainer>
-              <Grid container style={{ marginBottom: '1rem' }}>
+              <Grid container style={{ marginBottom: "1rem" }}>
                 {selectedImage !== null ? (
                   <img
                     src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
+                    width={"48px"}
                     alt="not found"
                   />
-                ) : data !== '' ? (
+                ) : data !== "" ? (
                   <img
                     src={`data:image/png;base64,${data}`}
                     alt=""
-                    width={'48px'}
+                    width={"48px"}
                   />
                 ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
+                  <img src={`../../heart.png`} width={"32px"} />
                 )}
               </Grid>
-              <Grid container style={{ marginBottom: '1rem' }}>
+              <Grid container style={{ marginBottom: "1rem" }}>
                 <PageTitle>{title}</PageTitle>
               </Grid>
               <Grid
                 container
                 style={{
-                  marginBottom: '1rem',
-                  whiteSpace: 'pre-wrap',
+                  marginBottom: "1rem",
+                  whiteSpace: "pre-wrap",
                 }}
               >
                 {message}
@@ -891,7 +893,7 @@ function NewForm() {
               <Grid
                 container
                 style={{
-                  display: checked[0] === 'true' ? 'flex' : 'none',
+                  display: checked[0] === "true" ? "flex" : "none",
                 }}
               >
                 <DefaultButton primary={priColor}>
@@ -902,57 +904,57 @@ function NewForm() {
               <Grid
                 container
                 style={{
-                  marginBottom: '0.5rem',
-                  display: checked[1] === 'true' ? 'flex' : 'none',
+                  marginBottom: "0.5rem",
+                  display: checked[1] === "true" ? "flex" : "none",
                 }}
               >
                 <DefaultButton>Write a review</DefaultButton>
               </Grid>
             </PreviewContainer>
             <PreviewContainer
-              style={{ display: visible === 2 ? 'flex' : 'none' }}
+              style={{ display: visible === 2 ? "flex" : "none" }}
             >
               <TopLinkContainer>
                 <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
-                  style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
+                  style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                 />
                 <a
                   href="http://tryloya.com"
                   style={{
-                    textDecoration: 'unset',
+                    textDecoration: "unset",
                   }}
                 >
                   Powered by Loya
                 </a>
               </TopLinkContainer>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 {selectedImage !== null ? (
                   <img
                     src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
+                    width={"48px"}
                     alt="not found"
                   />
-                ) : data !== '' ? (
+                ) : data !== "" ? (
                   <img
                     src={`data:image/png;base64,${data}`}
                     alt=""
-                    width={'48px'}
+                    width={"48px"}
                   />
                 ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
+                  <img src={`../../heart.png`} width={"32px"} />
                 )}
               </Grid>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 <PageTitle>Write a text textimonial</PageTitle>
               </Grid>
               <Grid
                 container
                 style={{
-                  marginTop: '1rem',
-                  whiteSpace: 'pre-wrap',
+                  marginTop: "1rem",
+                  whiteSpace: "pre-wrap",
                 }}
               >
                 {prompt}
@@ -960,23 +962,23 @@ function NewForm() {
               <Grid
                 container
                 style={{
-                  marginTop: '1rem',
+                  marginTop: "1rem",
                 }}
               >
                 <Rating
-                  style={{ display: checked[2] === 'true' ? 'flex' : 'none' }}
+                  style={{ display: checked[2] === "true" ? "flex" : "none" }}
                   value={rating}
                   onChange={(event, newValue) => {
                     setRating(rating);
                   }}
                 />
               </Grid>
-              {checked[0] === 'true' ? <VideoReview /> : TextReviews}
+              {checked[0] === "true" ? <VideoReview /> : TextReviews}
             </PreviewContainer>
             <PreviewContainer
               style={{
-                display: visible === 3 ? 'flex' : 'none',
-                alignSelf: 'baseline',
+                display: visible === 3 ? "flex" : "none",
+                alignSelf: "baseline",
               }}
             >
               <TopLinkContainer>
@@ -984,35 +986,35 @@ function NewForm() {
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
-                  style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
+                  style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                 />
                 <a
                   href="http://tryloya.com"
                   style={{
-                    textDecoration: 'unset',
+                    textDecoration: "unset",
                   }}
                 >
                   Powered by Loya
                 </a>
               </TopLinkContainer>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 {selectedImage !== null ? (
                   <img
                     src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
+                    width={"48px"}
                     alt="not found"
                   />
-                ) : data !== '' ? (
+                ) : data !== "" ? (
                   <img
                     src={`data:image/png;base64,${data}`}
                     alt=""
-                    width={'48px'}
+                    width={"48px"}
                   />
                 ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
+                  <img src={`../../heart.png`} width={"32px"} />
                 )}
               </Grid>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 <PageTitle>Almost done</PageTitle>
               </Grid>
               <FormGrid>
@@ -1020,73 +1022,73 @@ function NewForm() {
                 <FormInput placeholder="ex.John Smith" />
                 <div
                   style={{
-                    display: toggled[0] === true ? 'block' : 'none',
-                    width: '100%',
+                    display: toggled[0] === true ? "block" : "none",
+                    width: "100%",
                   }}
                 >
-                  <FormGrid style={{ padding: 'unset' }}>
+                  <FormGrid style={{ padding: "unset" }}>
                     <FormLabel>Email Address</FormLabel>
                     <FormInput placeholder="ex.John Smith" />
                   </FormGrid>
                 </div>
                 <div
                   style={{
-                    display: toggled[1] === true ? 'block' : 'none',
-                    width: '100%',
+                    display: toggled[1] === true ? "block" : "none",
+                    width: "100%",
                   }}
                 >
-                  <FormGrid style={{ padding: 'unset' }}>
+                  <FormGrid style={{ padding: "unset" }}>
                     <FormLabel>Headline</FormLabel>
                     <FormInput placeholder="ex.John Smith" />
                   </FormGrid>
                 </div>
                 <div
                   style={{
-                    display: toggled[2] === true ? 'block' : 'none',
-                    width: '100%',
+                    display: toggled[2] === true ? "block" : "none",
+                    width: "100%",
                   }}
                 >
-                  <FormGrid style={{ padding: 'unset' }}>
+                  <FormGrid style={{ padding: "unset" }}>
                     <FormLabel>Your Website</FormLabel>
                     <FormInput placeholder="ex.John Smith" />
                   </FormGrid>
                 </div>
                 <div>
                   <FormLabel>Avatar</FormLabel>
-                  <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
                     {selectedImage !== null ? (
                       <Avatar
                         style={{
-                          borderRadius: '50%',
-                          border: '1px solid #ddd',
+                          borderRadius: "50%",
+                          border: "1px solid #ddd",
                         }}
                       >
                         <img
                           src={URL.createObjectURL(selectedImage)}
-                          width={'48px'}
+                          width={"48px"}
                           alt="not found"
                         />
                       </Avatar>
-                    ) : selectedImage === null && data !== '' ? (
+                    ) : selectedImage === null && data !== "" ? (
                       <Avatar
                         style={{
-                          borderRadius: '50%',
-                          border: '1px solid #ddd',
+                          borderRadius: "50%",
+                          border: "1px solid #ddd",
                         }}
                       >
                         <img
                           src={`data:image/png;base64,${data}`}
-                          width={'48px'}
+                          width={"48px"}
                         />
                       </Avatar>
                     ) : (
                       <Avatar
                         style={{
-                          borderRadius: '50%',
-                          border: '1px solid #ddd',
+                          borderRadius: "50%",
+                          border: "1px solid #ddd",
                         }}
                       >
-                        <img src={`../../user.png`} alt="" width={'48px'} />
+                        <img src={`../../user.png`} alt="" width={"48px"} />
                       </Avatar>
                     )}
                     <UploadButton
@@ -1104,7 +1106,7 @@ function NewForm() {
                     multiple=""
                     accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
                     autocomplete="off"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                     onChange={(e) => {
                       console.log(e.target.files[0]);
                       setSelectedImage(e.target.files[0]);
@@ -1115,7 +1117,7 @@ function NewForm() {
                   ? null
                   : addingFields.map((value, index) => {
                       return (
-                        <FormGrid style={{ padding: 'unset' }}>
+                        <FormGrid style={{ padding: "unset" }}>
                           <FormLabel>{addingFields[index]}</FormLabel>
                           <FormInput placeholder="Enter details here" />
                         </FormGrid>
@@ -1125,49 +1127,49 @@ function NewForm() {
               </FormGrid>
             </PreviewContainer>
             <PreviewContainer
-              style={{ display: visible === 4 ? 'flex' : 'none' }}
+              style={{ display: visible === 4 ? "flex" : "none" }}
             >
               <TopLinkContainer>
                 <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
-                  style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
+                  style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                 />
                 <a
                   href="http://tryloya.com"
                   style={{
-                    textDecoration: 'unset',
+                    textDecoration: "unset",
                   }}
                 >
                   Powered by Loya
                 </a>
               </TopLinkContainer>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 {selectedImage !== null ? (
                   <img
                     src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
+                    width={"48px"}
                     alt="not found"
                   />
-                ) : selectedImage === null && data !== '' ? (
+                ) : selectedImage === null && data !== "" ? (
                   <img
                     src={`data:image/png;base64,${data}`}
                     alt=""
-                    width={'48px'}
+                    width={"48px"}
                   />
                 ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
+                  <img src={`../../heart.png`} width={"32px"} />
                 )}
               </Grid>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 <PageTitle>{thankTitle}</PageTitle>
               </Grid>
               <Grid
                 container
                 style={{
-                  marginTop: '1rem',
-                  whiteSpace: 'pre-wrap',
+                  marginTop: "1rem",
+                  whiteSpace: "pre-wrap",
                 }}
               >
                 {thankMessage}
@@ -1177,65 +1179,65 @@ function NewForm() {
         ) : (
           <div
             style={{
-              width: '320px',
-              alignSelf: 'center',
+              width: "320px",
+              alignSelf: "center",
               background: bgColor,
-              height: '600px',
-              display: 'flex',
-              justifyContent: 'center',
-              padding: '1rem',
-              borderColor: '#ddd',
-              borderWidth: '0.2rem',
-              overflowY: 'auto',
-              border: '3px solid #111',
-              margin: '1rem',
-              borderRadius: '1rem',
+              height: "600px",
+              display: "flex",
+              justifyContent: "center",
+              padding: "1rem",
+              borderColor: "#ddd",
+              borderWidth: "0.2rem",
+              overflowY: "auto",
+              border: "3px solid #111",
+              margin: "1rem",
+              borderRadius: "1rem",
             }}
           >
             <PreviewContainer
-              style={{ display: visible === 1 ? 'flex' : 'none' }}
+              style={{ display: visible === 1 ? "flex" : "none" }}
             >
               <TopLinkContainer>
                 <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
-                  style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
+                  style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                 />
                 <a
                   href="http://tryloya.com"
                   style={{
-                    textDecoration: 'unset',
+                    textDecoration: "unset",
                   }}
                 >
                   Powered by Loya
                 </a>
               </TopLinkContainer>
-              <Grid container style={{ marginBottom: '1rem' }}>
+              <Grid container style={{ marginBottom: "1rem" }}>
                 {selectedImage !== null ? (
                   <img
                     src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
+                    width={"48px"}
                     alt="not found"
                   />
-                ) : data !== '' ? (
+                ) : data !== "" ? (
                   <img
                     src={`data:image/png;base64,${data}`}
                     alt=""
-                    width={'48px'}
+                    width={"48px"}
                   />
                 ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
+                  <img src={`../../heart.png`} width={"32px"} />
                 )}
               </Grid>
-              <Grid container style={{ marginBottom: '1rem' }}>
+              <Grid container style={{ marginBottom: "1rem" }}>
                 <PageTitle>{title}</PageTitle>
               </Grid>
               <Grid
                 container
                 style={{
-                  marginBottom: '1rem',
-                  whiteSpace: 'pre-wrap',
+                  marginBottom: "1rem",
+                  whiteSpace: "pre-wrap",
                 }}
               >
                 {message}
@@ -1243,8 +1245,8 @@ function NewForm() {
               <Grid
                 container
                 style={{
-                  marginBottom: '1rem',
-                  display: checked[0] === 'true' ? 'flex' : 'none',
+                  marginBottom: "1rem",
+                  display: checked[0] === "true" ? "flex" : "none",
                 }}
               >
                 <DefaultButton primary={priColor}>
@@ -1255,57 +1257,57 @@ function NewForm() {
               <Grid
                 container
                 style={{
-                  marginBottom: '1rem',
-                  display: checked[1] === 'true' ? 'flex' : 'none',
+                  marginBottom: "1rem",
+                  display: checked[1] === "true" ? "flex" : "none",
                 }}
               >
                 <DefaultButton>Write a review</DefaultButton>
               </Grid>
             </PreviewContainer>
             <PreviewContainer
-              style={{ display: visible === 2 ? 'flex' : 'none' }}
+              style={{ display: visible === 2 ? "flex" : "none" }}
             >
               <TopLinkContainer>
                 <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
-                  style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
+                  style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                 />
                 <a
                   href="http://tryloya.com"
                   style={{
-                    textDecoration: 'unset',
+                    textDecoration: "unset",
                   }}
                 >
                   Powered by Loya
                 </a>
               </TopLinkContainer>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 {selectedImage !== null ? (
                   <img
                     src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
+                    width={"48px"}
                     alt="not found"
                   />
-                ) : data !== '' ? (
+                ) : data !== "" ? (
                   <img
                     src={`data:image/png;base64,${data}`}
                     alt=""
-                    width={'48px'}
+                    width={"48px"}
                   />
                 ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
+                  <img src={`../../heart.png`} width={"32px"} />
                 )}
               </Grid>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 <PageTitle>Write a text textimonial</PageTitle>
               </Grid>
               <Grid
                 container
                 style={{
-                  marginTop: '1rem',
-                  whiteSpace: 'pre-wrap',
+                  marginTop: "1rem",
+                  whiteSpace: "pre-wrap",
                 }}
               >
                 {prompt}
@@ -1313,11 +1315,11 @@ function NewForm() {
               <Grid
                 container
                 style={{
-                  marginTop: '1rem',
+                  marginTop: "1rem",
                 }}
               >
                 <Rating
-                  style={{ display: checked[2] === 'true' ? 'flex' : 'none' }}
+                  style={{ display: checked[2] === "true" ? "flex" : "none" }}
                   value={rating}
                   onChange={(event, newValue) => {
                     setRating(rating);
@@ -1327,8 +1329,8 @@ function NewForm() {
               <Grid
                 container
                 style={{
-                  marginTop: '1rem',
-                  whiteSpace: 'pre-wrap',
+                  marginTop: "1rem",
+                  whiteSpace: "pre-wrap",
                 }}
               >
                 <TextField
@@ -1336,17 +1338,17 @@ function NewForm() {
                   multiline
                   rows={4}
                   placeholder="Write something nice ✨"
-                  style={{ width: '100%' }}
+                  style={{ width: "100%" }}
                 />
               </Grid>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 <DefaultButton primary>Submit</DefaultButton>
               </Grid>
             </PreviewContainer>
             <PreviewContainer
               style={{
-                display: visible === 3 ? 'flex' : 'none',
-                alignSelf: 'baseline',
+                display: visible === 3 ? "flex" : "none",
+                alignSelf: "baseline",
               }}
             >
               <TopLinkContainer>
@@ -1354,35 +1356,35 @@ function NewForm() {
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
-                  style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
+                  style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                 />
                 <a
                   href="http://tryloya.com"
                   style={{
-                    textDecoration: 'unset',
+                    textDecoration: "unset",
                   }}
                 >
                   Powered by Loya
                 </a>
               </TopLinkContainer>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 {selectedImage !== null ? (
                   <img
                     src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
+                    width={"48px"}
                     alt="not found"
                   />
-                ) : data !== '' ? (
+                ) : data !== "" ? (
                   <img
                     src={`data:image/png;base64,${data}`}
                     alt=""
-                    width={'48px'}
+                    width={"48px"}
                   />
                 ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
+                  <img src={`../../heart.png`} width={"32px"} />
                 )}
               </Grid>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 <PageTitle>Almost done</PageTitle>
               </Grid>
               <FormGrid>
@@ -1390,73 +1392,73 @@ function NewForm() {
                 <FormInput placeholder="ex.John Smith" />
                 <div
                   style={{
-                    display: toggled[0] === true ? 'block' : 'none',
-                    width: '100%',
+                    display: toggled[0] === true ? "block" : "none",
+                    width: "100%",
                   }}
                 >
-                  <FormGrid style={{ padding: 'unset' }}>
+                  <FormGrid style={{ padding: "unset" }}>
                     <FormLabel>Email Address</FormLabel>
                     <FormInput placeholder="ex.John Smith" />
                   </FormGrid>
                 </div>
                 <div
                   style={{
-                    display: toggled[1] === true ? 'block' : 'none',
-                    width: '100%',
+                    display: toggled[1] === true ? "block" : "none",
+                    width: "100%",
                   }}
                 >
-                  <FormGrid style={{ padding: 'unset' }}>
+                  <FormGrid style={{ padding: "unset" }}>
                     <FormLabel>Headline</FormLabel>
                     <FormInput placeholder="ex.John Smith" />
                   </FormGrid>
                 </div>
                 <div
                   style={{
-                    display: toggled[2] === true ? 'block' : 'none',
-                    width: '100%',
+                    display: toggled[2] === true ? "block" : "none",
+                    width: "100%",
                   }}
                 >
-                  <FormGrid style={{ padding: 'unset' }}>
+                  <FormGrid style={{ padding: "unset" }}>
                     <FormLabel>Your Website</FormLabel>
                     <FormInput placeholder="ex.John Smith" />
                   </FormGrid>
                 </div>
                 <div>
                   <FormLabel>Avatar</FormLabel>
-                  <div style={{ display: 'flex', flexDirection: 'row' }}>
+                  <div style={{ display: "flex", flexDirection: "row" }}>
                     {selectedImage !== null ? (
                       <Avatar
                         style={{
-                          borderRadius: '50%',
-                          border: '1px solid #ddd',
+                          borderRadius: "50%",
+                          border: "1px solid #ddd",
                         }}
                       >
                         <img
                           src={URL.createObjectURL(selectedImage)}
-                          width={'48px'}
+                          width={"48px"}
                           alt="not found"
                         />
                       </Avatar>
-                    ) : selectedImage === null && data !== '' ? (
+                    ) : selectedImage === null && data !== "" ? (
                       <Avatar
                         style={{
-                          borderRadius: '50%',
-                          border: '1px solid #ddd',
+                          borderRadius: "50%",
+                          border: "1px solid #ddd",
                         }}
                       >
                         <img
                           src={`data:image/png;base64,${data}`}
-                          width={'48px'}
+                          width={"48px"}
                         />
                       </Avatar>
                     ) : (
                       <Avatar
                         style={{
-                          borderRadius: '50%',
-                          border: '1px solid #ddd',
+                          borderRadius: "50%",
+                          border: "1px solid #ddd",
                         }}
                       >
-                        <img src={`../../user.png`} alt="" width={'48px'} />
+                        <img src={`../../user.png`} alt="" width={"48px"} />
                       </Avatar>
                     )}
                     <UploadButton
@@ -1474,7 +1476,7 @@ function NewForm() {
                     multiple=""
                     accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
                     autocomplete="off"
-                    style={{ display: 'none' }}
+                    style={{ display: "none" }}
                     onChange={(e) => {
                       console.log(e.target.files[0]);
                       setSelectedImage(e.target.files[0]);
@@ -1495,49 +1497,49 @@ function NewForm() {
               </FormGrid>
             </PreviewContainer>
             <PreviewContainer
-              style={{ display: visible === 4 ? 'flex' : 'none' }}
+              style={{ display: visible === 4 ? "flex" : "none" }}
             >
               <TopLinkContainer>
                 <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
-                  style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
+                  style={{ paddingTop: "0.4rem", marginRight: "0.2rem" }}
                 />
                 <a
                   href="http://tryloya.com"
                   style={{
-                    textDecoration: 'unset',
+                    textDecoration: "unset",
                   }}
                 >
                   Powered by Loya
                 </a>
               </TopLinkContainer>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 {selectedImage !== null ? (
                   <img
                     src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
+                    width={"48px"}
                     alt="not found"
                   />
-                ) : selectedImage === null && data !== '' ? (
+                ) : selectedImage === null && data !== "" ? (
                   <img
                     src={`data:image/png;base64,${data}`}
                     alt=""
-                    width={'48px'}
+                    width={"48px"}
                   />
                 ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
+                  <img src={`../../heart.png`} width={"32px"} />
                 )}
               </Grid>
-              <Grid container style={{ marginTop: '1rem' }}>
+              <Grid container style={{ marginTop: "1rem" }}>
                 <PageTitle>{thankTitle}</PageTitle>
               </Grid>
               <Grid
                 container
                 style={{
-                  marginTop: '1rem',
-                  whiteSpace: 'pre-wrap',
+                  marginTop: "1rem",
+                  whiteSpace: "pre-wrap",
                 }}
               >
                 {thankMessage}
@@ -1547,7 +1549,7 @@ function NewForm() {
         )}
       </Grid>
       <Snackbar
-        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+        anchorOrigin={{ vertical: "top", horizontal: "right" }}
         open={open}
         autoHideDuration={6000}
         onClose={handleCloseSnack}
@@ -1555,7 +1557,7 @@ function NewForm() {
         <Alert
           onClose={handleCloseSnack}
           severity="success"
-          sx={{ width: '100%' }}
+          sx={{ width: "100%" }}
         >
           Save Changed
         </Alert>

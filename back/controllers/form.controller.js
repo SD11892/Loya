@@ -11,9 +11,11 @@ const Thank = db.thank;
 const Op = db.Sequelize.Op;
 
 exports.getAll = (req, res) => {
+  const data = req.query;
   Form.findAll({
     where: {
-      projectId: 1,
+      projectId: data.projects.map((row) => row.id),
+      userId: data.userId,
     },
   })
     .then((forms) => {
@@ -118,8 +120,10 @@ exports.getByUrl = (req, res) => {
 };
 
 exports.create = (req, res) => {
+  console.log("create=", req);
   Form.create({
     projectId: req.query.parentId,
+    userId: req.query.userId,
     formUrl: req.query.url,
     formName: req.query.name,
     response: 0,
@@ -158,7 +162,6 @@ exports.create = (req, res) => {
                 call: 0,
                 custom: 0,
               }).then((result) => {
-                console.log("result=", result.dataValues.formUrl);
                 return res.json({
                   CODE: 200,
                   message: "Success Form",
@@ -177,7 +180,6 @@ exports.create = (req, res) => {
 
 exports.update = (req, res) => {
   const data = req.query.info;
-  console.log("file=", req.file);
   if (req.file !== undefined) {
     Form.update(
       {
@@ -320,6 +322,7 @@ exports.update = (req, res) => {
                   },
                 }
               ).then((result) => {
+                console.log("result=", result);
                 res.json({ result });
               });
             });

@@ -85,7 +85,6 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   overflowX: "auto",
 }));
 
-const project = localStorage.getItem("project");
 function Complete() {
   const navigate = useNavigate();
   const [visible, setVisible] = React.useState(1);
@@ -186,13 +185,16 @@ function Complete() {
     infor.directUrl = directUrl;
     infor.key = inputingFields.concat(addingFields);
     infor.formUrl = formUrl;
-    console.log("herre");
-    saveForm(infor, selectedImage).then(() => {
+    infor.projectId = `${localStorage.getItem("projectId")}`;
+    infor.userId = `${localStorage.getItem("userId")}`;
+    saveForm(infor, selectedImage).then((result) => {
+      console.log("result=", result);
       navigate(`/forms/${formUrl}/ready`);
     });
   };
 
   useEffect(() => {
+    console.log("project=", localStorage.getItem("project"));
     setFormName(`${localStorage.getItem("project")} testimonials Form`);
     createForm(`${localStorage.getItem("project")} testimonials Form`).then(
       (res) => {
@@ -239,7 +241,7 @@ function Complete() {
             style={{
               width: "100%",
               height: "100vh",
-              overflowY:"auto",
+              overflowY: "auto",
             }}
           >
             <Grid container pt={"2rem"}>

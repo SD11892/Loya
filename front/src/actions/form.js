@@ -4,7 +4,6 @@ import { GETALL_SUCCESS } from "./types";
 export const getAll = () => (dispatch) => {
   return FormService.getAll().then(
     (data) => {
-      console.log(data.data);
       dispatch({
         type: GETALL_SUCCESS,
         payload: data.data,
@@ -25,10 +24,12 @@ export const getAll = () => (dispatch) => {
 };
 
 export const createForm = (name) => {
-  const parentId = 1;
+  const projects = JSON.parse(localStorage.getItem("projects"));
+  const projectId = projects[0].id;
+  const userId = `${localStorage.getItem("userId")}`;
   const url = makeid(6);
   const fname = name;
-  return FormService.create(url, parentId, fname);
+  return FormService.create(url, projectId, userId, fname);
 };
 
 export const saveForm = (info, data) => {

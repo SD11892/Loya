@@ -15,6 +15,8 @@ import { useNavigate } from "react-router-dom";
 import SignPanel from "./SignPanel";
 import { Googlesm } from "../../icons/google_sm";
 
+import { getAll } from "../../actions/project";
+
 const useStyles = makeStyles((theme) => ({
   margin: {
     margin: theme.spacing(1),
@@ -33,14 +35,19 @@ const Login = () => {
 
   const submit = () => {
     dispatch(login(state.email, state.password)).then((res) => {
-      console.log("res=", res);
       if (res.CODE === "200") {
         localStorage.setItem("signIn", true);
-        navigate("/testimonials");
+        localStorage.setItem("userId", res.data.id);
+        dispatch(getAll()).then((result) => {
+          localStorage.setItem(
+            "projects",
+            JSON.stringify(result.data.projects)
+          );
+          navigate("/testimonials");
+        });
       } else {
         alert("Invalid User or password");
         // console.log("Invalid");
-
       }
     });
   };

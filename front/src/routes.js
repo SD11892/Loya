@@ -16,6 +16,7 @@ import Ready from "./pages/sign/Ready";
 import Profile from "./pages/sign/Profile";
 import NewForm from "./pages/newForm/newForm";
 import FormView from "./pages/newForm/formView";
+import Project from "./pages/project";
 import React from "react";
 
 export const routes = [
@@ -56,6 +57,10 @@ export const routes = [
         element: <Widgets />,
       },
       {
+        path: "/settings/:id",
+        element: <Project />,
+      },
+      {
         path: "/walls",
         element: <Walls />,
       },
@@ -90,7 +95,7 @@ export const routes = [
     element: <WidgetView />,
   },
   {
-    path: "/walls/p/1/testimonials/:id",
+    path: "/walls/p/:id/testimonials/:id",
     element: <WallView />,
   },
 ];

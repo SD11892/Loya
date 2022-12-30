@@ -1,14 +1,21 @@
+import * as React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import BackwardButton from "../uielements/buttons/backwardButton";
 import SiderText from "../uielements/siderText";
-import { Grid, InputBase, Button } from "@mui/material";
+import { Grid, InputBase, Button, FormLabel, Rating } from "@mui/material";
 import PageTitle from "../uielements/pageTitle";
 import { Googlesm } from "../../icons/google_sm";
 import { Facebooksm } from "../../icons/facebook_sm";
-import { Star } from "../../icons/star";
+import FormInput from "../uielements/form/FormInput";
+import FormGrid from "../uielements/form/FormGrid";
 
 export const SearchPane = () => {
   const navigate = useNavigate();
+  const [rating, setRating] = React.useState(null);
+  const onChange = (event, newValue) => {
+    setRating(newValue);
+  };
+  React.useEffect(() => {}, [rating]);
   return (
     <div
       style={{
@@ -34,20 +41,14 @@ export const SearchPane = () => {
             marginBottom: "1rem",
           }}
         >
-          <InputBase
-            style={{
-              padding: "0.5rem",
-              width: "100%",
-              border: "1px solid #ddd",
-              borderRadius: "5px",
-            }}
-            placeholder="Search for a name,a job title or an name"
-          />
+          <FormGrid>
+            <FormInput placeholder="Search for a name,a job title or an name" />
+          </FormGrid>
         </Grid>
         <Grid item xs={12} style={{ marginBottom: "1rem" }}>
-          <div style={{ marginTop: "1rem", fontWeight: "500" }}>
-            Filter By Name
-          </div>
+          <FormGrid>
+            <FormLabel>Filter By Name</FormLabel>
+          </FormGrid>
         </Grid>
         <Grid
           item
@@ -89,16 +90,10 @@ export const SearchPane = () => {
           </Link>
         </Grid>
         <Grid item xs={12} style={{ marginBottom: "1rem" }}>
-          <div style={{ marginTop: "1rem", fontWeight: "500" }}>
-            Filter By Rating
-          </div>
+          <FormLabel>Filter By Rating</FormLabel>
         </Grid>
         <Grid item xs={12} style={{ marginBottom: "1rem" }}>
-          <Star />
-          <Star />
-          <Star />
-          <Star />
-          <Star />
+          <Rating value={rating} onChange={onChange} />
         </Grid>
         <Grid item xs={12} style={{ marginBottom: "1rem" }}>
           <div style={{ marginTop: "1rem", fontWeight: "500" }}>

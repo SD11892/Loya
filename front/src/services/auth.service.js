@@ -3,13 +3,28 @@ import axios from "axios";
 const API_URL = "/api/auth/";
 
 const register = (username, email, password) => {
-  return axios.post(API_URL + "signup", null, {
-    params: {
-      username,
-      email,
-      password,
-    },
-  });
+  return axios
+    .post(API_URL + "signup", null, {
+      params: {
+        username,
+        email,
+        password,
+      },
+    })
+    .then((response) => {
+      console.log("response=", response);
+      return {
+        CODE: "200",
+        message: "Sign In Successfully",
+        data: response.data,
+      };
+    })
+    .catch((err) => {
+      console.log("err=", err);
+      if (err.code === "ERR_BAD_REQUEST") {
+        return { CODE: "404", message: "Incorrect SignUp" };
+      }
+    });
 };
 
 const emailVerify = (email) => {

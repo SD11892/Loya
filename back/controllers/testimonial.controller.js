@@ -1,5 +1,6 @@
 const db = require("../models");
 const fs = require("fs");
+const { response } = require("../models");
 const Form = db.form;
 const Testimonial = db.testimonial;
 
@@ -7,65 +8,113 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
   const data = req.query.info;
+  console.log("submit=", data);
   if (req.file !== undefined) {
-    Form.findAll({
-      where: {
-        formUrl: data.url,
-      },
-    }).then((value) => {
-      Form.update(
-        {
-          response: value[0].dataValues.response + 1,
+    if (data.url !== "") {
+      Form.findAll({
+        where: {
+          formUrl: data.url,
         },
-        {
-          where: {
-            formUrl: data.url,
+      }).then((value) => {
+        Form.update(
+          {
+            response: value[0].dataValues.response + 1,
           },
-        }
-      ).then(() => {
-        Testimonial.create({
-          url: data.url,
-          key: data.key.toString(),
-          value: data.value.toString(),
-          content: data.content,
-          status: 0,
-          type: data.type,
-          name: data.name,
-          rating: data.rating,
-          data: fs.readFileSync("../upload/" + req.file.filename),
-          index: data.index,
-        });
+          {
+            where: {
+              formUrl: data.url,
+            },
+          }
+        )
+          .then(() => {
+            Testimonial.create({
+              url: data.url,
+              key: data.key.toString(),
+              value: data.value.toString(),
+              content: data.content,
+              status: 0,
+              type: data.type,
+              name: data.name,
+              rating: data.rating,
+              data: fs.readFileSync("../upload/" + req.file.filename),
+              index: data.index,
+              projectId: data.projectId,
+              userId: data.userId,
+            });
+          })
+          .then((r) => {
+            res.json({ r });
+          });
       });
-    });
+    } else {
+      Testimonial.create({
+        url: data.url,
+        key: data.key.toString(),
+        value: data.value.toString(),
+        content: data.content,
+        status: 0,
+        type: data.type,
+        name: data.name,
+        rating: data.rating,
+        data: fs.readFileSync("../upload/" + req.file.filename),
+        index: data.index,
+        projectId: data.projectId,
+        userId: data.userId,
+      }).then((result) => {
+        res.json({ result });
+      });
+    }
   } else {
-    Form.findAll({
-      where: {
-        formUrl: data.url,
-      },
-    }).then((value) => {
-      Form.update(
-        {
-          response: value[0].dataValues.response + 1,
+    if (data.url !== "") {
+      console.log(data.url);
+      Form.findAll({
+        where: {
+          formUrl: data.url,
         },
-        {
-          where: {
-            formUrl: data.url,
+      }).then((value) => {
+        console.log("value=", value);
+        Form.update(
+          {
+            response: value[0].dataValues.response + 1,
           },
-        }
-      ).then(() => {
-        Testimonial.create({
-          key: data.key.toString(),
-          url: data.url,
-          value: data.value.toString(),
-          content: data.content,
-          status: 0,
-          index: data.index,
+          {
+            where: {
+              formUrl: data.url,
+            },
+          }
+        ).then(() => {
+          Testimonial.create({
+            key: data.key.toString(),
+            url: data.url,
+            value: data.value.toString(),
+            content: data.content,
+            status: 0,
+            rating: data.rating,
+            index: data.index,
+            projectId: data.projectId,
+            userId: data.userId,
+          }).then((r) => {
+            res.json({ r });
+          });
         });
       });
-    });
+    } else {
+      Testimonial.create({
+        key: data.key.toString(),
+        url: data.url,
+        value: data.value.toString(),
+        content: data.content,
+        status: 0,
+        index: data.index,
+        rating: data.rating,
+        projectId: data.projectId,
+        userId: data.userId,
+      }).then((result) => {
+        res.json({ result });
+      });
+    }
   }
 };
-
 exports.update = (req, res) => {
   const data = req.query.info;
   console.log("data=", data);
@@ -116,7 +165,15 @@ exports.update = (req, res) => {
 };
 
 exports.getAll = (req, res) => {
-  Testimonial.findAll({ order: [["index", "ASC"]] })
+  const data = req.query;
+  console.log(data.projects);
+  Testimonial.findAll({
+    where: {
+      userId: data.userId,
+      projectId: data.projects.map((row) => row.id),
+    },
+    order: [["index", "ASC"]],
+  })
     .then((testimonials) => {
       if (!testimonials) {
         console.log("Testimonials Not Found");
@@ -133,19 +190,35 @@ exports.getAll = (req, res) => {
 
 exports.delete = (req, res) => {
   const Id = req.query.id;
-  Testimonial.destroy({
+  Testimonial.findAll({
     where: {
       Id: Id,
     },
-  }).then((result) => {
-    console.log("res=", res);
-    res.json({ result });
+  }).then((list) => {
+    Form.update(
+      {
+        response: response - 1,
+      },
+      {
+        where: {
+          formUrl: list.url,
+        },
+      }
+    ).then(() => {
+      Testimonial.destroy({
+        where: {
+          Id: Id,
+        },
+      }).then((result) => {
+        console.log("res=", res);
+        res.json({ result });
+      });
+    });
   });
 };
 
 exports.getByUrl = (req, res) => {
   const formUrl = req.params.url.replace(":", "");
-  console.log("f=", formUrl);
   const info = {
     key: [],
     value: [],

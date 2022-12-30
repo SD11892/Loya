@@ -38,7 +38,6 @@ export const deleteTestimonial = (id) => {
 export const getByFormUrl = (url) => {
   return testimonialService.getByFormUrl(url).then(
     (data) => {
-      console.log("data=", data);
       return Promise.resolve(data);
     },
     (error) => {

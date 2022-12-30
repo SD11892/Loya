@@ -1,28 +1,25 @@
 import axios from "axios";
 import { isEmpty } from "../util/isEmpty";
 
-const API_URL = "/api/form/";
+const API_URL = "/api/project/";
 
-const create = (url, parentId, userId, name) => {
-  console.log("service =", parentId);
-  return axios.post(API_URL + "create", null, {
-    params: {
-      url,
-      userId,
-      parentId,
-      name,
+const create = (name, id, url) => {
+  console.log(name, id, url);
+  return axios.post(
+    API_URL + "create",
+    null,
+    {
+      params: { name, id, url },
     },
-  });
+    {
+      headers: { "Content-Type": "multi-part/form-data" },
+    }
+  );
 };
 
-const update = (info, data) => {
-  const formData = new FormData();
-  if (data) {
-    formData.append("file", data, data.name);
-  }
+const update = (info) => {
   return axios.post(
     API_URL + "update",
-    formData,
     { params: { info } },
     {
       headers: { "Content-Type": "multi-part/form-data" },
@@ -31,13 +28,11 @@ const update = (info, data) => {
 };
 
 const getAll = () => {
-  const projects = JSON.parse(localStorage.getItem("projects"));
   const userId = `${localStorage.getItem("userId")}`;
   return axios
     .post(API_URL + `all`, null, {
       params: {
-        projects,
-        userId,
+        userId: userId,
       },
     })
     .then((response) => {
@@ -61,9 +56,9 @@ const getAll = () => {
     });
 };
 
-const getByFormUrl = async (url) => {
+const getById = async (Id) => {
   try {
-    const res = await axios.get(API_URL + ":" + url + "/");
+    const res = await axios.get(API_URL + ":" + Id + "/");
     return {
       CODE: 200,
       message: "success",
@@ -74,10 +69,10 @@ const getByFormUrl = async (url) => {
   }
 };
 
-const deleteForms = (ids) => {
+const deletePro = (id) => {
   return axios.post(API_URL + "delete", null, {
     params: {
-      ids,
+      id,
     },
   });
 };
@@ -85,7 +80,7 @@ const deleteForms = (ids) => {
 export default {
   create,
   getAll,
-  getByFormUrl,
-  deleteForms,
+  getById,
+  deletePro,
   update,
 };

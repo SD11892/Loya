@@ -25,6 +25,7 @@ db.form = require("../models/form.model.js")(sequelize, Sequelize);
 db.design = require("../models/design.model.js")(sequelize, Sequelize);
 db.welcome = require("../models/welcome.model.js")(sequelize, Sequelize);
 db.response = require("../models/response.model.js")(sequelize, Sequelize);
+db.project = require("../models/project.model.js")(sequelize, Sequelize);
 db.testimonial = require("../models/testimonial.model.js")(
   sequelize,
   Sequelize

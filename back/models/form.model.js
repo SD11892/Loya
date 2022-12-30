@@ -12,6 +12,12 @@ module.exports = (sequelize, Sequelize) => {
     response: {
       type: Sequelize.INTEGER,
     },
+    projectId: {
+      type: Sequelize.INTEGER,
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+    },
   });
 
   return Form;

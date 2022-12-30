@@ -30,6 +30,12 @@ module.exports = (sequelize, Sequelize) => {
     index: {
       type: Sequelize.INTEGER,
     },
+    userId: {
+      type: Sequelize.INTEGER,
+    },
+    projectId: {
+      type: Sequelize.INTEGER,
+    },
   });
 
   return Testimonial;

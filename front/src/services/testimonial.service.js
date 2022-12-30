@@ -4,7 +4,6 @@ import { isEmpty } from "../util/isEmpty";
 const API_URL = "/api/testimonial/";
 
 const create = (info, data) => {
-  console.log("info=", info);
   const formData = new FormData();
   if (data) {
     formData.append("file", data, data.name);
@@ -37,8 +36,10 @@ const update = (info, data) => {
 };
 
 const getAll = () => {
+  let userId = `${localStorage.getItem("userId")}`;
+  let projects = JSON.parse(localStorage.getItem("projects"));
   return axios
-    .get(API_URL + `all`)
+    .post(API_URL + `all`, null, { params: { userId, projects } })
     .then((response) => {
       if (isEmpty(response.data)) {
         return {

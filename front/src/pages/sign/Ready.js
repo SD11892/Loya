@@ -28,7 +28,14 @@ const Ready = () => {
   };
 
   const copyContent = async () => {
-    let text = window.location.href;
+    let text =
+      window.location.protocol +
+      "//" +
+      window.location.host +
+      "/forms/p/" +
+      `${localStorage.getItem("project")}` +
+      "/r/" +
+      window.location.href.replace("/ready", "").slice(-6);
 
     try {
       console.log("text=", text);
@@ -97,7 +104,13 @@ const Ready = () => {
               }}
               onClick={copyContent}
             >
-              {window.location.href}
+              {window.location.protocol +
+                "//" +
+                window.location.host +
+                "/forms/p/" +
+                `${localStorage.getItem("project")}` +
+                "/r/" +
+                window.location.href.replace("/ready", "").slice(-6)}
               <FormLink />
             </ButtonBase>
           </FormGrid>

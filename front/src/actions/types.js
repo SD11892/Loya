@@ -12,3 +12,5 @@ export const ALL_SUCCESS = "ALL_SUCCESS";
 export const WALL_SUCCESS = "WALL_SUCCESS";
 export const TEST_SUCCESS = "TEST_SUCCESS";
 export const SAVE_INDEX = "SAVE_INDEX";
+
+export const ALL_PROJECT = "ALL_PROJECT";

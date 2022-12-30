@@ -11,7 +11,7 @@ router.use(function (req, res, next) {
   next();
 });
 
-router.get("/api/form/all", controller.getAll);
+router.post("/api/form/all", controller.getAll);
 router.get("/api/form/:url", controller.getByUrl);
 router.post("/api/form/create", controller.create);
 router.post("/api/form/update", upload.single("file"), controller.update);

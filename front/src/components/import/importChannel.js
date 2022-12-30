@@ -1,6 +1,6 @@
 import { Grid, TextField, Avatar, Rating } from "@mui/material";
 import * as React from "react";
-import { moment } from "moment";
+import moment from "moment";
 import PageTitle from "../uielements/pageTitle";
 import { Facebook as FacebookIcon } from "../../icons/facebook";
 import { Google as GoogleIcon } from "../../icons/google";
@@ -15,8 +15,12 @@ import { Camera as CameraIcon } from "../../icons/camera";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
+import { createTestimonial } from "../../actions/testimonial";
+import { getAll } from "../../actions/testimonial";
+import { useDispatch } from "react-redux";
 
 export const ImportChannel = (props) => {
+  const dispatch = useDispatch();
   const [name, setName] = React.useState("");
   const [date, setDate] = React.useState(moment().format("L"));
   const [headline, setHeadline] = React.useState("");
@@ -25,7 +29,43 @@ export const ImportChannel = (props) => {
   const [rating, setRating] = React.useState(0);
   const [selectedImage, setSelectedImage] = React.useState(null);
   const hiddenFileInput = React.useRef(null);
+  const infor = {
+    index: "",
+    url: "",
+    content: "",
+    key: [],
+    value: [],
+    rating: 0,
+    name: "",
+    type: "",
+    projectId: "",
+    userId: "",
+  };
+  const onSubmit = () => {
+    const projects = JSON.parse(localStorage.getItem("projects"));
+    const projectId = projects[0].id;
+    const userId = `${localStorage.getItem("userId")}`;
+    console.log("submit");
+    if (selectedImage) {
+      infor.name = selectedImage.name;
+      infor.type = selectedImage.type;
+    }
+    infor.content = review;
+    infor.key = ["Your Name", "Email Address", "Your Website"];
+    infor.value[0] = name;
+    infor.value[1] = headline;
+    infor.value[2] = url;
+    infor.rating = rating;
+    infor.index = props.testimonials.length;
+    infor.projectId = projectId;
+    infor.userId = userId;
 
+    createTestimonial(infor, selectedImage).then(() => {
+      dispatch(getAll());
+    });
+  };
+
+  React.useEffect(() => {}, [rating]);
   return (
     <div
       style={{
@@ -36,7 +76,6 @@ export const ImportChannel = (props) => {
         height: "100vh",
         display: "flex",
         flexDirection: "column",
-        overflowY: "auto",
       }}
     >
       <div
@@ -189,19 +228,21 @@ export const ImportChannel = (props) => {
         >
           <FormLabel>Review</FormLabel>
         </Grid>
-        <Grid container spacing={2} style={{ marginTop: "0.1rem" }}>
-          <FormGrid>
-            <TextField
-              multiline
-              rows={4}
-              placeholder="Write something nice ✨"
-              style={{ width: "100%" }}
-              value={review}
-              onChange={(e) => {
-                setReview(e.target.value);
-              }}
-            />
-          </FormGrid>
+        <Grid
+          container
+          spacing={2}
+          style={{ marginTop: "0.1rem", paddingLeft: "1rem" }}
+        >
+          <TextField
+            multiline
+            rows={4}
+            placeholder="Write something nice ✨"
+            style={{ width: "100%" }}
+            value={review}
+            onChange={(e) => {
+              setReview(e.target.value);
+            }}
+          />
         </Grid>
         <Grid
           container
@@ -218,6 +259,7 @@ export const ImportChannel = (props) => {
           <Rating
             value={rating}
             onChange={(event, newValue) => {
+              console.log("rate=", newValue);
               setRating(newValue);
             }}
             style={{ fontSize: "2rem" }}
@@ -243,27 +285,18 @@ export const ImportChannel = (props) => {
             }}
           />
         </Grid>
-        <Grid
-          container
-          spacing={2}
-          style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
-        >
-          <FormLabel>Date</FormLabel>
-        </Grid>
-        <FormGrid>
-          <FormLabel>Date</FormLabel>
-          <LocalizationProvider dateAdapter={AdapterDayjs}>
-            <DatePicker
-              label=""
-              value={date}
-              onChange={(newValue) => {
-                console.log(newValue);
-                setDate(newValue);
-              }}
-              renderInput={(params) => <TextField {...params} />}
-            />
-          </LocalizationProvider>
-        </FormGrid>
+        <FormLabel>Date</FormLabel>
+        <LocalizationProvider dateAdapter={AdapterDayjs}>
+          <DatePicker
+            label=""
+            value={date}
+            onChange={(newValue) => {
+              console.log(newValue);
+              setDate(newValue);
+            }}
+            renderInput={(params) => <TextField {...params} />}
+          />
+        </LocalizationProvider>
         <Grid
           container
           spacing={2}
@@ -272,7 +305,9 @@ export const ImportChannel = (props) => {
           <FormGrid>
             <DefaultButton
               style={{ borderRadius: "9999px" }}
-              onClick={() => {}}
+              onClick={() => {
+                onSubmit();
+              }}
             >
               Import Review
             </DefaultButton>

@@ -5,6 +5,7 @@ import form from "./form";
 import testimonial from "./testimonial";
 import testimonialForm from "./testimonialForm";
 import wall from "./wall";
+import project from "./project";
 
 export default combineReducers({
   auth,
@@ -13,4 +14,5 @@ export default combineReducers({
   testimonial,
   testimonialForm,
   wall,
+  project,
 });

@@ -10,6 +10,7 @@ import { Button } from "@mui/material";
 import DefaultButton from "../../components/uielements/buttons/defaultButton";
 import FormGrid from "../../components/uielements/form/FormGrid";
 import { createForm } from "../../actions/form";
+import { createProject } from "../../actions/project";
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -33,20 +34,30 @@ const Profile = () => {
 
   const submit = () => {
     localStorage.setItem("project", state.projectName);
+    localStorage.setItem("projectUrl", state.projectUrl);
     localStorage.setItem("username", state.fname + " " + state.lname);
     const data = {
       email: localStorage.getItem("email"),
       password: localStorage.getItem("password"),
       username: state.fname + " " + state.lname,
       project: state.projectName,
+      url: state.projectUrl,
     };
-    console.log("proData=", data);
-    dispatch(register(data.username, data.email, data.password, data.project))
+    dispatch(register(data.username, data.email, data.password))
       .then((res) => {
-        console.log("here");
-        navigate("/complete");
+        console.log("userId=", res.data.user.user.id);
+        localStorage.setItem("userId", res.data.user.user.id);
+        createProject(
+          state.projectName,
+          localStorage.getItem("userId"),
+          state.projectUrl
+        ).then((project) => {
+          localStorage.setItem("projectId", project.data.result.id);
+          navigate("/complete");
+        });
       })
       .catch((err) => {
+        console.log("err=", err);
         alert("Already in");
       });
 

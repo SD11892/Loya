@@ -4,7 +4,6 @@ const bodyParser = require("body-parser");
 global.__basedir = __dirname;
 const app = express();
 
-
 app.use(cors());
 
 app.use(require("./routes/auth.routes"));
@@ -12,6 +11,7 @@ app.use(require("./routes/form.routes"));
 app.use(require("./routes/testimonial.routes"));
 app.use(require("./routes/wall.routes"));
 app.use(require("./routes/testimonialForm.routes"));
+app.use(require("./routes/project.routes"));
 
 app.use(bodyParser.json());
 

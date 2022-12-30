@@ -1,11 +1,18 @@
 import * as React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { ImportChannel } from "../../components/import/importChannel";
 import { ImportSelection } from "../../components/import/importSelection";
 import { Grid } from "@mui/material";
 import { ImportHistory } from "../../components/import/importHistory";
+import { getAll } from "../../actions/testimonial";
 
 const ImportTest = () => {
   const [select, setSelect] = React.useState("text");
+  const testimonials = useSelector((state) => state.testimonial.testimonial);
+  const dispatch = useDispatch();
+  React.useEffect(() => {
+    dispatch(getAll());
+  }, []);
   React.useEffect(() => {}, [select]);
   return (
     <div
@@ -22,13 +29,14 @@ const ImportTest = () => {
           background: "rgb(250,250,250)",
           paddingLeft: "2rem",
           paddingRight: "2rem",
-          maxWidth: "20rem",
+          minWidth: "20rem",
+          height: "100%",
         }}
       >
         <ImportSelection setSelect={setSelect} select={select} />
       </Grid>
-      <Grid item style={{ minWidth: "40rem" }}>
-        <ImportChannel select={select} />
+      <Grid item style={{ minWidth: "40rem", height: "100%" }}>
+        <ImportChannel select={select} testimonials={testimonials} />
       </Grid>
       <Grid
         item
@@ -36,9 +44,12 @@ const ImportTest = () => {
           background: "rgb(250,250,250)",
           paddingLeft: "2rem",
           paddingRight: "2rem",
+          width: "100%",
+          height: "100%",
+          overflowY: "scroll",
         }}
       >
-        <ImportHistory />
+        <ImportHistory testimonials={testimonials} />
       </Grid>
     </div>
   );
