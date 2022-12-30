@@ -1,6 +1,6 @@
-import * as React from "react";
-import { useNavigate } from "react-router-dom";
-import { deepPurple } from "@mui/material/colors";
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { deepPurple } from '@mui/material/colors';
 import {
   Grid,
   Avatar,
@@ -26,6 +26,7 @@ import { Setting as SettingIcon } from "../icons/setting";
 import { UpDown as UpDownIcon } from "../icons/upDown";
 import { Widget as WidgetIcon } from "../icons/widget";
 import { DownArrow } from "../icons/downArrow";
+import { Auth } from 'aws-amplify';
 import ButtonGroup from "./uielements/ButtonGroup";
 import { getAll } from "../actions/project";
 
@@ -34,7 +35,7 @@ export const Sidebar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchor, setAnchor] = React.useState(null);
   const [menu, setMenu] = React.useState(
-    `${window.location.pathname.replace(/\//g, "")}`
+    `${window.location.pathname.replace(/\//g, '')}`
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -203,6 +204,7 @@ export const Sidebar = () => {
             sx={{ p: 2 }}
             style={{ color: "#6701e6" }}
             onClick={() => {
+              Auth.signOut();
               navigate("/");
               localStorage.clear();
             }}

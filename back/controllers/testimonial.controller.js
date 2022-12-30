@@ -1,6 +1,6 @@
-const db = require("../models");
-const fs = require("fs");
-const { response } = require("../models");
+const db = require('../models');
+const fs = require('fs');
+const { response } = require('../models');
 const Form = db.form;
 const Testimonial = db.testimonial;
 
@@ -8,9 +8,9 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
   const data = req.query.info;
-  console.log("submit=", data);
+  console.log('submit=', data);
   if (req.file !== undefined) {
-    if (data.url !== "") {
+    if (data.url !== '') {
       Form.findAll({
         where: {
           formUrl: data.url,
@@ -36,7 +36,7 @@ exports.create = (req, res) => {
               type: data.type,
               name: data.name,
               rating: data.rating,
-              data: fs.readFileSync("../upload/" + req.file.filename),
+              data: fs.readFileSync('../upload/' + req.file.filename),
               index: data.index,
               projectId: data.projectId,
               userId: data.userId,
@@ -56,7 +56,7 @@ exports.create = (req, res) => {
         type: data.type,
         name: data.name,
         rating: data.rating,
-        data: fs.readFileSync("../upload/" + req.file.filename),
+        data: fs.readFileSync('../upload/' + req.file.filename),
         index: data.index,
         projectId: data.projectId,
         userId: data.userId,
@@ -65,14 +65,14 @@ exports.create = (req, res) => {
       });
     }
   } else {
-    if (data.url !== "") {
+    if (data.url !== '') {
       console.log(data.url);
       Form.findAll({
         where: {
           formUrl: data.url,
         },
       }).then((value) => {
-        console.log("value=", value);
+        console.log('value=', value);
         Form.update(
           {
             response: value[0].dataValues.response + 1,
@@ -117,20 +117,20 @@ exports.create = (req, res) => {
 };
 exports.update = (req, res) => {
   const data = req.query.info;
-  console.log("data=", data);
+  console.log('data=', data);
   if (req.file !== undefined) {
     Testimonial.update(
       {
         url: data.url,
-        key: typeof data.key === "string" ? data.key : data.key.toString(),
+        key: typeof data.key === 'string' ? data.key : data.key.toString(),
         value:
-          typeof data.value === "string" ? data.value : data.value.toString(),
+          typeof data.value === 'string' ? data.value : data.value.toString(),
         content: data.content,
         status: data.status,
         type: data.type,
         name: data.name,
         rating: data.rating,
-        data: fs.readFileSync("../upload/" + req.file.filename),
+        data: fs.readFileSync('../upload/' + req.file.filename),
         index: data.index,
       },
       {
@@ -139,15 +139,15 @@ exports.update = (req, res) => {
         },
       }
     ).then((result) => {
-      res.json({ code: 200, data: result, message: "success" });
+      res.json({ code: 200, data: result, message: 'success' });
     });
   } else {
     Testimonial.update(
       {
         url: data.url,
-        key: typeof data.key === "string" ? data.key : data.key.toString(),
+        key: typeof data.key === 'string' ? data.key : data.key.toString(),
         value:
-          typeof data.value === "string" ? data.value : data.value.toString(),
+          typeof data.value === 'string' ? data.value : data.value.toString(),
         content: data.content,
         status: data.status,
         rating: data.rating,
@@ -172,18 +172,18 @@ exports.getAll = (req, res) => {
       userId: data.userId,
       projectId: data.projects.map((row) => row.id),
     },
-    order: [["index", "ASC"]],
+    order: [['index', 'ASC']],
   })
     .then((testimonials) => {
       if (!testimonials) {
-        console.log("Testimonials Not Found");
-        return res.status(200).send({ message: "Empty" });
+        console.log('Testimonials Not Found');
+        return res.status(200).send({ message: 'Empty' });
       } else {
         res.status(200).send({ testimonials });
       }
     })
     .catch((err) => {
-      console.log("err=", err);
+      console.log('err=', err);
       res.status(500).send({ message: err.message });
     });
 };
@@ -210,7 +210,7 @@ exports.delete = (req, res) => {
           Id: Id,
         },
       }).then((result) => {
-        console.log("res=", res);
+        console.log('res=', res);
         res.json({ result });
       });
     });
@@ -218,12 +218,12 @@ exports.delete = (req, res) => {
 };
 
 exports.getByUrl = (req, res) => {
-  const formUrl = req.params.url.replace(":", "");
+  const formUrl = req.params.url.replace(':', '');
   const info = {
     key: [],
     value: [],
-    content: "",
-    data: "",
+    content: '',
+    data: '',
     rating: 0,
   };
   Testimonial.findAll({
@@ -232,7 +232,7 @@ exports.getByUrl = (req, res) => {
     },
   })
     .then((fdata) => {
-      console.log("fdata=", fdata);
+      console.log('fdata=', fdata);
       info.key = fdata.key;
       info.value = fdata.value;
       info.content = fdata.content;
@@ -241,7 +241,30 @@ exports.getByUrl = (req, res) => {
       res.status(200).send({ data: info });
     })
     .catch((err) => {
-      console.log("err=", err);
+      console.log('err=', err);
       res.status(500).send({ message: err.message });
     });
+};
+
+exports.uploadVideo = (req, res) => {
+  const data = req.query.info;
+  console.log('data=', data);
+  if (req.file !== undefined) {
+    fs.readFileSync('../upload/' + req.file.filename);
+    Testimonial.update(
+      {
+        video: data.video,
+        note: data.note,
+      },
+      {
+        where: {
+          url: data.url,
+        },
+      }
+    ).then((result) => {
+      res.json({ code: 200, data: result, message: 'success' });
+    });
+  } else {
+    res.json({ code: 404, message: 'Require a video file' });
+  }
 };
