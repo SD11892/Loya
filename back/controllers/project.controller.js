@@ -12,7 +12,8 @@ exports.create = (req, res) => {
     name: data.name,
     userId: data.id,
   }).then((result) => {
-    res.json({ result });
+    const projects = result.dataValues;
+    res.json({ projects });
   });
 };
 

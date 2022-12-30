@@ -14,7 +14,6 @@ export const Localization = () => {
         marginLeft: "1rem",
         marginRight: "1rem",
       }}
-      class="text-amber-500"
     >
       <path d="m5 8 6 6"></path>
       <path d="m4 14 6-6 2-3"></path>

@@ -52,7 +52,10 @@ const Profile = () => {
           localStorage.getItem("userId"),
           state.projectUrl
         ).then((project) => {
-          localStorage.setItem("projectId", project.data.result.id);
+          localStorage.setItem(
+            "projects",
+            JSON.stringify(project.data.projects)
+          );
           navigate("/complete");
         });
       })

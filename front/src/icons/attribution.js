@@ -14,7 +14,7 @@ export const Attribution = (props) => {
         marginLeft: "1rem",
         marginRight: "1rem",
       }}
-      class="text-green-600"
+      className="text-green-600"
     >
       <rect x="2" y="6" width="20" height="12" rx="2"></rect>
       <path d="M12 12h.01"></path>

@@ -129,7 +129,7 @@ export default function CreateWidget() {
   const [itemList, setItemList] = React.useState([]);
   const [drawerState, setDrawerState] = React.useState(false);
   const [code, setCode] = React.useState(
-    `<div class="loya-frame-embed" data-id="${url}"></div>
+    `<div className="loya-frame-embed" data-id="${url}"></div>
 <script defer type="text/javascript" src="http://192.168.105.43:3000/embedTemplate.js"></script>`
   );
   const [openSnack, setOpenSnack] = React.useState(false);
@@ -323,13 +323,28 @@ export default function CreateWidget() {
               exclusive
               onChange={handleChange}
             >
-              <ToggleButton value="theme" aria-label="theme" size="small">
+              <ToggleButton
+                value="theme"
+                key="theme"
+                aria-label="theme"
+                size="small"
+              >
                 <MagicPencilIcon />
               </ToggleButton>
-              <ToggleButton value="design" aria-label="design" size="small">
+              <ToggleButton
+                value="design"
+                key="design"
+                aria-label="design"
+                size="small"
+              >
                 <PencilIcon />
               </ToggleButton>
-              <ToggleButton value="setting" aria-label="setting" size="small">
+              <ToggleButton
+                value="setting"
+                key="setting"
+                aria-label="setting"
+                size="small"
+              >
                 <SwitchIcon />
               </ToggleButton>
             </ToggleButtonGroup>
@@ -867,6 +882,7 @@ export default function CreateWidget() {
       </Dialog>
       <Drawer
         anchor="right"
+        key="drawer1"
         open={drawerState}
         onClose={() => {
           setDrawerState(false);
@@ -919,9 +935,10 @@ export default function CreateWidget() {
                 >
                   <EmbedToolButton
                     value="js"
+                    key="js"
                     onClick={() => {
                       setCode(
-                        `<div class="loya-frame-embed" data-id="${url}"></div>\n<script defer type="text/javascript" src="http://192.168.105.43:3000/embedTemplate.js"></script>`
+                        `<div className="loya-frame-embed" data-id="${url}"></div>\n<script defer type="text/javascript" src="http://192.168.105.43:3000/embedTemplate.js"></script>`
                       );
                     }}
                   >
@@ -929,6 +946,7 @@ export default function CreateWidget() {
                   </EmbedToolButton>
                   <EmbedToolButton
                     value="url"
+                    key="url"
                     onClick={() => {
                       setCode(window.location.href);
                     }}

@@ -10,7 +10,6 @@ export const Response = (props) => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      class="text-red-500"
       style={{
         marginLeft: "1rem",
         marginRight: "1rem",

@@ -41,6 +41,7 @@ export const ImportSelection = (props) => {
           >
             <MenuButton
               value="text"
+              key="text"
               onClick={() => {
                 props.setSelect("text");
               }}
@@ -50,6 +51,7 @@ export const ImportSelection = (props) => {
             </MenuButton>
             <MenuButton
               value="video"
+              key="video"
               onClick={() => {
                 props.setSelect("video");
               }}
@@ -59,6 +61,7 @@ export const ImportSelection = (props) => {
             </MenuButton>
             <MenuButton
               value="google"
+              key="google"
               onClick={() => {
                 props.setSelect("google");
               }}
@@ -68,6 +71,7 @@ export const ImportSelection = (props) => {
             </MenuButton>
             <MenuButton
               value="facebook"
+              key="facebook"
               onClick={() => {
                 props.setSelect("facebook");
               }}

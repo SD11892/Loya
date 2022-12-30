@@ -817,10 +817,10 @@ function NewForm() {
               exclusive
               onChange={handleToggleChange}
             >
-              <TabButton value="laptop">
+              <TabButton value="laptop" key="laptop">
                 <LaptopIcon />
               </TabButton>
-              <TabButton value="mobile">
+              <TabButton value="mobile" key="mobile">
                 <MobileIcon />
               </TabButton>
             </ToggleButtonGroup>
@@ -1105,7 +1105,7 @@ function NewForm() {
                     type="file"
                     multiple=""
                     accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
-                    autocomplete="off"
+                    autoComplete="off"
                     style={{ display: "none" }}
                     onChange={(e) => {
                       console.log(e.target.files[0]);
@@ -1475,7 +1475,7 @@ function NewForm() {
                     type="file"
                     multiple=""
                     accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
-                    autocomplete="off"
+                    autoComplete="off"
                     style={{ display: "none" }}
                     onChange={(e) => {
                       console.log(e.target.files[0]);

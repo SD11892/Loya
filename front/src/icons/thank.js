@@ -14,7 +14,6 @@ export const Thank = (props) => {
         marginLeft: "1rem",
         marginRight: "1rem",
       }}
-      class="text-pink-600"
     >
       <path d="M5.8 11.3 2 22l10.7-3.79"></path>
       <path d="M4 3h.01"></path>

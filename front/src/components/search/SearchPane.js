@@ -61,7 +61,7 @@ export const SearchPane = () => {
           }}
         >
           <Link
-            to="/"
+            to=""
             style={{
               textDecoration: "unset",
               color: "#52525b",
@@ -75,7 +75,7 @@ export const SearchPane = () => {
             Google
           </Link>
           <Link
-            to="/"
+            to=""
             style={{
               textDecoration: "unset",
               color: "#52525b",

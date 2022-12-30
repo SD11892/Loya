@@ -440,6 +440,7 @@ const TestTable = () => {
       <Drawer
         anchor="right"
         open={drawerState}
+        key="drawer2"
         onClose={() => {
           setDrawerState(false);
         }}
@@ -763,7 +764,7 @@ const TestTable = () => {
                 type="file"
                 multiple=""
                 accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
-                autocomplete="off"
+                autoComplete="off"
                 style={{ display: "none" }}
                 onChange={(e) => {
                   console.log(e.target.files[0]);

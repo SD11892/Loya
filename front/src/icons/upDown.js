@@ -10,7 +10,6 @@ export const UpDown = () => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      class="text-zinc-400"
     >
       <path d="m7 15 5 5 5-5"></path>
       <path d="m7 9 5-5 5 5"></path>

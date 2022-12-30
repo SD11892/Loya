@@ -25,7 +25,7 @@ export const getAll = () => (dispatch) => {
 
 export const createForm = (name) => {
   const projects = JSON.parse(localStorage.getItem("projects"));
-  const projectId = projects[0].id;
+  const projectId = projects.id;
   const userId = `${localStorage.getItem("userId")}`;
   const url = makeid(6);
   const fname = name;
@@ -33,6 +33,7 @@ export const createForm = (name) => {
 };
 
 export const saveForm = (info, data) => {
+  console.log("FormInfo=", info);
   return FormService.update(info, data);
 };
 

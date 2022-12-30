@@ -73,7 +73,12 @@ export const Sidebar = () => {
         borderColor: "rgb(244 244 245)",
       }}
     >
-      <SideDrawer open variant="permanent" style={{ width: "14rem" }}>
+      <SideDrawer
+        key="side"
+        open
+        variant="permanent"
+        style={{ width: "14rem" }}
+      >
         <SiderButton onClick={handleClick}>
           <div style={{ flex: "none" }}>
             <Avatar
@@ -101,6 +106,7 @@ export const Sidebar = () => {
           </Grid>
           <MenuButton
             value="forms"
+            key="forms"
             onClick={() => {
               navigate("/forms");
             }}
@@ -110,6 +116,7 @@ export const Sidebar = () => {
           </MenuButton>
           <MenuButton
             value="import"
+            key="import"
             onClick={() => {
               navigate("/import");
             }}
@@ -121,6 +128,7 @@ export const Sidebar = () => {
             <Label>MANAGE</Label>
           </Grid>
           <MenuButton
+            key="testimonials"
             value="testimonial"
             onClick={() => {
               navigate("/testimonials");
@@ -131,6 +139,7 @@ export const Sidebar = () => {
           </MenuButton>
           <MenuButton
             value="search"
+            key="search"
             onClick={() => {
               navigate("/search");
             }}
@@ -138,7 +147,7 @@ export const Sidebar = () => {
             <SearchIcon />
             <SiderText>Search</SiderText>
           </MenuButton>
-          <MenuButton value="tags">
+          <MenuButton value="tags" key="tags">
             <TagsIcon />
             <SiderText>Tags</SiderText>
           </MenuButton>
@@ -147,6 +156,7 @@ export const Sidebar = () => {
           </Grid>
           <MenuButton
             value="walls"
+            key="walls"
             onClick={() => {
               navigate("/walls");
             }}
@@ -156,6 +166,7 @@ export const Sidebar = () => {
           </MenuButton>
           <MenuButton
             value="widgets"
+            key="widgets"
             onClick={() => {
               navigate("/widgets");
             }}
@@ -175,13 +186,20 @@ export const Sidebar = () => {
           }}
           style={{ padding: "0.5rem" }}
         >
-          <MenuButton sx={{ p: 2 }}>
+          <MenuButton sx={{ p: 2 }} key="1">
             {localStorage.getItem("user").username}
           </MenuButton>
-          <MenuButton sx={{ p: 2 }}>Account and Billing</MenuButton>
-          <MenuButton sx={{ p: 2 }}>Upgrade</MenuButton>
-          <MenuButton sx={{ p: 2 }}>Roadmap</MenuButton>
+          <MenuButton sx={{ p: 2 }} key="2">
+            Account and Billing
+          </MenuButton>
+          <MenuButton sx={{ p: 2 }} key="3">
+            Upgrade
+          </MenuButton>
+          <MenuButton sx={{ p: 2 }} key="4">
+            Roadmap
+          </MenuButton>
           <MenuButton
+            key="5"
             sx={{ p: 2 }}
             style={{ color: "#6701e6" }}
             onClick={() => {
@@ -262,8 +280,12 @@ export const Sidebar = () => {
               horizontal: "center",
             }}
           >
-            {projects.map((row) => {
-              return <MenuButton sx={{ p: 2 }}>{row.name}</MenuButton>;
+            {projects.map((row, index) => {
+              return (
+                <MenuButton key={index} sx={{ p: 2 }}>
+                  {row.name}
+                </MenuButton>
+              );
             })}
             <MenuButton
               sx={{ p: 2 }}

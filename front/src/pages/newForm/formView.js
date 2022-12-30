@@ -56,7 +56,7 @@ const FormView = () => {
   const dispatch = useDispatch();
 
   const projects = JSON.parse(localStorage.getItem("projects"));
-  const projectId = projects[0].id;
+  const projectId = projects.id;
   const userId = `${localStorage.getItem("userId")}`;
   const onSubmit = () => {
     if (selectedImage) {

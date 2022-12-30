@@ -4,9 +4,9 @@
       height="20"
       viewBox="0 0 24 24"
       fill="none"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
+      strokewidth="2"
+      strokelinecap="round"
+      strokelinejoin="round"
     >
       <path stroke="rgb(239 68 68)" d="M16 6H3"></path>
       <path stroke="rgb(59 130 246)" d="M11 12H3"></path>

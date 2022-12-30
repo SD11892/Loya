@@ -32,6 +32,7 @@ exports.create = (req, res) => {
     bgColor: "#ffffff",
     txtColor: "#374151",
     ratingColor: "#fbbf24",
+    theme: 1,
   }).then((result) => {
     return res.json({
       CODE: 200,

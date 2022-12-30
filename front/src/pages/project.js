@@ -31,10 +31,10 @@ const Project = () => {
         <TabContext value={value}>
           <Box sx={{ borderBottom: 1, borderColor: "divider" }}>
             <TabList onChange={handleChange}>
-              <Tab label="General" value="1" />
-              <Tab label="Members" value="2" />
-              <Tab label="Integrations" value="3" />
-              <Tab label="Danger Zone" value="4" />
+              <Tab label="General" value="1" key="1" />
+              <Tab label="Members" value="2" key="2" />
+              <Tab label="Integrations" value="3" key="3" />
+              <Tab label="Danger Zone" value="4" key="4" />
             </TabList>
           </Box>
           <TabPanel value="1">

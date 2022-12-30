@@ -185,23 +185,20 @@ function Complete() {
     infor.directUrl = directUrl;
     infor.key = inputingFields.concat(addingFields);
     infor.formUrl = formUrl;
-    infor.projectId = `${localStorage.getItem("projectId")}`;
-    infor.userId = `${localStorage.getItem("userId")}`;
-    saveForm(infor, selectedImage).then((result) => {
-      console.log("result=", result);
+    saveForm(infor, selectedImage).then(() => {
       navigate(`/forms/${formUrl}/ready`);
     });
   };
 
   useEffect(() => {
-    console.log("project=", localStorage.getItem("project"));
-    setFormName(`${localStorage.getItem("project")} testimonials Form`);
-    createForm(`${localStorage.getItem("project")} testimonials Form`).then(
-      (res) => {
-        console.log("formUrl=", res.data.data);
-        setFormUrl(res.data.data);
-      }
+    setFormName(
+      `${JSON.parse(localStorage.getItem("projects")).name} testimonials Form`
     );
+    createForm(
+      `${JSON.parse(localStorage.getItem("projects")).name} testimonials Form`
+    ).then((res) => {
+      setFormUrl(res.data.data);
+    });
   }, []);
   useEffect(() => {}, [
     formUrl,
@@ -738,10 +735,10 @@ function Complete() {
               exclusive
               onChange={handleToggleChange}
             >
-              <TabButton value="laptop">
+              <TabButton value="laptop" key="laptop">
                 <LaptopIcon />
               </TabButton>
-              <TabButton value="mobile">
+              <TabButton value="mobile" key="mobile">
                 <MobileIcon />
               </TabButton>
             </ToggleButtonGroup>
@@ -1043,7 +1040,7 @@ function Complete() {
                     type="file"
                     multiple=""
                     accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
-                    autocomplete="off"
+                    autoComplete="off"
                     style={{ display: "none" }}
                     onChange={(e) => {
                       console.log(e.target.files[0]);
@@ -1413,7 +1410,7 @@ function Complete() {
                     type="file"
                     multiple=""
                     accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
-                    autocomplete="off"
+                    autoComplete="off"
                     style={{ display: "none" }}
                     onChange={(e) => {
                       console.log(e.target.files[0]);

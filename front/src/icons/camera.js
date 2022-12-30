@@ -10,7 +10,7 @@ export const Camera = () => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      class=""
+      className=""
     >
       <path d="m22 8-6 4 6 4V8Z"></path>
       <rect x="2" y="6" width="14" height="12" rx="2" ry="2"></rect>

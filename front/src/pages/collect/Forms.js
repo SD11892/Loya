@@ -181,11 +181,11 @@ const Forms = () => {
           <div>No Forms Created Here</div>
         ) : (
           <List dense sx={{ width: "100%", bgcolor: "background.paper" }}>
-            {forms.map((value) => {
+            {forms.map((value, index) => {
               const labelId = `checkbox-list-secondary-label-${value}`;
 
               return (
-                <ListItem key={value.formId} style={{ marginTop: "1rem" }}>
+                <ListItem key={index} style={{ marginTop: "1rem" }}>
                   <ListItemButton
                     onClick={(e) => {
                       console.log(e);

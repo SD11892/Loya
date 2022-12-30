@@ -10,7 +10,6 @@ export const Custom = () => {
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      class="text-blue-500"
       style={{
         marginLeft: "1rem",
         marginRight: "1rem",

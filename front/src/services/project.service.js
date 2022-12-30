@@ -4,7 +4,6 @@ import { isEmpty } from "../util/isEmpty";
 const API_URL = "/api/project/";
 
 const create = (name, id, url) => {
-  console.log(name, id, url);
   return axios.post(
     API_URL + "create",
     null,
