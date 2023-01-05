@@ -41,16 +41,20 @@ const getAll = () => {
           message: "Empty",
         };
       } else {
+        localStorage.setItem(
+          "projects",
+          JSON.stringify(response.data.projects)
+        );
         return {
           CODE: "200",
-          message: "Get All Froms Successfully",
+          message: "Get All Projects Successfully",
           data: response.data,
         };
       }
     })
     .catch((err) => {
       if (err.code === "ERR_BAD_REQUEST") {
-        return { CODE: "404", message: "Failed getting forms" };
+        return { CODE: "404", message: "Failed getting projects" };
       }
     });
 };

@@ -17,6 +17,7 @@ app.use(bodyParser.json());
 
 app.use(function (req, res) {
   res.setHeader("Content-Type", "text/plain");
+  res.setHeader("Access-Control-Allow-Origin", "*");
   res.end(JSON.stringify(req.body, null, 2));
 });
 // parse requests of content-type - application/json

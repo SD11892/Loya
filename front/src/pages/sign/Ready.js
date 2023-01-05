@@ -147,6 +147,8 @@ const Ready = () => {
               dispatch(login(email, password)).then((res) => {
                 if (res.CODE === "200") {
                   localStorage.setItem("signIn", true);
+                  localStorage.removeItem("email");
+                  localStorage.removeItem("password");
                   navigate("/testimonials");
                 } else {
                   alert("Invalid User or password");

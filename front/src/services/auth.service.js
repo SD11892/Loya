@@ -60,7 +60,8 @@ const login = (email, password) => {
     })
     .then((response) => {
       console.log("response=", response);
-      localStorage.setItem("user", JSON.stringify(response.data));
+      localStorage.setItem("user", JSON.stringify(response.data.username));
+      localStorage.setItem("userId", response.data.id);
       return {
         CODE: "200",
         message: "Sign In Successfully",

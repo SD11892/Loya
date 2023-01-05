@@ -21,11 +21,7 @@ export const ImportHistory = (props) => {
       setUrl(...url, row.url);
     });
   }, []);
-  React.useEffect(() => {
-    props.testimonials.map((row) => {
-      setUrl(...url, row.url);
-    });
-  }, [url, props]);
+
   return (
     <div
       style={{
@@ -104,6 +100,21 @@ export const ImportHistory = (props) => {
                                   )
                                 )}`}
                               />
+                            ) : row.imageUrl !== null ? (
+                              <Avatar
+                                style={{
+                                  width: "24px",
+                                  height: "24px",
+                                  borderRadius: "50%",
+                                  border: "1px solid #ddd",
+                                  background: "#000",
+                                  color: "#fff",
+                                  fontSize: "0.8rem",
+                                }}
+                                alt={`Avatar n°${row + 1}`}
+                              >
+                                <img src={row.imageUrl} />
+                              </Avatar>
                             ) : (
                               <Avatar
                                 style={{
@@ -134,7 +145,11 @@ export const ImportHistory = (props) => {
                             </div>
                           </ListItemText>
                         </div>
-                        <div>{moment(row.updatedAt).format("ll")}</div>
+                        <div>
+                          {row.importDate !== null
+                            ? row.importDate
+                            : moment(row.updatedAt).format("ll")}
+                        </div>
                       </div>
                       <div
                         style={{

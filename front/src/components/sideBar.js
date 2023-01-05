@@ -1,6 +1,6 @@
-import * as React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { deepPurple } from '@mui/material/colors';
+import * as React from "react";
+import { useNavigate } from "react-router-dom";
+import { deepPurple } from "@mui/material/colors";
 import {
   Grid,
   Avatar,
@@ -26,7 +26,7 @@ import { Setting as SettingIcon } from "../icons/setting";
 import { UpDown as UpDownIcon } from "../icons/upDown";
 import { Widget as WidgetIcon } from "../icons/widget";
 import { DownArrow } from "../icons/downArrow";
-import { Auth } from 'aws-amplify';
+import { Auth } from "aws-amplify";
 import ButtonGroup from "./uielements/ButtonGroup";
 import { getAll } from "../actions/project";
 
@@ -35,7 +35,7 @@ export const Sidebar = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchor, setAnchor] = React.useState(null);
   const [menu, setMenu] = React.useState(
-    `${window.location.pathname.replace(/\//g, '')}`
+    `${window.location.pathname.replace(/\//g, "")}`
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -92,7 +92,7 @@ export const Sidebar = () => {
             ></Avatar>
           </div>
           <div style={{ fontSize: "0.9rem", fontWeight: "600" }}>
-            {JSON.parse(localStorage.getItem("user")).username}
+            {JSON.parse(localStorage.getItem("user"))}
           </div>
           <DownArrow />
         </SiderButton>
@@ -188,7 +188,7 @@ export const Sidebar = () => {
           style={{ padding: "0.5rem" }}
         >
           <MenuButton sx={{ p: 2 }} key="1">
-            {localStorage.getItem("user").username}
+            {localStorage.getItem("user")}
           </MenuButton>
           <MenuButton sx={{ p: 2 }} key="2">
             Account and Billing

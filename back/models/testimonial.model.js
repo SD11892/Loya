@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Testimonial = sequelize.define('testimonials', {
+  const Testimonial = sequelize.define("testimonials", {
     url: {
       type: Sequelize.STRING,
     },
@@ -41,6 +41,12 @@ module.exports = (sequelize, Sequelize) => {
     },
     projectId: {
       type: Sequelize.INTEGER,
+    },
+    imageUrl: {
+      type: Sequelize.STRING,
+    },
+    importDate: {
+      type: Sequelize.STRING,
     },
   });
 

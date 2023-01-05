@@ -506,6 +506,7 @@ const TestTable = () => {
                   value="delete"
                   key="delete"
                   onClick={() => {
+                    console.log("here");
                     deleteTestimonial(id).then(() => {
                       setDrawerState(false);
                       dispatch(getAll());

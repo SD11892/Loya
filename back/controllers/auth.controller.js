@@ -1,5 +1,9 @@
 const db = require("../models");
 const config = require("../config/auth.config");
+const { OAuth2Client } = require("google-auth-library");
+const client = new OAuth2Client(
+  "382447144454-18kdqo71vffauq6c6q2t53bi8u7artae.apps.googleusercontent.com"
+);
 const User = db.user;
 
 const Op = db.Sequelize.Op;
@@ -42,6 +46,25 @@ exports.verify = (req, res) => {
       });
     }
   });
+};
+
+exports.google = async (req, res) => {
+  console.log("here=", req);
+  const { token } = req.body;
+  const ticket = await client.verifyIdToken({
+    idToken: token,
+    audience:
+      "382447144454-18kdqo71vffauq6c6q2t53bi8u7artae.apps.googleusercontent.com",
+  });
+  const { name, email } = ticket.getPayload();
+  console.log("payload=", ticket.getPayload());
+  const user = await User.upsert({
+    where: { email: email },
+    update: { name },
+    create: { name, email },
+  });
+  res.status(201);
+  res.json(user);
 };
 
 exports.signin = (req, res) => {
