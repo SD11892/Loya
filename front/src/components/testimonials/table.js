@@ -576,6 +576,8 @@ const TestTable = () => {
             <p style={{ whiteSpace: "normal", maxWidth: "28rem" }}>
               {contentState}
             </p>
+
+            <Button>add tag</Button>
             <div
               style={{
                 marginRight: "2rem",

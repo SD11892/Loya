@@ -10,9 +10,10 @@ app.use(require("./routes/auth.routes"));
 app.use(require("./routes/form.routes"));
 app.use(require("./routes/testimonial.routes"));
 app.use(require("./routes/wall.routes"));
+
 app.use(require("./routes/testimonialForm.routes"));
 app.use(require("./routes/project.routes"));
-
+app.use(require("./routes/tag.routes"));
 app.use(bodyParser.json());
 
 app.use(function (req, res) {

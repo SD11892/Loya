@@ -19,19 +19,16 @@ import Avatar from "@mui/material/Avatar";
 import PlusButton from "../../components/uielements/buttons/plusButton";
 import PageTitle from "../../components/uielements/pageTitle";
 import Description from "../../components/uielements/description";
-import IconContainer from "../../components/uielements/iconContainer";
 import { Plus as PlusIcon } from "../../icons/plus";
-import { Qmark } from "../../icons/qmark";
 import { Close as CloseIcon } from "../../icons/close";
-import { Delete as DeleteIcon } from "../../icons/delete";
 import MainButton from "../../components/uielements/buttons/mainButton";
-import DeleteButton from "../../components/uielements/buttons/deleteButton";
-import { getAll, createWall, deleteWall } from "../../actions/wall";
+import { search_getAll, createTag } from "../../actions/tag";
 import { isEmpty } from "../../util/isEmpty";
 import { useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { CopyUrl } from "../../icons/copyUrl";
 import { Edit } from "../../icons/edit";
+import ModeEditIcon from "@mui/icons-material/ModeEdit";
 import FileCopyOutlinedIcon from "@mui/icons-material/FileCopyOutlined";
 
 const style = {
@@ -49,25 +46,24 @@ const style = {
   pb: 4,
 };
 
-const Walls = () => {
+const Tags = () => {
   const dispatch = useDispatch();
-  const walls = useSelector((state) => state.wall.payload);
-
+  const tags = useSelector((state) => state.tag.payload);
+  console.log("tagName", tags);
   const [checked, setChecked] = React.useState([]);
   const [open, setOpen] = React.useState(false);
-  const [wallName, setWallName] = React.useState("New Wall");
-  const [text, setText] = React.useState("New Wall");
+  const [tagName, setTagName] = React.useState("New Tag");
+  const [text, setText] = React.useState("");
 
   const navigate = useNavigate();
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
   useEffect(() => {
-    setWallName(text);
+    setTagName(text);
   }, [text]);
   useEffect(() => {
-    dispatch(getAll());
-    console.log("walls", walls);
+    dispatch(search_getAll());
   }, []);
 
   const handleToggle = (value) => () => {
@@ -84,9 +80,9 @@ const Walls = () => {
   };
 
   const handleCreate = () => {
-    createWall(wallName)
+    createTag(tagName)
       .then((res) => {
-        dispatch(getAll()).then((result) => {
+        dispatch(search_getAll()).then((result) => {
           handleClose();
         });
         return {
@@ -100,14 +96,14 @@ const Walls = () => {
       });
   };
 
-  const handleDelete = () => {
-    const deleteIds = [];
-    checked.map((row) => deleteIds.push(row.id));
-    deleteWall(deleteIds).then((res) => {
-      dispatch(getAll());
-    });
-    setChecked([]);
-  };
+  // const handleDelete = () => {
+  //   const deleteIds = [];
+  //   checked.map((row) => deleteIds.push(row.id));
+  //   deleteTag(deleteIds).then((res) => {
+  //     dispatch(getAll());
+  //   });
+  //   setChecked([]);
+  // };
 
   return (
     <div>
@@ -123,22 +119,40 @@ const Walls = () => {
         }}
       >
         <Grid item>
-          <PageTitle>Your Walls</PageTitle>
-          <Description>Make beautiful walls.</Description>
+          <PageTitle>Your Tags</PageTitle>
+          <Description>Use tags to organize your testimonials.</Description>
         </Grid>
         <Grid item>
-          {isEmpty(checked) === true ? null : (
+          {/* {isEmpty(checked) === true ? null : (
             <DeleteButton onClick={handleDelete}>
               <DeleteIcon fill="white" stroke="red" />
               <span style={{ marginLeft: "1rem" }}>Delete</span>
             </DeleteButton>
-          )}
+          )} */}
 
           <PlusButton onClick={handleOpen}>
             <PlusIcon fill="#923AFE" stroke="white" />
             Create New
           </PlusButton>
         </Grid>
+      </Grid>
+      <Grid item>
+        {isEmpty(tags) ? (
+          <div>No Tags</div>
+        ) : (
+          tags.map((value) => {
+            return (
+              <Grid>
+                <Description key={value.id}>
+                  {isEmpty(value.tag_name) ? "123" : value.tag_name}
+                </Description>
+                <Button>
+                  <ModeEditIcon></ModeEditIcon>
+                </Button>
+              </Grid>
+            );
+          })
+        )}
       </Grid>
       <div
         style={{
@@ -147,91 +161,8 @@ const Walls = () => {
           marginLeft: "2rem",
           marginTop: "2rem",
         }}
-      >
-        {isEmpty(walls) ? (
-          <div>No Walls Created Here</div>
-        ) : (
-          <List dense sx={{ width: "100%", bgcolor: "background.paper" }}>
-            {walls.map((value) => {
-              const labelId = `checkbox-list-secondary-label-${value}`;
+      ></div>
 
-              return (
-                <ListItem key={value.id} style={{ marginTop: "1rem" }}>
-                  <ListItemButton
-                    onClick={(e) => {
-                      if (isEmpty(e.target.id)) {
-                        navigate(`/walls/${value.url}`);
-                      }
-                    }}
-                  >
-                    <Checkbox
-                      id={`check[${value.Id}]`}
-                      style={{
-                        marginRight: "5px",
-                        color: "#ddd",
-                        borderRadius: "10px",
-                      }}
-                      edge="end"
-                      onChange={handleToggle(value)}
-                      checked={checked.indexOf(value) !== -1}
-                      inputProps={{ "aria-labelledby": labelId }}
-                    />
-                    <ListItemAvatar>
-                      <Avatar
-                        style={{
-                          width: "15px",
-                          paddingLeft: "5px",
-                          paddingRight: "5px",
-                          height: "30px",
-                          borderRadius: "20%",
-                          border: "1px solid #ddd",
-                        }}
-                        alt={`Avatar n°${value + 1}`}
-                        src={"./item.svg"}
-                      />
-                    </ListItemAvatar>
-                    <ListItemText style={{ letterSpacing: "1px" }}>
-                      <div style={{ fontSize: "1rem", fontWeight: "600" }}>
-                        {value.name}
-                      </div>
-                      <div>
-                        {value.testimonials} responses,created on{" "}
-                        {moment(value.createdAt).format("LL")}
-                      </div>
-                    </ListItemText>
-                    <IconContainer>
-                      <IconButton
-                        onClick={(ev) => {
-                          ev.stopPropagation();
-                          createWall(value.name + " copy").then((res) => {
-                            dispatch(getAll());
-                          });
-                        }}
-                      >
-                        <FileCopyOutlinedIcon />
-                      </IconButton>
-                    </IconContainer>
-                    <IconContainer>
-                      <IconButton
-                        onClick={(event) => {
-                          event.stopPropagation();
-                          let id = [];
-                          id.push(value.id);
-                          deleteWall(id).then(() => {
-                            dispatch(getAll());
-                          });
-                        }}
-                      >
-                        <DeleteIcon fill="white" stroke="red" />
-                      </IconButton>
-                    </IconContainer>
-                  </ListItemButton>
-                </ListItem>
-              );
-            })}
-          </List>
-        )}
-      </div>
       <Modal
         aria-labelledby="transition-modal-title"
         aria-describedby="transition-modal-description"
@@ -242,7 +173,7 @@ const Walls = () => {
       >
         <Fade in={open}>
           <Box sx={style}>
-            <PageTitle>Create a Wall</PageTitle>
+            <PageTitle>Create a Tag</PageTitle>
             <Button
               onClick={handleClose}
               sx={{
@@ -255,8 +186,7 @@ const Walls = () => {
               <CloseIcon />
             </Button>
             <Description style={{ fontSize: "1rem" }}>
-              You can create different testimonial forms to collect make
-              beautiful testimonials.
+              Use tags to organize your testimonials.
             </Description>
             <div style={{ marginTop: "2rem" }}>
               <div
@@ -268,9 +198,7 @@ const Walls = () => {
                   fontSize: "1rem",
                   fontWeight: "600",
                 }}
-              >
-                Wall Name <Qmark />
-              </div>
+              ></div>
               <InputBase
                 style={{
                   width: "100%",
@@ -282,6 +210,7 @@ const Walls = () => {
                   setText(e.target.value);
                 }}
                 value={text}
+                placeholder="new tag"
               ></InputBase>
             </div>
             <div style={{ marginTop: "1rem" }}>
@@ -289,7 +218,7 @@ const Walls = () => {
                 onClick={handleCreate}
                 style={{ width: "100%", marginLeft: "unset" }}
               >
-                Create wall
+                Create Tag
               </MainButton>
             </div>
           </Box>
@@ -299,4 +228,4 @@ const Walls = () => {
   );
 };
 
-export default Walls;
+export default Tags;

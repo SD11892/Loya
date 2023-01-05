@@ -130,7 +130,7 @@ export default function CreateWidget() {
   const [drawerState, setDrawerState] = React.useState(false);
   const [code, setCode] = React.useState(
     `<div className="loya-frame-embed" data-id="${url}"></div>
-<script defer type="text/javascript" src="http://192.168.105.43:3000/embedTemplate.js"></script>`
+<script defer type="text/javascript" src="http://35.170.73.191:3000/embedTemplate.js"></script>`
   );
   const [openSnack, setOpenSnack] = React.useState(false);
   const [openCopySnack, setOpenCopySnack] = React.useState(false);
@@ -938,7 +938,7 @@ export default function CreateWidget() {
                     key="js"
                     onClick={() => {
                       setCode(
-                        `<div className="loya-frame-embed" data-id="${url}"></div>\n<script defer type="text/javascript" src="http://192.168.105.43:3000/embedTemplate.js"></script>`
+                        `<div className="loya-frame-embed" data-id="${url}"></div>\n<script defer type="text/javascript" src="http://35.170.73.191:3000/embedTemplate.js"></script>`
                       );
                     }}
                   >

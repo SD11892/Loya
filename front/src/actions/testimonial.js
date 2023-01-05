@@ -1,8 +1,8 @@
 import testimonialService from "../services/testimonial.service";
 import { ALL_SUCCESS, SAVE_INDEX } from "./types";
 
-export const getAll = () => (dispatch) => {
-  return testimonialService.getAll().then(
+export const getAll = (data) => (dispatch) => {
+  return testimonialService.getAll(data).then(
     (res) => {
       dispatch({
         type: ALL_SUCCESS,

@@ -3,6 +3,7 @@ import Testimonials from "./pages/manage/Testimonials";
 import Forms from "./pages/collect/Forms";
 import ImportTest from "./pages/collect/ImportTest";
 import Search from "./pages/manage/Search";
+import Tags from "./pages/manage/Tags";
 import WallDesign from "./pages/share/WallDesign";
 import Walls from "./pages/share/Walls";
 import Widgets from "./pages/share/Widgets";
@@ -64,6 +65,10 @@ export const routes = [
         path: "/walls",
         element: <Walls />,
       },
+      {
+        path: "/tags",
+        element: <Tags />,
+      },
     ],
   },
   {
@@ -74,6 +79,7 @@ export const routes = [
     path: "/search",
     element: <Search />,
   },
+
   {
     path: "/walls/:id",
     element: <WallDesign />,

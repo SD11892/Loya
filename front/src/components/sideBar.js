@@ -148,7 +148,13 @@ export const Sidebar = () => {
             <SearchIcon />
             <SiderText>Search</SiderText>
           </MenuButton>
-          <MenuButton value="tags" key="tags">
+          <MenuButton
+            value="tags"
+            key="tags"
+            onClick={() => {
+              navigate("/tags");
+            }}
+          >
             <TagsIcon />
             <SiderText>Tags</SiderText>
           </MenuButton>

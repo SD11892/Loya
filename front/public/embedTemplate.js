@@ -18,7 +18,7 @@
         d = `loya-frame-${s}`;
       (a.id = d),
         a.setAttribute("loading", "lazy"),
-        a.setAttribute("data-src", `http://192.168.105.43:3000/widgets/p/${s}`),
+        a.setAttribute("data-src", `http://35.170.73.191:3000/widgets/p/${s}`),
         a.setAttribute("scrolling", "no"),
         a.setAttribute("frameborder", "0"),
         a.setAttribute("width", "400px"),
@@ -41,6 +41,3 @@
   }
   t();
 })();
-// http://192.168.105.43:3000/widgets/p/${s}
-// https://widget.senja.io/widget/${s}
-// https://widget.senja.io/widget/19626685-886f-4481-b103-d447769017c7

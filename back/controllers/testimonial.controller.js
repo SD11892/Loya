@@ -172,26 +172,57 @@ exports.update = (req, res) => {
 
 exports.getAll = (req, res) => {
   const data = req.query;
-  console.log(data);
-  Testimonial.findAll({
-    where: {
-      userId: data.userId,
-      projectId: data.projects.map((row) => row.id),
-    },
-    order: [["index", "ASC"]],
-  })
-    .then((testimonials) => {
-      if (!testimonials) {
-        console.log("Testimonials Not Found");
-        return res.status(200).send({ message: "Empty" });
-      } else {
-        res.status(200).send({ testimonials });
-      }
+  console.log(data.projects);
+  if (data.searchData) {
+    Testimonial.findAll({
+      where: {
+        userId: data.userId,
+        projectId: data.projects.map((row) => row.id),
+        [Op.or]: [
+          {
+            content: { [Op.like]: `%${data.searchData}%` },
+          },
+          {
+            value: { [Op.like]: `%${data.searchData}%` },
+          },
+        ],
+      },
+
+      order: [["index", "ASC"]],
     })
-    .catch((err) => {
-      console.log("err=", err);
-      res.status(500).send({ message: err.message });
-    });
+      .then((testimonials) => {
+        if (!testimonials) {
+          console.log("Testimonials Not Found");
+          return res.status(200).send({ message: "Empty" });
+        } else {
+          res.status(200).send({ testimonials });
+        }
+      })
+      .catch((err) => {
+        console.log("err=", err);
+        res.status(500).send({ message: err.message });
+      });
+  } else {
+    Testimonial.findAll({
+      where: {
+        userId: data.userId,
+        projectId: data.projects.map((row) => row.id),
+      },
+      order: [["index", "ASC"]],
+    })
+      .then((testimonials) => {
+        if (!testimonials) {
+          console.log("Testimonials Not Found");
+          return res.status(200).send({ message: "Empty" });
+        } else {
+          res.status(200).send({ testimonials });
+        }
+      })
+      .catch((err) => {
+        console.log("err=", err);
+        res.status(500).send({ message: err.message });
+      });
+  }
 };
 
 exports.delete = (req, res) => {
