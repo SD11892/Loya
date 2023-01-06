@@ -1,21 +1,22 @@
-import React, { useState, useRef } from "react";
-import { Paper, Button, Grid } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { validator } from "./Validator";
-import useForm from "./useForm";
-import CssTextField from "../../components/uielements/cssTextField";
-import { Heart as HeartIcon } from "../../icons/heart";
-import PageTitle from "../../components/uielements/pageTitle";
-import Description from "../../components/uielements/description";
-import MainButton from "../../components/uielements/buttons/mainButton";
-import BackwardButton from "../../components/uielements/buttons/backwardButton";
-import { verify } from "../../actions/auth";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import SignPanel from "./SignPanel";
-import { Googlesm } from "../../icons/google_sm";
+import React, { useState, useRef } from 'react';
+import { Paper, Button, Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import toastr from 'toastr';
+import { validator } from './Validator';
+import useForm from './useForm';
+import CssTextField from '../../components/uielements/cssTextField';
+import { Heart as HeartIcon } from '../../icons/heart';
+import PageTitle from '../../components/uielements/pageTitle';
+import Description from '../../components/uielements/description';
+import MainButton from '../../components/uielements/buttons/mainButton';
+import BackwardButton from '../../components/uielements/buttons/backwardButton';
+import { verify } from '../../actions/auth';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import SignPanel from './SignPanel';
+import { Googlesm } from '../../icons/google_sm';
 
-import AuthService from "../../services/auth.service";
+import AuthService from '../../services/auth.service';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -27,20 +28,20 @@ const Register = () => {
   const navigate = useNavigate();
 
   const initState = {
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   };
 
   const submit = () => {
     ////////////need change
     verify(state.email)
       .then((res) => {
-        if (res.CODE === "400") {
-          alert("already in use");
+        if (res.CODE === '400') {
+          toastr.warning('Already in use');
         } else {
-          localStorage.setItem("email", state.email);
-          localStorage.setItem("password", state.password);
-          navigate("/profile");
+          localStorage.setItem('email', state.email);
+          localStorage.setItem('password', state.password);
+          navigate('/profile');
         }
       })
       .catch((err) => {
@@ -58,7 +59,7 @@ const Register = () => {
   const { margin, papper } = useStyles();
 
   let isValidForm =
-    Object.values(errors).filter((error) => typeof error !== "undefined")
+    Object.values(errors).filter((error) => typeof error !== 'undefined')
       .length === 0;
 
   return (
@@ -70,23 +71,23 @@ const Register = () => {
         alignItems="center"
         justify="center"
         xs={6}
-        style={{ minHeight: "100vh", display: "flex" }}
+        style={{ minHeight: '100vh', display: 'flex' }}
       >
         <div>
-          <Grid container style={{ marginBottom: "0.5rem" }}>
+          <Grid container style={{ marginBottom: '0.5rem' }}>
             <HeartIcon />
           </Grid>
-          <Grid container style={{ marginBottom: "1rem" }}>
+          <Grid container style={{ marginBottom: '1rem' }}>
             <PageTitle>Sign up to Loya</PageTitle>
           </Grid>
-          <Grid container style={{ marginBottom: "1rem" }}>
+          <Grid container style={{ marginBottom: '1rem' }}>
             <Description>
               Loya helps you start collecting, managing and sharing your
               testimonials in minutes, not days.
             </Description>
           </Grid>
-          <Grid container style={{ marginBottom: "1rem" }}>
-            <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+          <Grid container style={{ marginBottom: '1rem' }}>
+            <form onSubmit={handleSubmit} style={{ width: '100%' }}>
               <div>
                 {/* EMAIL */}
                 <CssTextField
@@ -100,9 +101,9 @@ const Register = () => {
                   helperText={errors.email}
                   onBlur={handleBlur}
                   style={{
-                    width: "100%",
-                    padding: "unset",
-                    marginBottom: "1rem",
+                    width: '100%',
+                    padding: 'unset',
+                    marginBottom: '1rem',
                   }}
                 />
                 <br />
@@ -118,12 +119,12 @@ const Register = () => {
                   error={errors.password ? true : false}
                   helperText={errors.password}
                   onBlur={handleBlur}
-                  style={{ width: "100%" }}
+                  style={{ width: '100%' }}
                 />
               </div>
-              <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
+              <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
                 <MainButton
-                  style={{ width: "100%", marginLeft: "unset" }}
+                  style={{ width: '100%', marginLeft: 'unset' }}
                   disabled={!isValidForm}
                   type="submit"
                   variant="contained"
@@ -133,9 +134,9 @@ const Register = () => {
                   Sign up
                 </MainButton>
               </div>
-              <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
+              <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
                 <BackwardButton
-                  style={{ width: "100%", marginLeft: "unset" }}
+                  style={{ width: '100%', marginLeft: 'unset' }}
                   disabled={!isValidForm}
                   type="submit"
                   variant="contained"
@@ -148,12 +149,12 @@ const Register = () => {
               </div>
               <div
                 style={{
-                  marginBottom: "1rem",
-                  marginTop: "1rem",
-                  display: "flex",
+                  marginBottom: '1rem',
+                  marginTop: '1rem',
+                  display: 'flex',
                 }}
               >
-                <Description style={{ marginRight: "1rem" }}>
+                <Description style={{ marginRight: '1rem' }}>
                   Already have an account?
                 </Description>
                 <a href="/">Sign in</a>

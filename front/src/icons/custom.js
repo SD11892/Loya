@@ -11,8 +11,8 @@ export const Custom = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       style={{
-        marginLeft: "1rem",
-        marginRight: "1rem",
+        marginLeft: '1rem',
+        marginRight: '1rem',
       }}
     >
       <circle cx="12" cy="12" r="10"></circle>

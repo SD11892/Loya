@@ -1,10 +1,10 @@
-import axios from "axios";
+import axios from 'axios';
 
-const API_URL = "/api/auth/";
+const API_URL = '/api/auth/';
 
 const register = (username, email, password) => {
   return axios
-    .post(API_URL + "signup", null, {
+    .post(API_URL + 'signup', null, {
       params: {
         username,
         email,
@@ -12,39 +12,39 @@ const register = (username, email, password) => {
       },
     })
     .then((response) => {
-      console.log("response=", response);
+      console.log('response=', response);
       return {
-        CODE: "200",
-        message: "Sign In Successfully",
+        CODE: '200',
+        message: 'Sign In Successfully',
         data: response.data,
       };
     })
     .catch((err) => {
-      console.log("err=", err);
-      if (err.code === "ERR_BAD_REQUEST") {
-        return { CODE: "404", message: "Incorrect SignUp" };
+      console.log('err=', err);
+      if (err.code === 'ERR_BAD_REQUEST') {
+        return { CODE: '404', message: 'Incorrect SignUp' };
       }
     });
 };
 
 const emailVerify = (email) => {
   return axios
-    .post(API_URL + "email", null, {
+    .post(API_URL + 'email', null, {
       params: {
         email,
       },
     })
     .then((res) => {
       return {
-        CODE: "200",
-        message: "Verify SUCCESS",
+        CODE: '200',
+        message: 'Verify SUCCESS',
         data: res,
       };
     })
     .catch((err) => {
       return {
-        CODE: "400",
-        message: "Verify Failed",
+        CODE: '400',
+        message: 'Verify Failed',
         data: err,
       };
     });
@@ -59,24 +59,24 @@ const login = (email, password) => {
       },
     })
     .then((response) => {
-      console.log("response=", response);
-      localStorage.setItem("user", JSON.stringify(response.data.username));
-      localStorage.setItem("userId", response.data.id);
+      console.log('response=', response);
+      localStorage.setItem('user', JSON.stringify(response.data.username));
+      localStorage.setItem('userId', response.data.id);
       return {
-        CODE: "200",
-        message: "Sign In Successfully",
+        CODE: '200',
+        message: 'Sign In Successfully',
         data: response.data,
       };
     })
     .catch((err) => {
       console.log(err);
-      if (err.code === "ERR_BAD_REQUEST") {
-        return { CODE: "404", message: "Incorrect User or Password" };
+      if (err.code === 'ERR_BAD_REQUEST') {
+        return { CODE: '404', message: 'Incorrect User or Password' };
       }
     });
 };
 const logout = () => {
-  localStorage.removeItem("user");
+  localStorage.removeItem('user');
 };
 
 export default {

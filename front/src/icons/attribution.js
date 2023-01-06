@@ -11,8 +11,8 @@ export const Attribution = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       style={{
-        marginLeft: "1rem",
-        marginRight: "1rem",
+        marginLeft: '1rem',
+        marginRight: '1rem',
       }}
       className="text-green-600"
     >

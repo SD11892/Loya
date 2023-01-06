@@ -1,6 +1,6 @@
-import * as React from "react";
-import { useNavigate } from "react-router-dom";
-import { deepPurple } from "@mui/material/colors";
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { deepPurple } from '@mui/material/colors';
 import {
   Grid,
   Avatar,
@@ -9,41 +9,41 @@ import {
   ToggleButton,
   ToggleButtonGroup,
   IconButton,
-} from "@mui/material";
-import { useDispatch, useSelector } from "react-redux";
-import SideDrawer from "./uielements/drawer";
-import SiderButton from "./uielements/buttons/siderButton";
-import MenuButton from "./uielements/buttons/menuButton";
-import SiderText from "./uielements/siderText";
-import Label from "./uielements/label";
-import { Form as FormIcon } from "../icons/form";
-import { Import as ImportIcon } from "../icons/import";
-import { Testimonial as TestimonialIcon } from "../icons/testimonial";
-import { Search as SearchIcon } from "../icons/search";
-import { Tags as TagsIcon } from "../icons/tags";
-import { Wall as WallIcon } from "../icons/wall";
-import { Setting as SettingIcon } from "../icons/setting";
-import { UpDown as UpDownIcon } from "../icons/upDown";
-import { Widget as WidgetIcon } from "../icons/widget";
-import { DownArrow } from "../icons/downArrow";
-import { Auth } from "aws-amplify";
-import ButtonGroup from "./uielements/ButtonGroup";
-import { getAll } from "../actions/project";
+} from '@mui/material';
+import { useDispatch, useSelector } from 'react-redux';
+import SideDrawer from './uielements/drawer';
+import SiderButton from './uielements/buttons/siderButton';
+import MenuButton from './uielements/buttons/menuButton';
+import SiderText from './uielements/siderText';
+import Label from './uielements/label';
+import { Form as FormIcon } from '../icons/form';
+import { Import as ImportIcon } from '../icons/import';
+import { Testimonial as TestimonialIcon } from '../icons/testimonial';
+import { Search as SearchIcon } from '../icons/search';
+import { Tags as TagsIcon } from '../icons/tags';
+import { Wall as WallIcon } from '../icons/wall';
+import { Setting as SettingIcon } from '../icons/setting';
+import { UpDown as UpDownIcon } from '../icons/upDown';
+import { Widget as WidgetIcon } from '../icons/widget';
+import { DownArrow } from '../icons/downArrow';
+import { Auth } from 'aws-amplify';
+import ButtonGroup from './uielements/ButtonGroup';
+import { getAll } from '../actions/project';
 
 export const Sidebar = () => {
   const projects = useSelector((state) => state.project.payload);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchor, setAnchor] = React.useState(null);
   const [menu, setMenu] = React.useState(
-    `${window.location.pathname.replace(/\//g, "")}`
+    `${window.location.pathname.replace(/\//g, '')}`
   );
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const open = Boolean(anchorEl);
   const openPop = Boolean(anchor);
-  const id = open ? "simple-popover" : undefined;
-  const index = openPop ? "simple-popover" : undefined;
+  const id = open ? 'simple-popover' : undefined;
+  const index = openPop ? 'simple-popover' : undefined;
 
   const handleClose = () => {
     setAnchorEl(null);
@@ -70,29 +70,29 @@ export const Sidebar = () => {
   return (
     <div
       style={{
-        backgroundColor: "rgb(250 250 250 / 1)",
-        borderColor: "rgb(244 244 245)",
+        backgroundColor: 'rgb(250 250 250 / 1)',
+        borderColor: 'rgb(244 244 245)',
       }}
     >
       <SideDrawer
         key="side"
         open
         variant="permanent"
-        style={{ width: "14rem" }}
+        style={{ width: '14rem' }}
       >
         <SiderButton onClick={handleClick}>
-          <div style={{ flex: "none" }}>
+          <div style={{ flex: 'none' }}>
             <Avatar
               sx={{
                 bgcolor: deepPurple[500],
-                fontSize: "0.7rem",
-                width: "28px",
-                height: "28px",
+                fontSize: '0.7rem',
+                width: '28px',
+                height: '28px',
               }}
             ></Avatar>
           </div>
-          <div style={{ fontSize: "0.9rem", fontWeight: "600" }}>
-            {JSON.parse(localStorage.getItem("user"))}
+          <div style={{ fontSize: '0.9rem', fontWeight: '600' }}>
+            {JSON.parse(localStorage.getItem('user'))}
           </div>
           <DownArrow />
         </SiderButton>
@@ -100,7 +100,7 @@ export const Sidebar = () => {
         <ButtonGroup
           value={menu}
           onChange={handleToggleChange}
-          style={{ flexDirection: "column" }}
+          style={{ flexDirection: 'column' }}
         >
           <Grid container mb={2}>
             <Label>COLLECT</Label>
@@ -109,7 +109,7 @@ export const Sidebar = () => {
             value="forms"
             key="forms"
             onClick={() => {
-              navigate("/forms");
+              navigate('/forms');
             }}
           >
             <FormIcon />
@@ -119,7 +119,7 @@ export const Sidebar = () => {
             value="import"
             key="import"
             onClick={() => {
-              navigate("/import");
+              navigate('/import');
             }}
           >
             <ImportIcon />
@@ -132,7 +132,7 @@ export const Sidebar = () => {
             key="testimonials"
             value="testimonial"
             onClick={() => {
-              navigate("/testimonials");
+              navigate('/testimonials');
             }}
           >
             <TestimonialIcon />
@@ -142,7 +142,7 @@ export const Sidebar = () => {
             value="search"
             key="search"
             onClick={() => {
-              navigate("/search");
+              navigate('/search');
             }}
           >
             <SearchIcon />
@@ -152,7 +152,7 @@ export const Sidebar = () => {
             value="tags"
             key="tags"
             onClick={() => {
-              navigate("/tags");
+              navigate('/tags');
             }}
           >
             <TagsIcon />
@@ -165,7 +165,7 @@ export const Sidebar = () => {
             value="walls"
             key="walls"
             onClick={() => {
-              navigate("/walls");
+              navigate('/walls');
             }}
           >
             <WallIcon />
@@ -175,7 +175,7 @@ export const Sidebar = () => {
             value="widgets"
             key="widgets"
             onClick={() => {
-              navigate("/widgets");
+              navigate('/widgets');
             }}
           >
             <WidgetIcon />
@@ -188,13 +188,13 @@ export const Sidebar = () => {
           anchorEl={anchorEl}
           onClose={handleClose}
           anchorOrigin={{
-            vertical: "bottom",
-            horizontal: "left",
+            vertical: 'bottom',
+            horizontal: 'left',
           }}
-          style={{ padding: "0.5rem" }}
+          style={{ padding: '0.5rem' }}
         >
           <MenuButton sx={{ p: 2 }} key="1">
-            {localStorage.getItem("user")}
+            {localStorage.getItem('user')}
           </MenuButton>
           <MenuButton sx={{ p: 2 }} key="2">
             Account and Billing
@@ -208,10 +208,10 @@ export const Sidebar = () => {
           <MenuButton
             key="5"
             sx={{ p: 2 }}
-            style={{ color: "#6701e6" }}
+            style={{ color: '#6701e6' }}
             onClick={() => {
               Auth.signOut();
-              navigate("/");
+              navigate('/');
               localStorage.clear();
             }}
           >
@@ -221,38 +221,38 @@ export const Sidebar = () => {
       </SideDrawer>
       <div
         style={{
-          display: "flex",
-          height: "100vh",
-          width: "100%",
-          borderTop: "1px solid #ddd",
+          display: 'flex',
+          height: '100vh',
+          width: '100%',
+          borderTop: '1px solid #ddd',
         }}
       >
         <div
           style={{
-            display: "flex",
-            width: "100%",
-            padding: "1rem 1rem",
-            alignSelf: "flex-end",
-            borderTop: "1px solid #ddd",
-            justifyContent: "space-between",
+            display: 'flex',
+            width: '100%',
+            padding: '1rem 1rem',
+            alignSelf: 'flex-end',
+            borderTop: '1px solid #ddd',
+            justifyContent: 'space-between',
           }}
           onClick={handleProject}
         >
           <div
             style={{
-              gap: "0.5rem",
-              display: "flex",
-              alignItems: "center",
-              fontWeight: "500",
+              gap: '0.5rem',
+              display: 'flex',
+              alignItems: 'center',
+              fontWeight: '500',
             }}
           >
             <div
               style={{
-                alignItems: "center",
-                display: "flex",
-                background: "#ddd",
-                padding: "0.2rem",
-                borderRadius: "0.2rem",
+                alignItems: 'center',
+                display: 'flex',
+                background: '#ddd',
+                padding: '0.2rem',
+                borderRadius: '0.2rem',
               }}
             >
               <img src="../heart.png" width="16px" height="16px" />
@@ -261,7 +261,7 @@ export const Sidebar = () => {
               if (index === 0) return row.name;
             })}
           </div>
-          <div style={{ display: "flex" }}>
+          <div style={{ display: 'flex' }}>
             <IconButton
               onClick={() => {
                 navigate(`/settings/${Object.values(projects)[0].id}`);
@@ -280,12 +280,12 @@ export const Sidebar = () => {
             anchorEl={anchor}
             onClose={handleUpDownClose}
             anchorOrigin={{
-              vertical: "top",
-              horizontal: "center",
+              vertical: 'top',
+              horizontal: 'center',
             }}
             transformOrigin={{
-              vertical: "bottom",
-              horizontal: "center",
+              vertical: 'bottom',
+              horizontal: 'center',
             }}
           >
             {projects.map((row, index) => {
@@ -297,7 +297,7 @@ export const Sidebar = () => {
             })}
             <MenuButton
               sx={{ p: 2 }}
-              style={{ background: "#000", color: "#fff" }}
+              style={{ background: '#000', color: '#fff' }}
             >
               Create a New Project
             </MenuButton>

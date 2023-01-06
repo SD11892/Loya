@@ -11,8 +11,8 @@ export const Response = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       style={{
-        marginLeft: "1rem",
-        marginRight: "1rem",
+        marginLeft: '1rem',
+        marginRight: '1rem',
       }}
     >
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>

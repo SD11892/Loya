@@ -40,6 +40,7 @@ const FormView = () => {
   const [rating, setRating] = React.useState(0);
   const [checked, setChecked] = React.useState([]);
   const [selectedImage, setSelectedImage] = useState(null);
+  const [video, setVideo] = useState('');
   const hiddenFileInput = React.useRef(null);
   const infor = {
     url: '',
@@ -47,17 +48,18 @@ const FormView = () => {
     key: [],
     value: [],
     rating: 0,
-    name: "",
-    type: "",
-    projectId: "",
-    userId: "",
+    name: '',
+    type: '',
+    projectId: '',
+    userId: '',
+    video: '',
   };
   const testimonials = useSelector((state) => state.testimonial.testimonial);
   const dispatch = useDispatch();
 
-  const projects = JSON.parse(localStorage.getItem("projects"));
+  const projects = JSON.parse(localStorage.getItem('projects'));
   const projectId = projects.id;
-  const userId = `${localStorage.getItem("userId")}`;
+  const userId = `${localStorage.getItem('userId')}`;
   const onSubmit = () => {
     if (selectedImage) {
       infor.name = selectedImage.name;
@@ -69,6 +71,7 @@ const FormView = () => {
     infor.value = values;
     infor.rating = rating;
     infor.index = testimonials.length;
+    infor.video = video;
     infor.projectId = projectId;
     infor.userId = userId;
     createTestimonial(infor, selectedImage);
@@ -512,7 +515,8 @@ const FormView = () => {
       >
         <VideoRecorder
           priColor={priColor}
-          onClick={() => {
+          fileName={video}
+          onClick={(fileName) => {
             let len = 0;
             if (key.indexOf('Email Address') !== -1) {
               len += 1;
@@ -526,6 +530,7 @@ const FormView = () => {
             setInputingFields(key.slice(0, len + 1));
             setAddingFields(key.slice(len + 1, key.length));
             setVisible(3);
+            setVideo(fileName);
           }}
         />
       </Grid>

@@ -1,18 +1,18 @@
-import React, { useState, useRef } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import useForm from "./useForm";
-import { ProfileStyle } from "./Profile.style";
-import { register } from "../../actions/auth";
-import { useNavigate } from "react-router-dom";
-import { makeStyles } from "@material-ui/core/styles";
-import toastr from "toastr";
-import { validator } from "./Validator";
-import { Button } from "@mui/material";
-import DefaultButton from "../../components/uielements/buttons/defaultButton";
-import FormGrid from "../../components/uielements/form/FormGrid";
-import { createForm } from "../../actions/form";
+import React, { useState, useRef } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import useForm from './useForm';
+import { ProfileStyle } from './Profile.style';
+import { register } from '../../actions/auth';
+import { useNavigate } from 'react-router-dom';
+import { makeStyles } from '@material-ui/core/styles';
+import toastr from 'toastr';
+import { validator } from './Validator';
+import { Button } from '@mui/material';
+import DefaultButton from '../../components/uielements/buttons/defaultButton';
+import FormGrid from '../../components/uielements/form/FormGrid';
+import { createForm } from '../../actions/form';
 
-import { Auth } from "aws-amplify";
+import { Auth } from 'aws-amplify';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -25,27 +25,27 @@ const Profile = () => {
   const dispatch = useDispatch();
 
   const initState = {
-    fname: "",
-    lname: "",
-    projectName: "",
-    projectUrl: "",
-    collectedopt: "",
-    discovery: "",
-    goal: "",
+    fname: '',
+    lname: '',
+    projectName: '',
+    projectUrl: '',
+    collectedopt: '',
+    discovery: '',
+    goal: '',
   };
 
   const submit = () => {
-    localStorage.setItem("project", state.projectName);
-    localStorage.setItem("user", state.fname + " " + state.lname);
-    const email = localStorage.getItem("email");
-    const password = localStorage.getItem("password");
+    localStorage.setItem('project', state.projectName);
+    localStorage.setItem('user', state.fname + ' ' + state.lname);
+    const email = localStorage.getItem('email');
+    const password = localStorage.getItem('password');
     const data = {
       email,
       password,
-      username: state.fname + " " + state.lname,
+      username: state.fname + ' ' + state.lname,
       project: state.projectName,
     };
-    console.log("proData=", data);
+    console.log('proData=', data);
 
     Auth.signUp({
       username: email,
@@ -61,25 +61,25 @@ const Profile = () => {
           register(data.username, data.email, data.password, data.project)
         )
           .then((res) => {
-            console.log("here");
-            navigate("/complete");
+            console.log('here');
+            navigate('/complete');
           })
           .catch((err) => {
-            toastr.warning("Already in");
+            toastr.warning('Already in');
           });
       })
       .catch((err) => {
         // Something is Wrong
-        if (err.code === "UserNotConfirmedException") {
+        if (err.code === 'UserNotConfirmedException') {
           dispatch(
             register(data.username, data.email, data.password, data.project)
           )
             .then((res) => {
-              console.log("here");
-              navigate("/complete");
+              console.log('here');
+              navigate('/complete');
             })
             .catch((err) => {
-              toastr.warning("Already in");
+              toastr.warning('Already in');
             });
         } else {
           toastr.error(err.message);
@@ -98,14 +98,14 @@ const Profile = () => {
   const { margin, papper } = useStyles();
 
   let isValidForm =
-    Object.values(errors).filter((error) => typeof error !== "undefined")
+    Object.values(errors).filter((error) => typeof error !== 'undefined')
       .length === 0;
 
   return (
     <ProfileStyle>
       <div
         className="from-primary via-primary-300 to-primary-50 absolute -right-[30%] left-0 top-0 h-[75%] bg-gradient-to-tr isLoaded"
-        style={{ clipPath: "polygon(0px 0px, 0px 100%, 100% 0px)" }}
+        style={{ clipPath: 'polygon(0px 0px, 0px 100%, 100% 0px)' }}
       >
         <canvas
           id="gradient-canvas"
@@ -117,7 +117,7 @@ const Profile = () => {
       </div>
       <div className="absolute inset-0 overflow-y-auto py-8 px-8">
         <div className="flex h-full flex-col">
-          <div class="mx-auto my-auto w-full max-w-34rem rounded-2xl bg-white px-8 py-8 shadow-xl">
+          <div className="mx-auto my-auto w-full max-w-34rem rounded-2xl bg-white px-8 py-8 shadow-xl">
             <svg
               width="54px"
               height="54px"
@@ -154,10 +154,10 @@ const Profile = () => {
                     <label for="fname" className="block text-sm font-medium">
                       <div className="flex items-center gap-2">
                         First Name <div></div>
-                      </div>{" "}
-                    </label>{" "}
+                      </div>{' '}
+                    </label>{' '}
                     <div className="flex w-full rounded-md text-sm shadow-sm duration-200 mt-2 ">
-                      {" "}
+                      {' '}
                       <input
                         name="fname"
                         id=""
@@ -168,16 +168,16 @@ const Profile = () => {
                         className=" block flex-grow rounded-r-md border disabled:opacity-60 py-2-5 px-2 text-sm focus:ring-primary focus:border-primary border-gray-300 rounded-md"
                         onChange={handleChange}
                       />
-                    </div>{" "}
-                  </div>{" "}
+                    </div>{' '}
+                  </div>{' '}
                   <div className="w-full">
                     <label for="lname" className="block text-sm font-medium">
                       <div className="flex items-center gap-2">
                         Last Name <div></div>
-                      </div>{" "}
-                    </label>{" "}
+                      </div>{' '}
+                    </label>{' '}
                     <div className="flex w-full rounded-md text-sm shadow-sm duration-200 mt-2 ">
-                      {" "}
+                      {' '}
                       <input
                         name="lname"
                         id=""
@@ -188,9 +188,9 @@ const Profile = () => {
                         onChange={handleChange}
                         className=" block flex-grow rounded-r-md border disabled:opacity-60 py-2-5 px-2 text-sm focus:ring-primary focus:border-primary border-gray-300 rounded-md"
                       />
-                    </div>{" "}
+                    </div>{' '}
                   </div>
-                </div>{" "}
+                </div>{' '}
                 <div className="w-full">
                   <label
                     for="projectName"
@@ -198,10 +198,10 @@ const Profile = () => {
                   >
                     <div className="flex items-center gap-2">
                       Website Name <div></div>
-                    </div>{" "}
-                  </label>{" "}
+                    </div>{' '}
+                  </label>{' '}
                   <div className="flex w-full rounded-md text-sm shadow-sm duration-200 mt-2 ">
-                    {" "}
+                    {' '}
                     <input
                       name="projectName"
                       id=""
@@ -212,16 +212,16 @@ const Profile = () => {
                       onChange={handleChange}
                       className=" block flex-grow rounded-r-md border disabled:opacity-60 py-2-5 px-2 text-sm focus:ring-primary focus:border-primary border-gray-300 rounded-md"
                     />
-                  </div>{" "}
-                </div>{" "}
+                  </div>{' '}
+                </div>{' '}
                 <div className="w-full">
                   <label for="projectUrl" className="block text-sm font-medium">
                     <div className="flex items-center gap-2">
                       Website URL <div></div>
-                    </div>{" "}
-                  </label>{" "}
+                    </div>{' '}
+                  </label>{' '}
                   <div className="flex w-full rounded-md text-sm shadow-sm duration-200 mt-2 ">
-                    {" "}
+                    {' '}
                     <input
                       name="projectUrl"
                       id=""
@@ -232,8 +232,8 @@ const Profile = () => {
                       placeholder="https://Loya.io"
                       className=" block flex-grow rounded-r-md border disabled:opacity-60 py-2-5 px-2 text-sm focus:ring-primary focus:border-primary border-gray-300 rounded-md"
                     />
-                  </div>{" "}
-                </div>{" "}
+                  </div>{' '}
+                </div>{' '}
                 <div className="w-full">
                   <label
                     for="collectedopt"
@@ -241,27 +241,27 @@ const Profile = () => {
                   >
                     <div className="flex items-center gap-2">
                       Do you already have testimonials? <div></div>
-                    </div>{" "}
-                  </label>{" "}
+                    </div>{' '}
+                  </label>{' '}
                   <select
                     name="collectedopt"
                     required=""
-                    class="focus:ring-primary focus:border-primary mt-2 block  w-full appearance-none rounded-md px-2 py-2-5 text-sm shadow-sm bg-white text-gray-900 border-gray-300 invalid:text-gray-500"
+                    className="focus:ring-primary focus:border-primary mt-2 block  w-full appearance-none rounded-md px-2 py-2-5 text-sm shadow-sm bg-white text-gray-900 border-gray-300 invalid:text-gray-500"
                     onChange={handleChange}
                   >
                     <option value="" disabled="">
-                      Select an option{" "}
+                      Select an option{' '}
                     </option>
                     <option value="true">Yes </option>
                     <option value="false">No </option>
                   </select>
-                </div>{" "}
+                </div>{' '}
                 <div className="w-full">
                   <label for="discovery" className="block text-sm font-medium">
                     <div className="flex items-center gap-2">
                       How did you hear about us? <div></div>
-                    </div>{" "}
-                  </label>{" "}
+                    </div>{' '}
+                  </label>{' '}
                   <select
                     name="discovery"
                     required=""
@@ -269,7 +269,7 @@ const Profile = () => {
                     onChange={handleChange}
                   >
                     <option value="" disabled="">
-                      Select an option{" "}
+                      Select an option{' '}
                     </option>
                     <option value="search_engine">Search Engine </option>
                     <option value="twitter">Twitter </option>
@@ -284,20 +284,20 @@ const Profile = () => {
                     <option value="recommendation">Recommendation </option>
                     <option value="other">Other </option>
                   </select>
-                </div>{" "}
+                </div>{' '}
                 <div className="w-full">
                   <label for="goal" className="block text-sm font-medium">
                     <div className="flex items-center gap-2">
                       Tell us what you hope to achieve with Loya <div></div>
-                    </div>{" "}
-                  </label>{" "}
+                    </div>{' '}
+                  </label>{' '}
                   <textarea
                     name="goal"
                     placeholder="One sentence is fine"
                     onChange={handleChange}
                     className=" focus:ring-primary focus:border-primary mt-2 block w-full appearance-none rounded-md border-gray-300 py-2-5 text-sm shadow-sm"
                   ></textarea>
-                </div>{" "}
+                </div>{' '}
                 <FormGrid>
                   <DefaultButton disabled={!isValidForm} onClick={submit}>
                     Next
@@ -305,7 +305,7 @@ const Profile = () => {
                 </FormGrid>
               </form>
             </div>
-          </div>{" "}
+          </div>{' '}
           <div className="h-8 flex-none"></div>
         </div>
       </div>

@@ -1,14 +1,7 @@
 import React, { useEffect } from 'react';
 
-import {
-  RecordWebcam,
-  useRecordWebcam,
-  CAMERA_STATUS,
-} from 'react-record-webcam';
-// import { default as ReactVideoRecorder } from 'react-video-recorder';
-// import S3 from 'react-aws-s3';
+import { useRecordWebcam, CAMERA_STATUS } from 'react-record-webcam';
 import AWS from 'aws-sdk';
-import { uploadFile } from 'react-s3';
 import { Grid } from '@mui/material';
 
 import { TextWhite as TextWhiteIcon } from '../../../icons/textWhite';
@@ -29,61 +22,49 @@ const OPTIONS = {
   height: 1080,
 };
 
-// window.Buffer = window.Buffer || require('buffer').Buffer;
-
-const SESConfig = {
-  accessKeyId: process.env.REACT_APP_ACCESS,
-  secretAccessKey: process.env.REACT_APP_SECRET,
-};
-
-const config = {
-  bucketName: process.env.REACT_APP_BUCKET_NAME,
-  region: process.env.REACT_APP_REGION,
-  accessKeyId: process.env.REACT_APP_ACCESS,
-  secretAccessKey: process.env.REACT_APP_SECRET,
-};
-
-AWS.config.update(SESConfig);
-
-AWS.config.update({
-  credentials: new AWS.CognitoIdentityCredentials({
-    IdentityPoolId: 'us-east-1:246744e6-804e-4715-81c1-df7f63ad969a',
-  }),
-});
-
-// AWS.config.apiVersions = {
-//   s3: '2012-10-17',
-// };
-
-var s3 = new AWS.S3({
-  params: {
-    Bucket: 'loya-bucket',
-  },
-  region: process.env.REACT_APP_REGION,
-});
+window.Buffer = window.Buffer || require('buffer').Buffer;
 
 export default function VideoRecorder(props) {
+  console.log(process.env);
+
+  const SESConfig = {
+    accessKeyId: process.env.REACT_APP_ACCESS,
+    secretAccessKey: process.env.REACT_APP_SECRET,
+    region: process.env.REACT_APP_REGION,
+  };
+
+  AWS.config.update(SESConfig);
+
+  var s3 = new AWS.S3({
+    params: {
+      Bucket: 'loya-bucket',
+    },
+    region: process.env.REACT_APP_REGION,
+  });
+
   const recordWebcam = useRecordWebcam(OPTIONS);
   const getRecordingFileHooks = async () => {
     const file = await recordWebcam.getRecording();
+    const fileName = Date.now() + '-loya.mp4';
     console.log({ file });
 
-    // setVisible(5);
-    // const file = await recordWebcam.getRecording();
-
-    testimonialService
-      .uploadVideo({ url: window.location.href.slice(-6), name: '' }, file)
-      .then((res) => {
-        console.log(res);
-      });
+    // testimonialService
+    //   .uploadVideo(
+    //     { url: window.location.href.slice(-6), name: fileName },
+    //     file
+    //   )
+    //   .then((res) => {
+    //     console.log(res);
+    //   });
 
     s3.putObject(
       {
-        Key: 'video.mp4',
+        Key: fileName,
         Body: file,
         ContentType: 'video/mp4',
         ACL: 'public-read',
         Bucket: 'loya-bucket',
+        ServerSideEncryption: 'AES256',
       },
       (err) => {
         console.log(err);
@@ -95,22 +76,7 @@ export default function VideoRecorder(props) {
       }
     );
 
-    uploadFile(file, config)
-      .then((data) => console.log(data))
-      .catch((err) => console.error(err));
-
-    props.onClick();
-
-    // const ReactS3Bucket = new S3(config);
-    // https://loya-bucket.eu-west-1.amazonaws.com/video.mp4
-
-    // ReactS3Bucket.uploadFile(file, file.name)
-    //   .then((data) => console.log(data.location))
-    //   .catch((err) => console.error(err));
-  };
-
-  const getRecordingFileRenderProp = async (blob) => {
-    console.log({ blob });
+    props.onClick(fileName);
   };
 
   useEffect(() => {
@@ -132,69 +98,8 @@ export default function VideoRecorder(props) {
             borderRadius: '1rem',
           }}
         >
-          {/* <ReactVideoRecorder
-          onRecordingComplete={(videoBlob) => {
-            // Do something with the video...
-            console.log('videoBlob', videoBlob);
-          }}
-        /> */}
           <div>
             <p>Camera status: {recordWebcam.status}</p>
-            {/* <div>
-            <button
-              disabled={
-                recordWebcam.status === CAMERA_STATUS.OPEN ||
-                recordWebcam.status === CAMERA_STATUS.RECORDING ||
-                recordWebcam.status === CAMERA_STATUS.PREVIEW
-              }
-              onClick={recordWebcam.open}
-            >
-              Open camera
-            </button>
-            <button
-              disabled={
-                recordWebcam.status === CAMERA_STATUS.CLOSED ||
-                recordWebcam.status === CAMERA_STATUS.PREVIEW
-              }
-              onClick={recordWebcam.close}
-            >
-              Close camera
-            </button>
-            <button
-              disabled={
-                recordWebcam.status === CAMERA_STATUS.CLOSED ||
-                recordWebcam.status === CAMERA_STATUS.RECORDING ||
-                recordWebcam.status === CAMERA_STATUS.PREVIEW
-              }
-              onClick={recordWebcam.start}
-            >
-              Start recording
-            </button>
-            <button
-              disabled={recordWebcam.status !== CAMERA_STATUS.RECORDING}
-              onClick={recordWebcam.stop}
-            >
-              Stop recording
-            </button>
-            <button
-              disabled={recordWebcam.status !== CAMERA_STATUS.PREVIEW}
-              onClick={recordWebcam.retake}
-            >
-              Retake
-            </button>
-            <button
-              disabled={recordWebcam.status !== CAMERA_STATUS.PREVIEW}
-              onClick={recordWebcam.download}
-            >
-              Download
-            </button>
-            <button
-              disabled={recordWebcam.status !== CAMERA_STATUS.PREVIEW}
-              onClick={getRecordingFileHooks}
-            >
-              Get recording
-            </button>
-          </div> */}
 
             <video
               ref={recordWebcam.webcamRef}
@@ -290,24 +195,7 @@ export default function VideoRecorder(props) {
             recordWebcam.status === CAMERA_STATUS.PREVIEW ? 'flex' : 'none',
         }}
       >
-        <DefaultButton
-          onClick={getRecordingFileHooks}
-          // onClick={async () => {
-          //   // setVisible(5);
-          //   const file = await recordWebcam.getRecording();
-
-          //   testimonialService.uploadVideo(
-          //     { url: window.location.href.slice(-6), name: '' },
-          //     file
-          //   );
-          //   const ReactS3Bucket = new S3(config);
-
-          //   ReactS3Bucket.uploadFile(file, file.name)
-          //     .then((data) => console.log(data.location))
-          //     .catch((err) => console.error(err));
-          // }}
-          primary={props.priColor}
-        >
+        <DefaultButton onClick={getRecordingFileHooks} primary={props.priColor}>
           <CameraIcon />
           Submit
         </DefaultButton>

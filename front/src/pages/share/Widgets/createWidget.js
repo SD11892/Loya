@@ -1,86 +1,86 @@
-import * as React from "react";
-import moment from "moment";
-import { useDispatch, useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { DragDropContext, Droppable, Draggable } from "react-beautiful-dnd";
-import Editor from "react-simple-code-editor";
-import SyntaxHighlighter from "react-syntax-highlighter";
-import { docco } from "react-syntax-highlighter/dist/esm/styles/hljs";
-import { CopyToClipboard } from "react-copy-to-clipboard";
+import * as React from 'react';
+import moment from 'moment';
+import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import Editor from 'react-simple-code-editor';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
 
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Paper from "@mui/material/Paper";
-import Toolbar from "@mui/material/Toolbar";
-import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
-import IconButton from "@mui/material/IconButton";
-import Grid from "@mui/material/Grid";
-import Rating from "@mui/material/Rating";
-import Avatar from "@mui/material/Avatar";
-import Select from "@mui/material/Select";
-import MenuItem from "@mui/material/MenuItem";
-import { purple } from "@mui/material/colors";
-import ToggleButtonGroup from "@mui/material/ToggleButtonGroup";
-import ToggleButton from "@mui/material/ToggleButton";
-import { ButtonBase } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import Slide from "@mui/material/Slide";
-import Dialog from "@mui/material/Dialog";
-import Badge from "@mui/material/Badge";
-import { Drawer } from "@mui/material";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
+import AppBar from '@mui/material/AppBar';
+import Box from '@mui/material/Box';
+import Paper from '@mui/material/Paper';
+import Toolbar from '@mui/material/Toolbar';
+import Typography from '@mui/material/Typography';
+import Button from '@mui/material/Button';
+import IconButton from '@mui/material/IconButton';
+import Grid from '@mui/material/Grid';
+import Rating from '@mui/material/Rating';
+import Avatar from '@mui/material/Avatar';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import { purple } from '@mui/material/colors';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
+import { ButtonBase } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import Slide from '@mui/material/Slide';
+import Dialog from '@mui/material/Dialog';
+import Badge from '@mui/material/Badge';
+import { Drawer } from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-import Picker from "../../../components/uielements/picker";
-import EmbedButton from "../../../components/uielements/buttons/embedButton";
-import EmbedToolButton from "../../../components/uielements/buttons/embedToolButton";
-import ImageCard from "../../../components/uielements/imageCard";
-import WidgetCard from "../../../components/uielements/widgetCard";
-import FormLabel from "../../../components/uielements/form/FormLabel";
-import PageTitle from "../../../components/uielements/pageTitle";
-import Description from "../../../components/uielements/description";
+import Picker from '../../../components/uielements/picker';
+import EmbedButton from '../../../components/uielements/buttons/embedButton';
+import EmbedToolButton from '../../../components/uielements/buttons/embedToolButton';
+import ImageCard from '../../../components/uielements/imageCard';
+import WidgetCard from '../../../components/uielements/widgetCard';
+import FormLabel from '../../../components/uielements/form/FormLabel';
+import PageTitle from '../../../components/uielements/pageTitle';
+import Description from '../../../components/uielements/description';
 
-import { LeftArrow as LeftArrowIcon } from "../../../icons/leftArrow";
-import { Embed as EmbedIcon } from "../../../icons/embed";
-import { Menu as MenuIcon } from "../../../icons/menu";
-import { Pencil as PencilIcon } from "../../../icons/pencil";
-import { MagicPencil as MagicPencilIcon } from "../../../icons/magicPencil";
-import { Switch as SwitchIcon } from "../../../icons/switch";
-import { Close as CloseIcon } from "../../../icons/close";
-import { CopyEmbed as CopyEmbedIcon } from "../../../icons/copyEmbed";
+import { LeftArrow as LeftArrowIcon } from '../../../icons/leftArrow';
+import { Embed as EmbedIcon } from '../../../icons/embed';
+import { Menu as MenuIcon } from '../../../icons/menu';
+import { Pencil as PencilIcon } from '../../../icons/pencil';
+import { MagicPencil as MagicPencilIcon } from '../../../icons/magicPencil';
+import { Switch as SwitchIcon } from '../../../icons/switch';
+import { Close as CloseIcon } from '../../../icons/close';
+import { CopyEmbed as CopyEmbedIcon } from '../../../icons/copyEmbed';
 
 import {
   getAll,
   saveIndex,
   updateTestimonial,
-} from "../../../actions/testimonial";
+} from '../../../actions/testimonial';
 
-import { getByFormUrl, saveForm } from "../../../actions/testimonialForm";
+import { getByFormUrl, saveForm } from '../../../actions/testimonialForm';
 
-import { createColor } from "material-ui-color";
-import WidgetBubble from "../../../components/widgets/widgetBubble";
+import { createColor } from 'material-ui-color';
+import WidgetBubble from '../../../components/widgets/widgetBubble';
 
-const Div = styled("div")(({ theme }) => ({
+const Div = styled('div')(({ theme }) => ({
   ...theme.typography.button,
-  backgroundColor: "#05966933",
-  borderRadius: "9999px",
-  marginLeft: "0.5rem",
-  paddingLeft: "1rem",
-  paddingRight: "1rem",
-  paddingTop: "0.375rem",
-  paddingBottom: "0.375rem",
-  fontSize: "0.75rem",
-  lineHeight: "1rem",
-  fontWeight: "500",
-  color: "rgb(5 150 105)",
+  backgroundColor: '#05966933',
+  borderRadius: '9999px',
+  marginLeft: '0.5rem',
+  paddingLeft: '1rem',
+  paddingRight: '1rem',
+  paddingTop: '0.375rem',
+  paddingBottom: '0.375rem',
+  fontSize: '0.75rem',
+  lineHeight: '1rem',
+  fontWeight: '500',
+  color: 'rgb(5 150 105)',
 }));
 
 const ColorButton = styled(Button)(({ theme }) => ({
   color: theme.palette.getContrastText(purple[500]),
-  backgroundColor: "#22C55E",
-  "&:hover": {
-    backgroundColor: "#27D064",
+  backgroundColor: '#22C55E',
+  '&:hover': {
+    backgroundColor: '#27D064',
   },
 }));
 
@@ -93,16 +93,16 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 });
 
 const infor = {
-  url: "",
-  spacing: "",
-  shadow: "",
-  border: "",
-  bgColor: "",
-  txtColor: "",
-  ratingColor: "",
-  bfColor: "",
-  blColor: "",
-  fgColor: "",
+  url: '',
+  spacing: '',
+  shadow: '',
+  border: '',
+  bgColor: '',
+  txtColor: '',
+  ratingColor: '',
+  bfColor: '',
+  blColor: '',
+  fgColor: '',
   theme: 1,
 };
 
@@ -110,21 +110,21 @@ export default function CreateWidget() {
   const testimonials = useSelector((state) => state.testimonial.testimonial);
   const dispatch = useDispatch();
   const url = window.location.pathname
-    .replace(/testimonialforms/i, "")
-    .replace("//", "");
+    .replace(/testimonialforms/i, '')
+    .replace('//', '');
 
-  const [view, setView] = React.useState("theme");
-  const [embed, setEmbed] = React.useState("js");
-  const [bgColor, setBgColor] = React.useState("");
-  const [bfColor, setBfColor] = React.useState("");
-  const [blColor, setBlColor] = React.useState("");
-  const [fgColor, setFgColor] = React.useState("");
-  const [txtColor, setTxtColor] = React.useState("");
-  const [ratingColor, setRatingColor] = React.useState("");
-  const [space, setSpace] = React.useState("");
+  const [view, setView] = React.useState('theme');
+  const [embed, setEmbed] = React.useState('js');
+  const [bgColor, setBgColor] = React.useState('');
+  const [bfColor, setBfColor] = React.useState('');
+  const [blColor, setBlColor] = React.useState('');
+  const [fgColor, setFgColor] = React.useState('');
+  const [txtColor, setTxtColor] = React.useState('');
+  const [ratingColor, setRatingColor] = React.useState('');
+  const [space, setSpace] = React.useState('');
   const [theme, setTheme] = React.useState(1);
-  const [shadow, setShadow] = React.useState("");
-  const [radius, setRadius] = React.useState("");
+  const [shadow, setShadow] = React.useState('');
+  const [radius, setRadius] = React.useState('');
   const [open, setOpen] = React.useState(false);
   const [itemList, setItemList] = React.useState([]);
   const [drawerState, setDrawerState] = React.useState(false);
@@ -203,7 +203,7 @@ export default function CreateWidget() {
   };
 
   const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
 
@@ -228,7 +228,7 @@ export default function CreateWidget() {
         setFgColor(result.fgColor);
       })
       .catch((err) => {
-        alert("Invalid Form");
+        alert('Invalid Form');
       });
     setItemList(testimonials);
   }, []);
@@ -258,7 +258,7 @@ export default function CreateWidget() {
 
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="static" style={{ backgroundColor: "rgb(15,23,42)" }}>
+      <AppBar position="static" style={{ backgroundColor: 'rgb(15,23,42)' }}>
         <Toolbar>
           <IconButton
             size="large"
@@ -267,7 +267,7 @@ export default function CreateWidget() {
             aria-label="menu"
             sx={{ mr: 2 }}
             onClick={() => {
-              navigate("/widgets");
+              navigate('/widgets');
             }}
           >
             <LeftArrowIcon />
@@ -299,22 +299,22 @@ export default function CreateWidget() {
           <MenuIcon />
         </Toolbar>
       </AppBar>
-      <div style={{ display: "flex", flexDirection: "row" }}>
-        <div style={{ display: "flex" }}>
+      <div style={{ display: 'flex', flexDirection: 'row' }}>
+        <div style={{ display: 'flex' }}>
           <div
             style={{
-              float: "left",
-              borderStyle: "ridge",
-              borderRightWidth: "1px",
-              borderLeftWidth: "0px",
-              borderTopWidth: "0px",
-              borderBottomWidth: "0px",
-              backgroundColor: "rgb(249 250 251)",
-              paddingLeft: "0.5rem",
-              paddingRight: "0.5rem",
-              paddingTop: "1rem",
-              width: "2.3rem",
-              height: "55rem",
+              float: 'left',
+              borderStyle: 'ridge',
+              borderRightWidth: '1px',
+              borderLeftWidth: '0px',
+              borderTopWidth: '0px',
+              borderBottomWidth: '0px',
+              backgroundColor: 'rgb(249 250 251)',
+              paddingLeft: '0.5rem',
+              paddingRight: '0.5rem',
+              paddingTop: '1rem',
+              width: '2.3rem',
+              height: '55rem',
             }}
           >
             <ToggleButtonGroup
@@ -350,138 +350,138 @@ export default function CreateWidget() {
             </ToggleButtonGroup>
           </div>
         </div>
-        <div style={{ display: "flex" }}>
+        <div style={{ display: 'flex' }}>
           <div
             style={{
-              float: "left",
-              width: "20rem",
+              float: 'left',
+              width: '20rem',
             }}
           >
-            {view === "theme" ? (
+            {view === 'theme' ? (
               <Paper
                 elevation={8}
                 style={{
-                  width: "auto",
-                  height: "auto",
-                  display: "grid",
-                  gridTemplateColumns: "repeat(2,minmax(0,1fr))",
-                  gap: "1rem",
-                  padding: "0.5rem",
-                  boxShadow: "unset",
+                  width: 'auto',
+                  height: 'auto',
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(2,minmax(0,1fr))',
+                  gap: '1rem',
+                  padding: '0.5rem',
+                  boxShadow: 'unset',
                 }}
               >
                 <ImageCard>
                   <ButtonBase
                     onClick={() => {
-                      setBgColor("white");
-                      setTxtColor("black");
-                      setRatingColor("#FBBF24");
+                      setBgColor('white');
+                      setTxtColor('black');
+                      setRatingColor('#FBBF24');
                       setTheme(1);
                     }}
                   >
                     <img
                       alt=""
                       src="../theme1_white.png"
-                      style={{ width: "9rem", height: "9rem" }}
+                      style={{ width: '9rem', height: '9rem' }}
                     />
                   </ButtonBase>
                 </ImageCard>
                 <ImageCard>
                   <ButtonBase
                     onClick={() => {
-                      setBgColor("black");
-                      setTxtColor("white");
-                      setRatingColor("#FBBF24");
+                      setBgColor('black');
+                      setTxtColor('white');
+                      setRatingColor('#FBBF24');
                       setTheme(1);
                     }}
                   >
                     <img
                       alt=""
                       src="../theme1_black.png"
-                      style={{ width: "9rem", height: "9rem" }}
+                      style={{ width: '9rem', height: '9rem' }}
                     />
                   </ButtonBase>
                 </ImageCard>
                 <ImageCard>
                   <ButtonBase
                     onClick={() => {
-                      setBgColor("#234A46");
-                      setTxtColor("white");
-                      setRatingColor("#B9E1D8");
+                      setBgColor('#234A46');
+                      setTxtColor('white');
+                      setRatingColor('#B9E1D8');
                       setTheme(1);
                     }}
                   >
                     <img
                       alt=""
                       src="../theme1_green.png"
-                      style={{ width: "9rem", height: "9rem" }}
+                      style={{ width: '9rem', height: '9rem' }}
                     />
                   </ButtonBase>
                 </ImageCard>
                 <ImageCard>
                   <ButtonBase
                     onClick={() => {
-                      setBgColor("#260D5C");
-                      setTxtColor("white");
-                      setRatingColor("violet");
+                      setBgColor('#260D5C');
+                      setTxtColor('white');
+                      setRatingColor('violet');
                       setTheme(1);
                     }}
                   >
                     <img
                       alt=""
                       src="../theme1_violet.png"
-                      style={{ width: "9rem", height: "9rem" }}
+                      style={{ width: '9rem', height: '9rem' }}
                     />
                   </ButtonBase>
                 </ImageCard>
                 <ImageCard>
                   <ButtonBase
                     onClick={() => {
-                      setFgColor("white");
-                      setBfColor("#6701e6");
-                      setBlColor("#85fc78");
-                      setTxtColor("black");
-                      setRatingColor("#FBBF24");
+                      setFgColor('white');
+                      setBfColor('#6701e6');
+                      setBlColor('#85fc78');
+                      setTxtColor('black');
+                      setRatingColor('#FBBF24');
                       setTheme(2);
                     }}
                   >
                     <img
                       alt=""
                       src="../theme2_white.png"
-                      style={{ width: "9rem", height: "9rem" }}
+                      style={{ width: '9rem', height: '9rem' }}
                     />
                   </ButtonBase>
                 </ImageCard>
                 <ImageCard>
                   <ButtonBase
                     onClick={() => {
-                      setFgColor("#1E51EF");
-                      setBfColor("#9ffd95");
-                      setBlColor("#85fc78");
-                      setTxtColor("white");
-                      setRatingColor("#FBB24");
+                      setFgColor('#1E51EF');
+                      setBfColor('#9ffd95');
+                      setBlColor('#85fc78');
+                      setTxtColor('white');
+                      setRatingColor('#FBB24');
                       setTheme(2);
                     }}
                   >
                     <img
                       alt=""
                       src="../theme2_blue.png"
-                      style={{ width: "9rem", height: "9rem" }}
+                      style={{ width: '9rem', height: '9rem' }}
                     />
                   </ButtonBase>
                 </ImageCard>
               </Paper>
-            ) : view === "design" ? (
+            ) : view === 'design' ? (
               <Paper
                 elevation={8}
                 style={{
-                  displau: "grid",
-                  padding: "1.5rem",
-                  width: "auto",
-                  height: "auto",
-                  gap: "1rem",
-                  padding: "0.5rem",
-                  boxShadow: "unset",
+                  displau: 'grid',
+                  padding: '1.5rem',
+                  width: 'auto',
+                  height: 'auto',
+                  gap: '1rem',
+                  padding: '0.5rem',
+                  boxShadow: 'unset',
                 }}
               >
                 <FormLabel>Background Color</FormLabel>
@@ -504,13 +504,13 @@ export default function CreateWidget() {
               <Paper
                 elevation={8}
                 style={{
-                  width: "auto",
-                  height: "auto",
-                  display: "flex",
-                  flexDirection: "column",
-                  gap: "1rem",
-                  padding: "1.5rem",
-                  boxShadow: "unset",
+                  width: 'auto',
+                  height: 'auto',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1rem',
+                  padding: '1.5rem',
+                  boxShadow: 'unset',
                 }}
               >
                 <Button variant="outlined" onClick={handleClickOpen}>
@@ -557,27 +557,27 @@ export default function CreateWidget() {
         </div>
         <div
           style={{
-            width: "100%",
-            background: "transparent",
+            width: '100%',
+            background: 'transparent',
           }}
         >
           <div
             style={{
-              float: "grid",
-              gridTemplateColumns: "repeat(auto-fill,350px)",
+              float: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill,350px)',
               gap:
-                space === "small"
-                  ? "0.5rem"
-                  : space === "medium"
-                  ? "1rem"
-                  : space === "large"
-                  ? "1.5rem"
-                  : space === "extra large"
-                  ? "2rem"
-                  : "unset",
-              padding: "2rem",
-              display: "grid",
-              height: "min-content",
+                space === 'small'
+                  ? '0.5rem'
+                  : space === 'medium'
+                  ? '1rem'
+                  : space === 'large'
+                  ? '1.5rem'
+                  : space === 'extra large'
+                  ? '2rem'
+                  : 'unset',
+              padding: '2rem',
+              display: 'grid',
+              height: 'min-content',
             }}
           >
             {itemList.map((row) =>
@@ -591,26 +591,26 @@ export default function CreateWidget() {
                   <Grid
                     container
                     style={{
-                      display: "flex",
-                      flexDirection: "column",
+                      display: 'flex',
+                      flexDirection: 'column',
                     }}
                   >
                     <Grid
                       item
                       style={{
-                        marginTop: "0.5rem",
-                        display: "flex",
-                        alignItems: "center",
-                        gap: "0.5rem",
+                        marginTop: '0.5rem',
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '0.5rem',
                       }}
                     >
                       {row.data !== null ? (
                         <Avatar
                           style={{
-                            borderRadius: "50%",
-                            border: "1px solid #ddd",
-                            borderColor: "rgb(237, 243, 249)",
-                            borderWidth: "4px",
+                            borderRadius: '50%',
+                            border: '1px solid #ddd',
+                            borderColor: 'rgb(237, 243, 249)',
+                            borderWidth: '4px',
                           }}
                           sx={{ width: 56, height: 56 }}
                         >
@@ -620,35 +620,35 @@ export default function CreateWidget() {
                                 ...new Uint8Array(row.data.data)
                               )
                             )}`}
-                            width={"60px"}
+                            width={'60px'}
                           />
                         </Avatar>
                       ) : (
                         <Avatar
                           style={{
-                            borderRadius: "50%",
-                            border: "1px solid #ddd",
-                            borderColor: "rgb(237, 243, 249)",
-                            borderWidth: "4px",
+                            borderRadius: '50%',
+                            border: '1px solid #ddd',
+                            borderColor: 'rgb(237, 243, 249)',
+                            borderWidth: '4px',
                           }}
                           sx={{ width: 56, height: 56 }}
                         >
-                          <img src={`../../../../../user.png`} width={"60px"} />
+                          <img src={`../../../../../user.png`} width={'60px'} />
                         </Avatar>
                       )}
 
                       <div>
-                        <div>{row.value.split(",")[0]}</div>
+                        <div>{row.value.split(',')[0]}</div>
                         <div>
-                          {row.key.indexOf("Headline") !== -1
-                            ? row.value.split(",")[
-                                row.key.split(",").indexOf("Headline")
+                          {row.key.indexOf('Headline') !== -1
+                            ? row.value.split(',')[
+                                row.key.split(',').indexOf('Headline')
                               ]
                             : null}
                         </div>
                       </div>
                     </Grid>
-                    <Grid item style={{ marginTop: "0.5rem" }}>
+                    <Grid item style={{ marginTop: '0.5rem' }}>
                       <Rating
                         readOnly
                         value={row.rating}
@@ -657,11 +657,11 @@ export default function CreateWidget() {
                         }}
                       />
                     </Grid>
-                    <Grid item style={{ marginTop: "0.5rem" }}>
+                    <Grid item style={{ marginTop: '0.5rem' }}>
                       {row.content}
                     </Grid>
-                    <Grid item style={{ marginTop: "0.5rem" }}>
-                      {moment(row.date).format("ll")}
+                    <Grid item style={{ marginTop: '0.5rem' }}>
+                      {moment(row.date).format('ll')}
                     </Grid>
                   </Grid>
                 </WidgetCard>
@@ -674,12 +674,12 @@ export default function CreateWidget() {
                   rating={row.rating}
                   bfColor={bfColor}
                   blColor={blColor}
-                  name={row.value.split(",")[0]}
+                  name={row.value.split(',')[0]}
                   txtColor={txtColor}
                   headline={
-                    row.key.indexOf("Headline") !== -1
-                      ? row.value.split(",")[
-                          row.key.split(",").indexOf("Headline")
+                    row.key.indexOf('Headline') !== -1
+                      ? row.value.split(',')[
+                          row.key.split(',').indexOf('Headline')
                         ]
                       : null
                   }
@@ -697,20 +697,20 @@ export default function CreateWidget() {
             item
             xs={6}
             style={{
-              alignSelf: "center",
-              display: "flex",
-              flexDirection: "column",
-              marginTop: "2rem",
+              alignSelf: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              marginTop: '2rem',
             }}
           >
-            <div style={{ display: "flex", justifyContent: "space-between" }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
               <PageTitle>Edit Testimonial Order</PageTitle>
               <IconButton
-                style={{ padding: "8px 16px" }}
+                style={{ padding: '8px 16px' }}
                 onClick={() => {
                   itemList.map((row, index) => {
                     row.index = index;
-                    console.log("row=", row);
+                    console.log('row=', row);
                   });
                   setItemList([...itemList]);
                   handleClose();
@@ -721,8 +721,8 @@ export default function CreateWidget() {
             </div>
             <div
               style={{
-                width: "100%",
-                marginTop: "2rem",
+                width: '100%',
+                marginTop: '2rem',
               }}
             >
               <DragDropContext onDragEnd={onDragEnd}>
@@ -733,19 +733,19 @@ export default function CreateWidget() {
                       {...provided.droppableProps}
                       style={{
                         gap:
-                          space === "small"
-                            ? "0.5rem"
-                            : space === "medium"
-                            ? "1rem"
-                            : space === "large"
-                            ? "1.5rem"
-                            : space === "extra large"
-                            ? "2rem"
-                            : "unset",
-                        padding: "2rem",
-                        display: "flex",
-                        flexWrap: "wrap",
-                        height: "min-content",
+                          space === 'small'
+                            ? '0.5rem'
+                            : space === 'medium'
+                            ? '1rem'
+                            : space === 'large'
+                            ? '1.5rem'
+                            : space === 'extra large'
+                            ? '2rem'
+                            : 'unset',
+                        padding: '2rem',
+                        display: 'flex',
+                        flexWrap: 'wrap',
+                        height: 'min-content',
                       }}
                     >
                       {itemList.map((item, index) => {
@@ -774,26 +774,26 @@ export default function CreateWidget() {
                                     <Grid
                                       container
                                       style={{
-                                        display: "flex",
-                                        flexDirection: "column",
+                                        display: 'flex',
+                                        flexDirection: 'column',
                                       }}
                                     >
                                       <Grid
                                         item
                                         style={{
-                                          marginTop: "0.5rem",
-                                          display: "flex",
-                                          alignItems: "center",
-                                          gap: "0.5rem",
+                                          marginTop: '0.5rem',
+                                          display: 'flex',
+                                          alignItems: 'center',
+                                          gap: '0.5rem',
                                         }}
                                       >
                                         {item.data !== null ? (
                                           <Avatar
                                             style={{
-                                              borderRadius: "50%",
-                                              border: "1px solid #ddd",
-                                              borderColor: "rgb(237, 243, 249)",
-                                              borderWidth: "4px",
+                                              borderRadius: '50%',
+                                              border: '1px solid #ddd',
+                                              borderColor: 'rgb(237, 243, 249)',
+                                              borderWidth: '4px',
                                             }}
                                             sx={{ width: 56, height: 56 }}
                                           >
@@ -805,34 +805,34 @@ export default function CreateWidget() {
                                                   )
                                                 )
                                               )}`}
-                                              width={"60px"}
+                                              width={'60px'}
                                             />
                                           </Avatar>
                                         ) : (
                                           <Avatar
                                             style={{
-                                              borderRadius: "50%",
-                                              border: "1px solid #ddd",
-                                              borderColor: "rgb(237, 243, 249)",
-                                              borderWidth: "4px",
+                                              borderRadius: '50%',
+                                              border: '1px solid #ddd',
+                                              borderColor: 'rgb(237, 243, 249)',
+                                              borderWidth: '4px',
                                             }}
                                             sx={{ width: 56, height: 56 }}
                                           >
                                             <img
                                               src={`../../../../../user.png`}
-                                              width={"60px"}
+                                              width={'60px'}
                                             />
                                           </Avatar>
                                         )}
 
                                         <div>
-                                          <div>{item.value.split(",")[0]}</div>
+                                          <div>{item.value.split(',')[0]}</div>
                                           <div>
-                                            {item.key.indexOf("Headline") !== -1
-                                              ? item.value.split(",")[
+                                            {item.key.indexOf('Headline') !== -1
+                                              ? item.value.split(',')[
                                                   item.key
-                                                    .split(",")
-                                                    .indexOf("Headline")
+                                                    .split(',')
+                                                    .indexOf('Headline')
                                                 ]
                                               : null}
                                           </div>
@@ -840,7 +840,7 @@ export default function CreateWidget() {
                                       </Grid>
                                       <Grid
                                         item
-                                        style={{ marginTop: "0.5rem" }}
+                                        style={{ marginTop: '0.5rem' }}
                                       >
                                         <Rating
                                           readOnly
@@ -852,15 +852,15 @@ export default function CreateWidget() {
                                       </Grid>
                                       <Grid
                                         item
-                                        style={{ marginTop: "0.5rem" }}
+                                        style={{ marginTop: '0.5rem' }}
                                       >
                                         {item.content}
                                       </Grid>
                                       <Grid
                                         item
-                                        style={{ marginTop: "0.5rem" }}
+                                        style={{ marginTop: '0.5rem' }}
                                       >
-                                        {moment(item.date).format("ll")}
+                                        {moment(item.date).format('ll')}
                                       </Grid>
                                     </Grid>
                                   </WidgetCard>
@@ -893,39 +893,39 @@ export default function CreateWidget() {
             container
             spacing={1}
             style={{
-              padding: "2rem",
-              width: "512px",
-              height: "140px",
-              backgroundColor: "#6701e6",
+              padding: '2rem',
+              width: '512px',
+              height: '140px',
+              backgroundColor: '#6701e6',
             }}
           >
-            <PageTitle style={{ color: "white" }}>
+            <PageTitle style={{ color: 'white' }}>
               Share your widget?🥳
             </PageTitle>
-            <Description style={{ color: "#fff" }}>
+            <Description style={{ color: '#fff' }}>
               Follow the instructions to embed this on your website
             </Description>
           </Grid>
-          <Grid container style={{ padding: "2rem", width: "500px" }}>
-            <Grid item style={{ width: "100%" }}>
+          <Grid container style={{ padding: '2rem', width: '500px' }}>
+            <Grid item style={{ width: '100%' }}>
               Embed on your website
             </Grid>
             <Grid
               item
               style={{
-                fontSize: "0.875rem",
-                lineHeight: "1.25rem",
-                background: "rgb(55,65,81)",
-                overflow: "hidden",
-                width: "100%",
+                fontSize: '0.875rem',
+                lineHeight: '1.25rem',
+                background: 'rgb(55,65,81)',
+                overflow: 'hidden',
+                width: '100%',
               }}
             >
               <div
                 style={{
-                  color: "#fff",
-                  padding: "0.5rem",
-                  gap: "0.5rem",
-                  display: "flex",
+                  color: '#fff',
+                  padding: '0.5rem',
+                  gap: '0.5rem',
+                  display: 'flex',
                 }}
               >
                 <ToggleButtonGroup
@@ -980,7 +980,7 @@ export default function CreateWidget() {
         </div>
       </Drawer>
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={openSnack}
         autoHideDuration={6000}
         onClose={handleCloseSnack}
@@ -988,13 +988,13 @@ export default function CreateWidget() {
         <Alert
           onClose={handleCloseSnack}
           severity="success"
-          sx={{ width: "100%" }}
+          sx={{ width: '100%' }}
         >
           Save Changed
         </Alert>
       </Snackbar>
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={openCopySnack}
         autoHideDuration={6000}
         onClose={handleCloseSnack}
@@ -1002,7 +1002,7 @@ export default function CreateWidget() {
         <Alert
           onClose={handleCloseSnack}
           severity="success"
-          sx={{ width: "100%" }}
+          sx={{ width: '100%' }}
         >
           Copied to Clipboard
         </Alert>

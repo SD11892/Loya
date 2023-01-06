@@ -1,6 +1,5 @@
 const db = require("../models");
 const fs = require("fs");
-const { response } = require("../models");
 const Form = db.form;
 const Testimonial = db.testimonial;
 
@@ -8,7 +7,6 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
   const data = req.query.info;
-  console.log("submit=", data);
   if (req.file !== undefined) {
     if (data.url !== undefined) {
       Form.findAll({
@@ -36,6 +34,7 @@ exports.create = (req, res) => {
               type: data.type,
               name: data.name,
               rating: data.rating,
+              video: data.video,
               data: fs.readFileSync("../upload/" + req.file.filename),
               index: data.index,
               projectId: data.projectId,
@@ -56,6 +55,7 @@ exports.create = (req, res) => {
         status: 0,
         type: data.type,
         name: data.name,
+        video: data.video,
         rating: data.rating,
         data: fs.readFileSync("../upload/" + req.file.filename),
         index: data.index,
@@ -73,7 +73,6 @@ exports.create = (req, res) => {
           formUrl: data.url,
         },
       }).then((value) => {
-        console.log("value=", value);
         Form.update(
           {
             response: value[0].dataValues.response + 1,
@@ -120,7 +119,6 @@ exports.create = (req, res) => {
 };
 exports.update = (req, res) => {
   const data = req.query.info;
-  console.log("data=", data);
   if (req.file !== undefined) {
     Testimonial.update(
       {
@@ -189,15 +187,12 @@ exports.getAll = (req, res) => {
     })
       .then((testimonials) => {
         if (!testimonials) {
-          console.log("Testimonials Not Found");
           return res.status(200).send({ message: "Empty" });
         } else {
-          console.log("testimonials=", testimonials);
           res.status(200).send({ testimonials });
         }
       })
       .catch((err) => {
-        console.log("err=", err);
         res.status(500).send({ message: err.message });
       });
   } else {
@@ -210,14 +205,12 @@ exports.getAll = (req, res) => {
     })
       .then((testimonials) => {
         if (!testimonials) {
-          console.log("Testimonials Not Found");
           return res.status(200).send({ message: "Empty" });
         } else {
           res.status(200).send({ testimonials });
         }
       })
       .catch((err) => {
-        console.log("err=", err);
         res.status(500).send({ message: err.message });
       });
   }
@@ -246,7 +239,6 @@ exports.delete = (req, res) => {
             Id: Id,
           },
         }).then((result) => {
-          console.log("res=", res);
           res.json({ result });
         });
       });
@@ -256,7 +248,6 @@ exports.delete = (req, res) => {
           Id: Id,
         },
       }).then((result) => {
-        console.log("res=", res);
         res.json({ result });
       });
     }
@@ -278,7 +269,6 @@ exports.getByUrl = (req, res) => {
     },
   })
     .then((fdata) => {
-      console.log("fdata=", fdata);
       info.key = fdata.key;
       info.value = fdata.value;
       info.content = fdata.content;
@@ -294,7 +284,6 @@ exports.getByUrl = (req, res) => {
 
 exports.uploadVideo = (req, res) => {
   const data = req.query.info;
-  console.log("data=", data);
   if (req.file !== undefined) {
     fs.readFileSync("../upload/" + req.file.filename);
     Testimonial.update(
@@ -319,7 +308,6 @@ exports.importAll = async (req, res) => {
   const array = req.query.array;
   console.log(array);
   const length = Object.keys(array).length;
-  console.log("ARRAY=", length);
   for (var i = 0; i < length; i++) {
     await Testimonial.create({
       value: array[i].name,
@@ -351,7 +339,6 @@ exports.importHistory = (req, res) => {
         imports.push(testimonials[i]);
       }
     }
-    console.log("imports=", imports);
     res.status(200).send({ imports });
   });
 };

@@ -1,32 +1,32 @@
-import React, { useState, useRef } from "react";
-import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import React, { useState, useRef } from 'react';
+import { useDispatch } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
-import { Paper, Button, Grid } from "@material-ui/core";
-import { makeStyles } from "@material-ui/core/styles";
-import { Auth } from "aws-amplify";
-import toastr from "toastr";
+import { Paper, Button, Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
+import { Auth } from 'aws-amplify';
+import toastr from 'toastr';
 
-import { validator } from "./Validator";
-import useForm from "./useForm";
-import SignPanel from "./SignPanel";
+import { validator } from './Validator';
+import useForm from './useForm';
+import SignPanel from './SignPanel';
 
-import CssTextField from "../../components/uielements/cssTextField";
-import PageTitle from "../../components/uielements/pageTitle";
-import Description from "../../components/uielements/description";
-import MainButton from "../../components/uielements/buttons/mainButton";
-import BackwardButton from "../../components/uielements/buttons/backwardButton";
+import CssTextField from '../../components/uielements/cssTextField';
+import PageTitle from '../../components/uielements/pageTitle';
+import Description from '../../components/uielements/description';
+import MainButton from '../../components/uielements/buttons/mainButton';
+import BackwardButton from '../../components/uielements/buttons/backwardButton';
 
-import { Googlesm } from "../../icons/google_sm";
-import { Heart as HeartIcon } from "../../icons/heart";
+import { Googlesm } from '../../icons/google_sm';
+import { Heart as HeartIcon } from '../../icons/heart';
 
-import { login } from "../../actions/auth";
-import { getAll } from "../../actions/project";
+import { login } from '../../actions/auth';
+import { getAll } from '../../actions/project';
 import GoogleLogin, {
   GoogleLogout,
   GoogleLoginResponse,
   GoogleLoginResponseOffline,
-} from "react-google-login";
+} from 'react-google-login';
 
 const useStyles = makeStyles((theme) => ({
   margin: {
@@ -35,17 +35,19 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const CLIENT_ID =
-  "382447144454-18kdqo71vffauq6c6q2t53bi8u7artae.apps.googleusercontent.com";
+  '382447144454-18kdqo71vffauq6c6q2t53bi8u7artae.apps.googleusercontent.com';
 
-const SCOPE = "https://www.googleapis.com/auth/drive";
+const SCOPE = 'https://www.googleapis.com/auth/drive';
 
 const Login = () => {
-  const [loading, setLoading] = useState("false");
+  // const [user, setUser] = useState(null);
+  // const [customState, setCustomState] = useState(null);
+  const [loading, setLoading] = useState('false');
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const [isSignedIn, setIsSignedIn] = useState(false);
   const signOutHandler = () => {
-    console.log("logged out!");
+    console.log('logged out!');
     setIsSignedIn(false);
   };
   const signInHandler = (response) => {
@@ -54,8 +56,8 @@ const Login = () => {
   };
 
   const initState = {
-    email: "",
-    password: "",
+    email: '',
+    password: '',
   };
 
   // const handleLogin = async (googleData) => {
@@ -82,16 +84,16 @@ const Login = () => {
         //Success
         console.log(result);
         dispatch(login(state.email, state.password)).then((res) => {
-          console.log("res=", res);
+          console.log('res=', res);
           dispatch(getAll()).then((result) => {
             localStorage.setItem(
-              "projects",
+              'projects',
               JSON.stringify(result.data.projects)
             );
-            if (res.CODE === "200") {
-              toastr.success("Success LogIn!");
-              localStorage.setItem("signIn", true);
-              navigate("/testimonials");
+            if (res.CODE === '200') {
+              toastr.success('Success LogIn!');
+              localStorage.setItem('signIn', true);
+              navigate('/testimonials');
             } else {
               toastr.error(res.message);
               console.log(res.message);
@@ -101,13 +103,13 @@ const Login = () => {
       })
       .catch((err) => {
         // Something is Wrong
-        if (err.code === "UserNotConfirmedException") {
+        if (err.code === 'UserNotConfirmedException') {
           dispatch(login(state.email, state.password)).then((res) => {
-            console.log("res=", res);
-            if (res.CODE === "200") {
-              toastr.success("Success LogIn!");
-              localStorage.setItem("signIn", true);
-              navigate("/testimonials");
+            console.log('res=', res);
+            if (res.CODE === '200') {
+              toastr.success('Success LogIn!');
+              localStorage.setItem('signIn', true);
+              navigate('/testimonials');
             } else {
               toastr.error(res.message);
               console.log(res.message);
@@ -129,7 +131,7 @@ const Login = () => {
   const { margin, papper } = useStyles();
 
   let isValidForm =
-    Object.values(errors).filter((error) => typeof error !== "undefined")
+    Object.values(errors).filter((error) => typeof error !== 'undefined')
       .length === 0;
 
   return (
@@ -140,29 +142,29 @@ const Login = () => {
         direction="column"
         alignItems="center"
         xs={6}
-        style={{ minHeight: "100vh", display: "flex" }}
+        style={{ minHeight: '100vh', display: 'flex' }}
       >
-        <div style={{ display: "flex", flexDirection: "row", height: "100vh" }}>
+        <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
           <div
             style={{
-              alignSelf: "center",
-              padding: "1rem",
+              alignSelf: 'center',
+              padding: '1rem',
             }}
           >
-            <Grid container style={{ marginBottom: "0.5rem" }}>
+            <Grid container style={{ marginBottom: '0.5rem' }}>
               <HeartIcon />
             </Grid>
-            <Grid container style={{ marginBottom: "1rem" }}>
+            <Grid container style={{ marginBottom: '1rem' }}>
               <PageTitle>Sign in to Loya</PageTitle>
             </Grid>
-            <Grid container style={{ marginBottom: "1rem" }}>
+            <Grid container style={{ marginBottom: '1rem' }}>
               <Description>
                 Loya helps you start collecting, managing and sharing your
                 testimonials in minutes, not days.
               </Description>
             </Grid>
-            <Grid container style={{ marginBottom: "1rem" }}>
-              <form onSubmit={handleSubmit} style={{ width: "100%" }}>
+            <Grid container style={{ marginBottom: '1rem' }}>
+              <form onSubmit={handleSubmit} style={{ width: '100%' }}>
                 <div>
                   {/* EMAIL */}
                   <CssTextField
@@ -176,9 +178,9 @@ const Login = () => {
                     helperText={errors.email}
                     onBlur={handleBlur}
                     style={{
-                      width: "100%",
-                      padding: "unset",
-                      marginBottom: "1rem",
+                      width: '100%',
+                      padding: 'unset',
+                      marginBottom: '1rem',
                     }}
                   />
                   <br />
@@ -194,12 +196,12 @@ const Login = () => {
                     error={errors.password ? true : false}
                     helperText={errors.password}
                     onBlur={handleBlur}
-                    style={{ width: "100%" }}
+                    style={{ width: '100%' }}
                   />
                 </div>
-                <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
+                <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
                   <MainButton
-                    style={{ width: "100%", marginLeft: "unset" }}
+                    style={{ width: '100%', marginLeft: 'unset' }}
                     disabled={!isValidForm}
                     type="submit"
                     variant="contained"
@@ -209,25 +211,25 @@ const Login = () => {
                     Sign in
                   </MainButton>
                 </div>
-                <div style={{ marginBottom: "1rem", marginTop: "1rem" }}>
+                <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
                   <GoogleLogin
                     clientId={CLIENT_ID}
                     buttonText="Sign in with Google "
                     onSuccess={signInHandler}
                     onFailure={signInHandler}
-                    cookiePolicy={"single_host_origin"}
+                    cookiePolicy={'single_host_origin'}
                     isSignedIn={true}
                     scope={SCOPE}
                   />
                 </div>
                 <div
                   style={{
-                    marginBottom: "1rem",
-                    marginTop: "1rem",
-                    display: "flex",
+                    marginBottom: '1rem',
+                    marginTop: '1rem',
+                    display: 'flex',
                   }}
                 >
-                  <Description style={{ marginRight: "1rem" }}>
+                  <Description style={{ marginRight: '1rem' }}>
                     Don't have account?
                   </Description>
                   <a href="/signup">Sign up</a>

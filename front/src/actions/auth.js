@@ -6,9 +6,9 @@ import {
   LOGOUT,
   SET_MESSAGE,
   VERIFY_SUCCESS,
-} from "./types";
+} from './types';
 
-import AuthService from "../services/auth.service";
+import AuthService from '../services/auth.service';
 
 export const register = (username, email, password) => (dispatch) => {
   return AuthService.register(username, email, password);
@@ -35,7 +35,7 @@ export const verify = (email) => {
       };
     })
     .catch((err) => {
-      console.log("err=", err);
+      console.log('err=', err);
       return Promise.reject();
     });
 };

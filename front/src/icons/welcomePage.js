@@ -11,8 +11,8 @@ export const WelcomePage = (props) => {
       strokeLinecap="round"
       strokeLinejoin="round"
       style={{
-        marginLeft: "1rem",
-        marginRight: "1rem",
+        marginLeft: '1rem',
+        marginRight: '1rem',
       }}
     >
       <path d="M18 11V6a2 2 0 0 0-2-2v0a2 2 0 0 0-2 2v0"></path>

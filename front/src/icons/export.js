@@ -7,7 +7,7 @@ export const Export = () => {
       viewBox="0 0 24 24"
       stroke="currentColor"
       fill="none"
-      style={{ color: "#444" }}
+      style={{ color: '#444' }}
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"

@@ -11,8 +11,8 @@ export const Localization = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       style={{
-        marginLeft: "1rem",
-        marginRight: "1rem",
+        marginLeft: '1rem',
+        marginRight: '1rem',
       }}
     >
       <path d="m5 8 6 6"></path>

@@ -1,5 +1,5 @@
-import React, { useEffect, useState } from "react";
-import moment from "moment";
+import React, { useEffect, useState } from 'react';
+import moment from 'moment';
 import {
   Grid,
   TableContainer,
@@ -20,36 +20,38 @@ import {
   Button,
   ButtonBase,
   TextField,
-} from "@mui/material";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
+} from '@mui/material';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
 
-import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
-import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
-import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import Input from "../uielements/form/FormInput";
-import GroupButton from "../uielements/buttons/groupButton";
-import DefaultButton from "../uielements/buttons/defaultButton";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import VideoImageThumbnail from 'react-video-thumbnail-image';
+import AWS from 'aws-sdk';
+import Input from '../uielements/form/FormInput';
+import GroupButton from '../uielements/buttons/groupButton';
+import DefaultButton from '../uielements/buttons/defaultButton';
 
-import { Pencil as PencilIcon } from "../../icons/pencil";
-import { Delete as DeleteIcon } from "../../icons/delete";
-import { Image as ImageIcon } from "../../icons/image";
-import { Close as CloseIcon } from "../../icons/close";
-import { Thanknote as ThanknoteIcon } from "../../icons/thanknote";
+import { Pencil as PencilIcon } from '../../icons/pencil';
+import { Delete as DeleteIcon } from '../../icons/delete';
+import { Image as ImageIcon } from '../../icons/image';
+import { Close as CloseIcon } from '../../icons/close';
+import { Thanknote as ThanknoteIcon } from '../../icons/thanknote';
 
-import UploadButton from "../uielements/buttons/uploadButton";
-import StatusButton from "../../components/uielements/buttons/statusButton";
-import { Embed } from "../../icons/embed";
-import GBContainer from "../uielements/containers/groupButtonContainer";
+import UploadButton from '../uielements/buttons/uploadButton';
+import StatusButton from '../../components/uielements/buttons/statusButton';
+import { Embed } from '../../icons/embed';
+import GBContainer from '../uielements/containers/groupButtonContainer';
 import {
   updateTestimonial,
   deleteTestimonial,
-} from "../../actions/testimonial";
-import { useDispatch, useSelector } from "react-redux";
-import { getAll } from "../../actions/testimonial";
-import PageTitle from "../uielements/pageTitle";
-import FormLabel from "../uielements/form/FormLabel";
-import FormGrid from "../uielements/form/FormGrid";
+} from '../../actions/testimonial';
+import { useDispatch, useSelector } from 'react-redux';
+import { getAll } from '../../actions/testimonial';
+import PageTitle from '../uielements/pageTitle';
+import FormLabel from '../uielements/form/FormLabel';
+import FormGrid from '../uielements/form/FormGrid';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -59,41 +61,58 @@ const TestTable = () => {
   const dispatch = useDispatch();
   const testimonials = useSelector((state) => state.testimonial.testimonial);
   const [status, setStatus] = useState(0);
-  const [name, setName] = useState("");
-  const [type, setType] = useState("");
+  const [name, setName] = useState('');
+  const [type, setType] = useState('');
   const [id, setId] = useState(0);
   const [key, setKey] = useState([]);
   const [value, setValue] = useState([]);
   const [drawerState, setDrawerState] = useState(false);
   const [editState, setEditState] = useState(false);
-  const [avatarState, setAvatarState] = useState("");
-  const [contentState, setContentState] = useState("");
-  const [url, setUrl] = useState("");
-  const [date, setDate] = useState("");
+  const [avatarState, setAvatarState] = useState('');
+  const [contentState, setContentState] = useState('');
+  const [url, setUrl] = useState('');
+  const [date, setDate] = useState('');
   const [rateState, setRateState] = useState(null);
+  const [video, setVideo] = useState(null);
+  const [videoURL, setVideoURL] = useState('');
   const hiddenFileInput = React.useRef(null);
   const [open, setOpen] = React.useState(false);
 
   const [selectedImage, setSelectedImage] = useState(null);
 
-  const privateStyle = { background: "#F59E0B33", color: "#D97706 " };
-  const publicStyle = { background: "#10B98133", color: "#059689" };
+  const privateStyle = { background: '#F59E0B33', color: '#D97706 ' };
+  const publicStyle = { background: '#10B98133', color: '#059689' };
 
   const inf = {
     id: 0,
     status: 0,
     key: [],
-    content: "",
-    name: "",
+    content: '',
+    name: '',
     rating: 0,
-    type: "",
-    updatedAt: "",
-    url: "",
+    type: '',
+    updatedAt: '',
+    url: '',
     value: [],
   };
 
+  const SESConfig = {
+    accessKeyId: process.env.REACT_APP_ACCESS,
+    secretAccessKey: process.env.REACT_APP_SECRET,
+    region: process.env.REACT_APP_REGION,
+  };
+
+  AWS.config.update(SESConfig);
+
+  var s3 = new AWS.S3({
+    params: {
+      Bucket: 'loya-bucket',
+    },
+    region: process.env.REACT_APP_REGION,
+  });
+
   const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
 
@@ -107,29 +126,29 @@ const TestTable = () => {
     <GroupButton key="one">
       <div
         style={{
-          display: "flex",
-          width: "1rem",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "0.5rem 1rem",
-          color: "#fff",
-          background: "#6701e6",
-          borderTopLeftRadius: "6px",
+          display: 'flex',
+          width: '1rem',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0.5rem 1rem',
+          color: '#fff',
+          background: '#6701e6',
+          borderTopLeftRadius: '6px',
         }}
       >
         <div
           style={{
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
+            position: 'relative',
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
           }}
         >
           <ImageIcon />
         </div>
       </div>
       <GBContainer
-        style={{ borderTop: "1px solid #ddd", borderTopRightRadius: "6px" }}
+        style={{ borderTop: '1px solid #ddd', borderTopRightRadius: '6px' }}
       >
         Create an image
       </GBContainer>
@@ -137,21 +156,21 @@ const TestTable = () => {
     <GroupButton key="two">
       <div
         style={{
-          display: "flex",
-          width: "1rem",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "0.5rem 1rem",
-          color: "#fff",
-          background: "#000",
+          display: 'flex',
+          width: '1rem',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0.5rem 1rem',
+          color: '#fff',
+          background: '#000',
         }}
       >
         <div
           style={{
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
+            position: 'relative',
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
           }}
         >
           <Embed />
@@ -162,28 +181,28 @@ const TestTable = () => {
     <GroupButton key="three">
       <div
         style={{
-          display: "flex",
-          width: "1rem",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "0.5rem 1rem",
-          color: "#fff",
-          background: "#db2777",
-          borderBottomLeftRadius: "6px",
+          display: 'flex',
+          width: '1rem',
+          alignItems: 'center',
+          justifyContent: 'center',
+          padding: '0.5rem 1rem',
+          color: '#fff',
+          background: '#db2777',
+          borderBottomLeftRadius: '6px',
         }}
       >
         <div
           style={{
-            position: "relative",
-            justifyContent: "center",
-            alignItems: "center",
-            display: "flex",
+            position: 'relative',
+            justifyContent: 'center',
+            alignItems: 'center',
+            display: 'flex',
           }}
         >
           <ThanknoteIcon />
         </div>
       </div>
-      <GBContainer style={{ borderBottomRightRadius: "6px" }}>
+      <GBContainer style={{ borderBottomRightRadius: '6px' }}>
         Send a thank you note
       </GBContainer>
     </GroupButton>,
@@ -203,28 +222,28 @@ const TestTable = () => {
 
   return (
     <div>
-      <TableContainer style={{ boxShadow: "unset" }} component={Paper}>
+      <TableContainer style={{ boxShadow: 'unset' }} component={Paper}>
         <Table sx={{ minWidth: 650 }}>
           <TableHead>
             <TableRow>
               <TableCell
                 style={{
-                  padding: "0.875rem 1rem 0.5rem",
-                  textAlign: "left",
-                  fontSize: "0.75rem",
-                  fontWeight: "400",
-                  color: "rgb(107,114,128)",
+                  padding: '0.875rem 1rem 0.5rem',
+                  textAlign: 'left',
+                  fontSize: '0.75rem',
+                  fontWeight: '400',
+                  color: 'rgb(107,114,128)',
                 }}
               >
                 Person
               </TableCell>
               <TableCell
                 style={{
-                  padding: "0.875rem 1rem 0.5rem",
-                  textAlign: "left",
-                  fontSize: "0.75rem",
-                  fontWeight: "400",
-                  color: "rgb(107,114,128)",
+                  padding: '0.875rem 1rem 0.5rem',
+                  textAlign: 'left',
+                  fontSize: '0.75rem',
+                  fontWeight: '400',
+                  color: 'rgb(107,114,128)',
                 }}
                 align="left"
               >
@@ -232,11 +251,11 @@ const TestTable = () => {
               </TableCell>
               <TableCell
                 style={{
-                  padding: "0.875rem 1rem 0.5rem",
-                  textAlign: "left",
-                  fontSize: "0.75rem",
-                  fontWeight: "400",
-                  color: "rgb(107,114,128)",
+                  padding: '0.875rem 1rem 0.5rem',
+                  textAlign: 'left',
+                  fontSize: '0.75rem',
+                  fontWeight: '400',
+                  color: 'rgb(107,114,128)',
                 }}
                 align="left"
               >
@@ -244,11 +263,11 @@ const TestTable = () => {
               </TableCell>
               <TableCell
                 style={{
-                  padding: "0.875rem 1rem 0.5rem",
-                  textAlign: "left",
-                  fontSize: "0.75rem",
-                  fontWeight: "400",
-                  color: "rgb(107,114,128)",
+                  padding: '0.875rem 1rem 0.5rem',
+                  textAlign: 'left',
+                  fontSize: '0.75rem',
+                  fontWeight: '400',
+                  color: 'rgb(107,114,128)',
                 }}
                 align="left"
               >
@@ -261,9 +280,9 @@ const TestTable = () => {
               <TableRow
                 key={row.id}
                 sx={{
-                  "&:last-child td, &:last-child th": {
+                  '&:last-child td, &:last-child th': {
                     border: 0,
-                    verticalAlign: "top",
+                    verticalAlign: 'top',
                   },
                 }}
                 onClick={(e) => {
@@ -275,44 +294,50 @@ const TestTable = () => {
                     );
                     setId(row.id);
                     setStatus(row.status);
-                    setKey(row.key.split(","));
-                    setValue(row.value.split(","));
+                    setKey(row.key.split(','));
+                    setValue(row.value.split(','));
                     setUrl(row.url);
                     setContentState(row.content);
                     setRateState(row.rating);
                     setDrawerState(true);
                     setDate(row.date);
+                    setVideo(row.video);
                   } else {
                     setId(row.id);
-                    setAvatarState("");
+                    setAvatarState('');
                     setStatus(row.status);
-                    setKey(row.key.split(","));
-                    setValue(row.value.split(","));
+                    setKey(row.key.split(','));
+                    setValue(row.value.split(','));
                     setUrl(row.url);
                     setContentState(row.content);
                     setRateState(row.rating);
                     setDrawerState(true);
                     setDate(row.date);
+                    setVideo(row.video);
                   }
+                  var params = { Bucket: 'loya-bucket', Key: video };
+                  var url = s3.getSignedUrl('getObject', params);
+                  console.log('The URL is', url);
+                  setVideoURL(url);
                 }}
               >
                 <TableCell
                   style={{
-                    padding: "1rem",
-                    fontSize: "0.8rem",
-                    lineHeight: "1.25rem",
-                    color: "rgb(107,114,128)",
+                    padding: '1rem',
+                    fontSize: '0.8rem',
+                    lineHeight: '1.25rem',
+                    color: 'rgb(107,114,128)',
                   }}
                   component="th"
                   scope="row"
                 >
-                  <Grid container spacing={2} style={{ gap: "0.5rem" }}>
+                  <Grid container spacing={2} style={{ gap: '0.5rem' }}>
                     <Grid item>
                       {row.data !== null ? (
                         <Avatar
                           style={{
-                            borderRadius: "50%",
-                            border: "1px solid #ddd",
+                            borderRadius: '50%',
+                            border: '1px solid #ddd',
                           }}
                         >
                           <img
@@ -321,14 +346,14 @@ const TestTable = () => {
                                 ...new Uint8Array(row.data.data)
                               )
                             )}`}
-                            width={"48px"}
+                            width={'48px'}
                           />
                         </Avatar>
                       ) : (
                         <Avatar
                           style={{
-                            borderRadius: "50%",
-                            border: "1px solid #ddd",
+                            borderRadius: '50%',
+                            border: '1px solid #ddd',
                           }}
                         >
                           {row.value[0].slice(0, 2)}
@@ -338,20 +363,20 @@ const TestTable = () => {
                     <Grid
                       item
                       style={{
-                        overFlow: "hidden",
-                        textOverflow: "ellipsis",
-                        whiteSpace: "nowrap",
-                        color: "#000",
+                        overFlow: 'hidden',
+                        textOverflow: 'ellipsis',
+                        whiteSpace: 'nowrap',
+                        color: '#000',
                       }}
                     >
-                      <div>{row.value.split(",").slice(0, 1)}</div>
+                      <div>{row.value.split(',').slice(0, 1)}</div>
                       <div>
-                        {row.key.split(",").indexOf("Headline") ===
+                        {row.key.split(',').indexOf('Headline') ===
                         -1 ? null : (
                           <span>
                             {
-                              row.value.split(",")[
-                                row.key.split(",").indexOf("Headline")
+                              row.value.split(',')[
+                                row.key.split(',').indexOf('Headline')
                               ]
                             }
                           </span>
@@ -360,49 +385,74 @@ const TestTable = () => {
                     </Grid>
                   </Grid>
                 </TableCell>
+                {/* <TableCell
+                  tyle={{
+                    padding: '1rem',
+                    fontSize: '0.8rem',
+                    lineHeight: '1.25rem',
+                  }}
+                  align="center">
+                <VideoImageThumbnail
+    videoUrl="https://dl.dropboxusercontent.com/s/pkz1yguv8vcs7k1/cover.mp4?dl=0"
+    thumbnailHandler={(thumbnail) => console.log(thumbnail)}
+    width={120}
+    height={80}
+    alt="my test video"
+    /></TableCell> */}
                 <TableCell
                   tyle={{
-                    padding: "1rem",
-                    fontSize: "0.8rem",
-                    lineHeight: "1.25rem",
+                    padding: '1rem',
+                    fontSize: '0.8rem',
+                    lineHeight: '1.25rem',
                   }}
                   align="left"
                 >
-                  <div style={{ color: "rgb(107,114,128)", maxWidth: "28rem" }}>
+                  {row.video ? (
+                    <VideoImageThumbnail
+                      videoUrl={s3.getSignedUrl('getObject', {
+                        Bucket: 'loya-bucket',
+                        Key: row.video,
+                      })}
+                      alt="my test video"
+                    />
+                  ) : (
+                    <></>
+                  )}
+                  <div style={{ color: 'rgb(107,114,128)', maxWidth: '28rem' }}>
                     {row.rating === null ? null : (
                       <div>
                         <Rating
                           value={row.rating}
                           readOnly
-                          style={{ fontSize: "1rem" }}
+                          style={{ fontSize: '1rem' }}
                         />
                       </div>
                     )}
                   </div>
-                  <div style={{ color: "rgb(107,114,128)", maxWidth: "28rem" }}>
+                  <div style={{ color: 'rgb(107,114,128)', maxWidth: '28rem' }}>
                     {row.content}
                   </div>
                 </TableCell>
                 <TableCell
                   style={{
-                    padding: "1rem",
-                    fontSize: "0.8rem",
-                    lineHeight: "1.25rem",
-                    verticalAlign: "top",
+                    padding: '1rem',
+                    fontSize: '0.8rem',
+                    lineHeight: '1.25rem',
+                    verticalAlign: 'top',
                   }}
                   align="left"
                 >
-                  <div style={{ color: "rgb(17,24,39)" }}>
-                    {moment(row.updatedAt).format("LL")}
+                  <div style={{ color: 'rgb(17,24,39)' }}>
+                    {moment(row.updatedAt).format('LL')}
                   </div>
                 </TableCell>
                 <TableCell
                   tyle={{
-                    padding: "1rem",
-                    fontSize: "0.8rem",
-                    lineHeight: "1.25rem",
-                    color: "rgb(107,114,128)",
-                    verticalAlign: "top",
+                    padding: '1rem',
+                    fontSize: '0.8rem',
+                    lineHeight: '1.25rem',
+                    color: 'rgb(107,114,128)',
+                    verticalAlign: 'top',
                   }}
                   align="left"
                 >
@@ -429,7 +479,7 @@ const TestTable = () => {
                       });
                     }}
                   >
-                    {row.status === 1 ? "public" : "private"}
+                    {row.status === 1 ? 'public' : 'private'}
                   </StatusButton>
                 </TableCell>
               </TableRow>
@@ -445,22 +495,22 @@ const TestTable = () => {
           setDrawerState(false);
         }}
       >
-        <div style={{ display: editState === true ? "none" : "block" }}>
+        <div style={{ display: editState === true ? 'none' : 'block' }}>
           <Grid
             container
             spacing={1}
             style={{
-              padding: "1rem",
-              width: "512px",
-              height: "140px",
-              backgroundColor: "#EDF3F9",
+              padding: '1rem',
+              width: '512px',
+              height: '140px',
+              backgroundColor: '#EDF3F9',
             }}
           >
             <Grid item xs={7.75}></Grid>
-            <Grid item xs={2.25} style={{ paddingLeft: "10px" }}>
+            <Grid item xs={2.25} style={{ paddingLeft: '10px' }}>
               <Tooltip
                 title={
-                  <p style={{ fontSize: "0.85rem" }}>
+                  <p style={{ fontSize: '0.85rem' }}>
                     Published reviews will show up on your widgets & wall of
                     love.
                   </p>
@@ -469,7 +519,7 @@ const TestTable = () => {
               >
                 <Button
                   variant="outlined"
-                  style={{ color: status === 1 ? "#059689" : "#D97706" }}
+                  style={{ color: status === 1 ? '#059689' : '#D97706' }}
                   onClick={(e) => {
                     inf.id = id;
                     inf.status = 1 - status;
@@ -487,7 +537,7 @@ const TestTable = () => {
                     });
                   }}
                 >
-                  {status === 1 ? "public" : "private"}
+                  {status === 1 ? 'public' : 'private'}
                 </Button>
               </Tooltip>
             </Grid>
@@ -506,7 +556,7 @@ const TestTable = () => {
                   value="delete"
                   key="delete"
                   onClick={() => {
-                    console.log("here");
+                    console.log('here');
                     deleteTestimonial(id).then(() => {
                       setDrawerState(false);
                       dispatch(getAll());
@@ -520,43 +570,43 @@ const TestTable = () => {
           </Grid>
           <div
             style={{
-              paddingLeft: "2rem",
-              position: "relative",
-              top: "-1.75rem",
+              paddingLeft: '2rem',
+              position: 'relative',
+              top: '-1.75rem',
             }}
           >
             {selectedImage !== null ? (
               <Avatar
                 style={{
-                  borderRadius: "50%",
-                  border: "1px solid #ddd",
+                  borderRadius: '50%',
+                  border: '1px solid #ddd',
                 }}
               >
                 <img
                   src={URL.createObjectURL(selectedImage)}
-                  width={"48px"}
+                  width={'48px'}
                   alt="not found"
                 />
               </Avatar>
-            ) : selectedImage === null && avatarState !== "" ? (
+            ) : selectedImage === null && avatarState !== '' ? (
               <Avatar
                 style={{
-                  borderRadius: "50%",
-                  border: "1px solid #ddd",
-                  borderColor: "rgb(237, 243, 249)",
-                  borderWidth: "4px",
+                  borderRadius: '50%',
+                  border: '1px solid #ddd',
+                  borderColor: 'rgb(237, 243, 249)',
+                  borderWidth: '4px',
                 }}
                 sx={{ width: 56, height: 56 }}
               >
-                <img src={avatarState} width={"60px"} />
+                <img src={avatarState} width={'60px'} />
               </Avatar>
             ) : (
               <Avatar
                 style={{
-                  borderRadius: "50%",
-                  border: "1px solid #ddd",
-                  borderColor: "rgb(237, 243, 249)",
-                  borderWidth: "4px",
+                  borderRadius: '50%',
+                  border: '1px solid #ddd',
+                  borderColor: 'rgb(237, 243, 249)',
+                  borderWidth: '4px',
                 }}
                 sx={{ width: 56, height: 56 }}
               >
@@ -564,8 +614,8 @@ const TestTable = () => {
               </Avatar>
             )}
           </div>
-          <div style={{ paddingLeft: "2rem" }}>
-            <p style={{ fontSize: "1.2rem" }}>
+          <div style={{ paddingLeft: '2rem' }}>
+            <p style={{ fontSize: '1.2rem' }}>
               <b>{value[0]}</b>
             </p>
             {rateState ? (
@@ -573,17 +623,24 @@ const TestTable = () => {
             ) : (
               <></>
             )}
-            <p style={{ whiteSpace: "normal", maxWidth: "28rem" }}>
+            {video ? (
+              <video width={448} controls style={{ paddingRight: '2rem' }}>
+                <source src={videoURL} width={'100%'} type="video/mp4"></source>
+              </video>
+            ) : (
+              <></>
+            )}
+            <p style={{ whiteSpace: 'normal', maxWidth: '28rem' }}>
               {contentState}
             </p>
 
             <Button>add tag</Button>
             <div
               style={{
-                marginRight: "2rem",
-                borderRadius: "0.5rem",
-                backgroundColor: "#EDF3F9",
-                padding: "1rem",
+                marginRight: '2rem',
+                borderRadius: '0.5rem',
+                backgroundColor: '#EDF3F9',
+                padding: '1rem',
               }}
             >
               {/* <p>From: {url}</p>
@@ -593,29 +650,29 @@ const TestTable = () => {
                 : `Email: ${value[key.indexOf("Email Address")]}`}
             </p> */}
               {key.map((val) =>
-                val !== "Your Name" ? (
+                val !== 'Your Name' ? (
                   <p>
                     {val}:{value[key.indexOf(val)]}
                   </p>
                 ) : null
               )}
               <p></p>
-              <p>Date:{moment(date).format("LL")}</p>
+              <p>Date:{moment(date).format('LL')}</p>
             </div>
             <br />
-            <p style={{ fontSize: "1.1rem" }}>
+            <p style={{ fontSize: '1.1rem' }}>
               <b>Do more with your review ✨</b>
             </p>
             <div
               style={{
-                display: "table",
+                display: 'table',
               }}
             >
               <Card
                 style={{
-                  width: "10em",
-                  height: "10rem",
-                  float: "left",
+                  width: '10em',
+                  height: '10rem',
+                  float: 'left',
                 }}
               >
                 {/* <img
@@ -629,10 +686,10 @@ const TestTable = () => {
               </Card>
               <Card
                 style={{
-                  width: "10em",
-                  height: "10rem",
-                  float: "left",
-                  marginLeft: "1rem",
+                  width: '10em',
+                  height: '10rem',
+                  float: 'left',
+                  marginLeft: '1rem',
                 }}
               >
                 {/* <img
@@ -645,7 +702,7 @@ const TestTable = () => {
               /> */}
               </Card>
             </div>
-            <div style={{ marginTop: "1rem" }}>
+            <div style={{ marginTop: '1rem' }}>
               <ButtonGroup
                 orientation="vertical"
                 aria-label="vertical outlined button group"
@@ -655,37 +712,37 @@ const TestTable = () => {
             </div>
           </div>
         </div>
-        <div style={{ display: editState === true ? "block" : "none" }}>
+        <div style={{ display: editState === true ? 'block' : 'none' }}>
           <Grid
             container
             spacing={1}
             style={{
-              padding: "1rem",
-              width: "512px",
-              height: "140px",
-              marginLeft: "unset",
-              backgroundColor: "#EDF3F9",
+              padding: '1rem',
+              width: '512px',
+              height: '140px',
+              marginLeft: 'unset',
+              backgroundColor: '#EDF3F9',
             }}
           >
             <Grid item>
               <Button
                 onClick={handleClose}
                 sx={{
-                  position: "absolute",
+                  position: 'absolute',
                   right: 8,
                   top: 8,
-                  color: "#444",
+                  color: '#444',
                 }}
-                style={{ justifyContent: "flex-end", minWidth: "unset" }}
+                style={{ justifyContent: 'flex-end', minWidth: 'unset' }}
               >
                 <CloseIcon />
               </Button>
             </Grid>
-            <Grid item style={{ display: "flex", alignSelf: "flex-end" }}>
+            <Grid item style={{ display: 'flex', alignSelf: 'flex-end' }}>
               <PageTitle>Edit Testimonial</PageTitle>
             </Grid>
           </Grid>
-          <Grid container style={{ width: "512px" }}>
+          <Grid container style={{ width: '512px' }}>
             <FormGrid>
               <FormLabel>Your Name</FormLabel>
               <Input value={value[0]} />
@@ -694,17 +751,17 @@ const TestTable = () => {
               <FormLabel>Tagline</FormLabel>
               <Input
                 value={
-                  key.indexOf("Headline") === -1
+                  key.indexOf('Headline') === -1
                     ? null
-                    : value[key.indexOf("Headline")]
+                    : value[key.indexOf('Headline')]
                 }
                 onChange={(e) => {
-                  if (key.indexOf("Headline") === -1) {
+                  if (key.indexOf('Headline') === -1) {
                     value[value.length] = e.target.value;
                     setValue([...value]);
-                    setKey([...key, "Headline"]);
+                    setKey([...key, 'Headline']);
                   } else {
-                    value[key.indexOf("Headline")] = e.target.value;
+                    value[key.indexOf('Headline')] = e.target.value;
                     setValue([...value]);
                   }
                 }}
@@ -712,37 +769,37 @@ const TestTable = () => {
             </FormGrid>
             <FormGrid>
               <FormLabel>Avatar</FormLabel>
-              <div style={{ display: "flex", flexDirection: "row" }}>
+              <div style={{ display: 'flex', flexDirection: 'row' }}>
                 {selectedImage !== null ? (
                   <Avatar
                     style={{
-                      borderRadius: "50%",
-                      border: "1px solid #ddd",
+                      borderRadius: '50%',
+                      border: '1px solid #ddd',
                     }}
                   >
                     <img
                       src={URL.createObjectURL(selectedImage)}
-                      width={"48px"}
+                      width={'48px'}
                       alt="not found"
                     />
                   </Avatar>
-                ) : selectedImage === null && avatarState !== "" ? (
+                ) : selectedImage === null && avatarState !== '' ? (
                   <Avatar
                     style={{
-                      borderRadius: "50%",
-                      border: "1px solid #ddd",
+                      borderRadius: '50%',
+                      border: '1px solid #ddd',
                     }}
                   >
-                    <img src={avatarState} width={"48px"} />
+                    <img src={avatarState} width={'48px'} />
                   </Avatar>
                 ) : (
                   <Avatar
                     style={{
-                      borderRadius: "50%",
-                      border: "1px solid #ddd",
+                      borderRadius: '50%',
+                      border: '1px solid #ddd',
                     }}
                   >
-                    <img src={`../user.png`} alt="" width={"48px"} />
+                    <img src={`../user.png`} alt="" width={'48px'} />
                   </Avatar>
                 )}
                 <UploadButton
@@ -754,7 +811,7 @@ const TestTable = () => {
                   Pick an image
                 </UploadButton>
                 <ButtonBase
-                  style={{ display: selectedImage === null ? "none" : "flex" }}
+                  style={{ display: selectedImage === null ? 'none' : 'flex' }}
                   onClick={() => {
                     setSelectedImage(null);
                   }}
@@ -768,7 +825,7 @@ const TestTable = () => {
                 multiple=""
                 accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
                 autoComplete="off"
-                style={{ display: "none" }}
+                style={{ display: 'none' }}
                 onChange={(e) => {
                   console.log(e.target.files[0]);
                   setSelectedImage(e.target.files[0]);
@@ -779,17 +836,17 @@ const TestTable = () => {
               <FormLabel>Website URL</FormLabel>
               <Input
                 value={
-                  key.indexOf("Your Website") === -1
+                  key.indexOf('Your Website') === -1
                     ? null
-                    : value[key.indexOf("Your Website")]
+                    : value[key.indexOf('Your Website')]
                 }
                 onChange={(e) => {
-                  if (key.indexOf("Your Website") === -1) {
+                  if (key.indexOf('Your Website') === -1) {
                     value[value.length] = e.target.value;
                     setValue([...value]);
-                    setKey([...key, "Your Website"]);
+                    setKey([...key, 'Your Website']);
                   } else {
-                    value[key.indexOf("Your Website")] = e.target.value;
+                    value[key.indexOf('Your Website')] = e.target.value;
                     setValue([...value]);
                   }
                 }}
@@ -801,7 +858,7 @@ const TestTable = () => {
                 multiline
                 rows={4}
                 placeholder="Write something nice ✨"
-                style={{ width: "100%" }}
+                style={{ width: '100%' }}
                 value={contentState}
                 onChange={(e) => {
                   setContentState(e.target.value);
@@ -822,7 +879,7 @@ const TestTable = () => {
               <LocalizationProvider dateAdapter={AdapterDayjs}>
                 <DatePicker
                   label=""
-                  value={moment(date).format("L").replace(/\//g, "-")}
+                  value={moment(date).format('L').replace(/\//g, '-')}
                   onChange={(newValue) => {
                     console.log(newValue);
                     setDate(newValue);
@@ -845,7 +902,7 @@ const TestTable = () => {
                   inf.url = url;
                   inf.value = value;
                   updateTestimonial(inf, selectedImage).then((e) => {
-                    console.log("e=", e);
+                    console.log('e=', e);
                     dispatch(getAll());
                     setOpen(true);
                     setEditState(false);
@@ -859,7 +916,7 @@ const TestTable = () => {
         </div>
       </Drawer>
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={open}
         autoHideDuration={6000}
         onClose={handleCloseSnack}
@@ -867,7 +924,7 @@ const TestTable = () => {
         <Alert
           onClose={handleCloseSnack}
           severity="success"
-          sx={{ width: "100%" }}
+          sx={{ width: '100%' }}
         >
           Save Changed
         </Alert>
