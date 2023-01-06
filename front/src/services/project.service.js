@@ -45,6 +45,10 @@ const getAll = () => {
           "projects",
           JSON.stringify(response.data.projects)
         );
+        localStorage.setItem(
+          "projectId",
+          JSON.stringify(response.data.projects[0])
+        );
         return {
           CODE: "200",
           message: "Get All Projects Successfully",

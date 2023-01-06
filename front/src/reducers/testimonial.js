@@ -1,7 +1,8 @@
-import { ALL_SUCCESS, SAVE_INDEX } from "../actions/types";
+import { ALL_SUCCESS, SAVE_INDEX, ALL_IMPORT } from "../actions/types";
 
 const initialState = {
   testimonial: [],
+  imports: [],
 };
 
 export default function (state = initialState, action) {
@@ -12,6 +13,11 @@ export default function (state = initialState, action) {
       return {
         ...state,
         testimonial: payload.testimonials,
+      };
+    case ALL_IMPORT:
+      return {
+        ...state,
+        imports: payload.imports,
       };
     case SAVE_INDEX:
       return {

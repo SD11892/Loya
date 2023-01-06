@@ -4,7 +4,6 @@ import { ALL_PROJECT } from "./types";
 export const getAll = () => (dispatch) => {
   return projectService.getAll().then(
     (res) => {
-      console.log("project++++", res);
       dispatch({
         type: ALL_PROJECT,
         payload: res.data,

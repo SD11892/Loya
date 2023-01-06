@@ -20,6 +20,17 @@ const create = (info, data) => {
   );
 };
 
+const importAll = (array) => {
+  return axios({
+    method: "post",
+    url: API_URL + "import",
+    headers: { "Content-Type": "multi-part/form-data" },
+    params: {
+      array,
+    },
+  });
+};
+
 const update = (info, data) => {
   const formData = new FormData();
   if (data) {
@@ -38,7 +49,6 @@ const update = (info, data) => {
 const getAll = (searchData) => {
   let userId = `${localStorage.getItem("userId")}`;
   let projects = JSON.parse(localStorage.getItem("projects"));
-  console.log("get", searchData);
   return axios
     .post(API_URL + `all`, null, { params: { userId, projects, searchData } })
     .then((response) => {
@@ -73,6 +83,34 @@ const getByFormUrl = async (url) => {
   } catch (err) {
     console.log("createErr=", err);
   }
+};
+
+const getImport = async () => {
+  let userId = `${localStorage.getItem("userId")}`;
+  let projects = JSON.parse(localStorage.getItem("projects"));
+  return axios
+    .post(API_URL + `history`, null, {
+      params: { userId, projects },
+    })
+    .then((response) => {
+      if (isEmpty(response.data)) {
+        return {
+          CODE: "200",
+          message: "Empty",
+        };
+      } else {
+        return {
+          CODE: "200",
+          message: "Get All Froms Successfully",
+          data: response.data,
+        };
+      }
+    })
+    .catch((err) => {
+      if (err.code === "ERR_BAD_REQUEST") {
+        return { CODE: "404", message: "Failed getting forms" };
+      }
+    });
 };
 
 const search_target = (newData) => {
@@ -115,8 +153,10 @@ const uploadVideo = (info, data) => {
 };
 
 export default {
+  getImport,
   create,
   getAll,
+  importAll,
   getByFormUrl,
   deleteTest,
   update,

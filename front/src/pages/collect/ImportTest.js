@@ -4,14 +4,16 @@ import { ImportChannel } from "../../components/import/importChannel";
 import { ImportSelection } from "../../components/import/importSelection";
 import { Grid } from "@mui/material";
 import { ImportHistory } from "../../components/import/importHistory";
-import { getAll } from "../../actions/testimonial";
+import { getAll, getImport } from "../../actions/testimonial";
 
 const ImportTest = () => {
   const [select, setSelect] = React.useState("text");
   const testimonials = useSelector((state) => state.testimonial.testimonial);
+  const imports = useSelector((state) => state.testimonial.imports);
   const dispatch = useDispatch();
   React.useEffect(() => {
     dispatch(getAll());
+    dispatch(getImport());
   }, []);
   React.useEffect(() => {}, [select]);
   return (
@@ -49,7 +51,7 @@ const ImportTest = () => {
           overflowY: "scroll",
         }}
       >
-        <ImportHistory testimonials={testimonials} />
+        <ImportHistory imports={imports} />
       </Grid>
     </div>
   );

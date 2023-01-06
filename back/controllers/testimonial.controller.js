@@ -10,7 +10,7 @@ exports.create = (req, res) => {
   const data = req.query.info;
   console.log("submit=", data);
   if (req.file !== undefined) {
-    if (data.url !== "") {
+    if (data.url !== undefined) {
       Form.findAll({
         where: {
           formUrl: data.url,
@@ -50,7 +50,6 @@ exports.create = (req, res) => {
       Testimonial.create({
         imageUrl: data.imageUrl,
         importDate: data.importDate,
-        url: data.url,
         key: data.key.toString(),
         value: data.value.toString(),
         content: data.content,
@@ -67,7 +66,7 @@ exports.create = (req, res) => {
       });
     }
   } else {
-    if (data.url !== "") {
+    if (data.url !== undefined) {
       console.log(data.url);
       Form.findAll({
         where: {
@@ -89,7 +88,6 @@ exports.create = (req, res) => {
             imageUrl: data.imageUrl,
             importDate: data.importDate,
             key: data.key.toString(),
-            url: data.url,
             value: data.value.toString(),
             content: data.content,
             status: 0,
@@ -107,7 +105,6 @@ exports.create = (req, res) => {
         imageUrl: data.imageUrl,
         importDate: data.importDate,
         key: data.key.toString(),
-        url: data.url,
         value: data.value.toString(),
         content: data.content,
         status: 0,
@@ -195,6 +192,7 @@ exports.getAll = (req, res) => {
           console.log("Testimonials Not Found");
           return res.status(200).send({ message: "Empty" });
         } else {
+          console.log("testimonials=", testimonials);
           res.status(200).send({ testimonials });
         }
       })
@@ -315,4 +313,45 @@ exports.uploadVideo = (req, res) => {
   } else {
     res.json({ code: 404, message: "Require a video file" });
   }
+};
+
+exports.importAll = async (req, res) => {
+  const array = req.query.array;
+  console.log(array);
+  const length = Object.keys(array).length;
+  console.log("ARRAY=", length);
+  for (var i = 0; i < length; i++) {
+    await Testimonial.create({
+      value: array[i].name,
+      key: "",
+      content: array[i].review,
+      status: 0,
+      rating: array[i].rating,
+      imageUrl: array[i].imageUrl,
+      importDate: array[i].importDate,
+      index: array[i].index,
+      projectId: array[i].projectId,
+      userId: array[i].userId,
+    });
+  }
+  res.json({ code: 200, message: "imported testimonials exactly!" });
+};
+
+exports.importHistory = (req, res) => {
+  const data = req.query;
+  Testimonial.findAll({
+    where: {
+      userId: data.userId,
+      projectId: data.projects.map((row) => row.id),
+    },
+  }).then((testimonials) => {
+    let imports = [];
+    for (var i = 0; i < testimonials.length; i++) {
+      if (testimonials[i].url === null) {
+        imports.push(testimonials[i]);
+      }
+    }
+    console.log("imports=", imports);
+    res.status(200).send({ imports });
+  });
 };

@@ -25,8 +25,11 @@ import { Camera as CameraIcon } from "../../icons/camera";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
-import { createTestimonial } from "../../actions/testimonial";
-import { getAll } from "../../actions/testimonial";
+import {
+  createTestimonial,
+  importSeveralTestimonials,
+} from "../../actions/testimonial";
+import { getAll, getImport } from "../../actions/testimonial";
 import { useDispatch } from "react-redux";
 import { isEmpty } from "../../util/isEmpty";
 import { Star as StarIcon } from "../../icons/star";
@@ -51,7 +54,6 @@ export const ImportChannel = (props) => {
     name: "",
     headline: "",
     review: ``,
-    url: "",
     rating: 0,
     selectedImage: null,
     imageUrl: "",
@@ -62,7 +64,6 @@ export const ImportChannel = (props) => {
   const hiddenFileInput = React.useRef(null);
   const infor = {
     index: "",
-    url: "",
     content: "",
     key: [],
     value: [],
@@ -75,13 +76,13 @@ export const ImportChannel = (props) => {
     imageUrl: "",
     importDate: "",
   };
-  const onSubmit = () => {
-    if (box === []) {
-      if (total.name !== "") {
-        const projects = JSON.parse(localStorage.getItem("projects"));
-        const projectId = projects[0].id;
-        const userId = `${localStorage.getItem("userId")}`;
+  const projects = JSON.parse(localStorage.getItem("projects"));
+  const projectId = projects[0].id;
+  const userId = `${localStorage.getItem("userId")}`;
 
+  const onSubmit = () => {
+    if (isEmpty(box)) {
+      if (total.name !== "") {
         if (total.selectedImage) {
           infor.name = total.selectedImage.name;
           infor.type = total.selectedImage.type;
@@ -97,27 +98,17 @@ export const ImportChannel = (props) => {
         infor.userId = userId;
         infor.imageUrl = total.imageUrl;
         infor.importDate = total.importDate;
+        infor.url = null;
 
         console.log(infor, total.selectedImage);
 
         createTestimonial(infor, total.selectedImage).then(() => {
-          dispatch(getAll());
+          dispatch(getImport());
         });
       }
     } else {
-      box.map((row) => {
-        const projects = JSON.parse(localStorage.getItem("projects"));
-        const projectId = projects[0].id;
-        const userId = `${localStorage.getItem("userId")}`;
-        infor.content = row.review;
-        infor.value[0] = row.name;
-        infor.rating = row.rating;
-        infor.index = props.testimonials.length;
-        infor.projectId = projectId;
-        infor.userId = userId;
-        infor.imageUrl = row.imageUrl;
-        infor.importDate = row.importDate;
-        setTimeout(createTestimonial(infor, null), 1000);
+      importSeveralTestimonials(box).then(() => {
+        dispatch(getImport());
       });
     }
   };
@@ -133,7 +124,6 @@ export const ImportChannel = (props) => {
         }
       )
       .then((response) => {
-        console.log(response.data.results);
         setBusiness(response.data.results);
       })
       .catch((err) => {
@@ -170,8 +160,9 @@ export const ImportChannel = (props) => {
   };
 
   const isGoogle = props.select === "google";
-
-  const notGoogle = (
+  const isText = props.select === "text";
+  const isVideo = props.select === "video";
+  const text = (
     <div
       style={{
         background: "white",
@@ -746,17 +737,10 @@ export const ImportChannel = (props) => {
                     headline: "",
                     url: "",
                     selectedImage: null,
+                    index: props.testimonials.length,
+                    projectId: projectId,
+                    userId: userId,
                   });
-                  // setTotal({
-                  //   name: row.author_name,
-                  //   rating: row.rating,
-                  //   imageUrl: row.profile_photo_url,
-                  //   importDate: moment.unix(row.time).format("MMM Do YYYY"),
-                  //   review: row.text,
-                  //   headline: "",
-                  //   url: "",
-                  //   selectedImage: null,
-                  // });
                 }
               });
               setBox(tmptotal);
@@ -768,6 +752,240 @@ export const ImportChannel = (props) => {
       </div>
     );
 
+  const video = (
+    <div
+      style={{
+        background: "white",
+        paddingLeft: "2rem",
+        paddingRight: "2rem",
+        marginTop: "1rem",
+        border: "1px solid #ddd",
+        borderTopLeftRadius: "1rem",
+        borderTopRightRadius: "1rem",
+        height: "100vh",
+      }}
+    >
+      <Grid
+        container
+        justifyContent="space-between"
+        style={{
+          marginTop: "0.25rem",
+          alignItems: "center",
+        }}
+      >
+        <PageTitle> Import from {`${props.select}`}</PageTitle>
+        <Avatar
+          style={{
+            borderRadius: "50%",
+            border: "1px solid #ddd",
+            background: "#ddd",
+            color: "#333",
+          }}
+        >
+          {props.select === "text" ? (
+            <PencilIcon />
+          ) : props.select === "video" ? (
+            <CameraIcon />
+          ) : (
+            <FacebookIcon />
+          )}
+        </Avatar>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        style={{
+          marginTop: "0.25rem",
+          paddingLeft: "1rem",
+        }}
+      >
+        <div style={{ width: "50%" }}>
+          <FormLabel>
+            Name
+            <Qmark />
+          </FormLabel>
+        </div>
+        <div style={{ width: "50%" }}>
+          <FormLabel>Tagline</FormLabel>
+        </div>
+      </Grid>
+      <Grid
+        container
+        justifyContent="space-between"
+        spacing={2}
+        style={{
+          marginTop: "0.1rem",
+          marginBottom: "0.25rem",
+          paddingLeft: "1rem",
+        }}
+      >
+        <div style={{ width: "50%" }}>
+          <FormInput
+            placeholder="Luke Skywalker"
+            value={total.name}
+            onChange={(e) => {
+              total.name = e.target.value;
+              setTotal({ ...total, name: e.target.value });
+            }}
+          />
+        </div>
+        <div style={{ width: "50%" }}>
+          <FormInput
+            placeholder="CEO of knight Inc."
+            value={total.headline}
+            onChange={(e) => {
+              setTotal({ ...total, headline: e.target.value });
+            }}
+          />
+        </div>
+      </Grid>
+      <Grid
+        container
+        style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
+        spacing={2}
+      >
+        <FormLabel>Avatar</FormLabel>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        style={{ marginTop: "0.1rem", paddingLeft: "1rem" }}
+      >
+        {total.selectedImage !== null ? (
+          <Avatar
+            style={{
+              borderRadius: "50%",
+              border: "1px solid #ddd",
+            }}
+          >
+            <img
+              src={URL.createObjectURL(total.selectedImage)}
+              width={"48px"}
+              alt="not found"
+            />
+          </Avatar>
+        ) : (
+          <Avatar
+            style={{
+              borderRadius: "50%",
+              border: "1px solid #ddd",
+            }}
+          >
+            <img src={`./user.png`} alt="" width={"48px"} />
+          </Avatar>
+        )}
+        <UploadButton
+          htmlFor="icon-button-file"
+          onClick={() => {
+            hiddenFileInput.current.click();
+          }}
+        >
+          Pick an image
+        </UploadButton>
+        <input
+          ref={hiddenFileInput}
+          type="file"
+          multiple=""
+          accept="image/png,image/jpg,image/gif,image/jpeg,image/webp"
+          autocomplete="off"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            setTotal({ ...total, selectedImage: e.target.files[0] });
+          }}
+        />
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
+      >
+        <FormLabel>Review</FormLabel>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        style={{ marginTop: "0.1rem", paddingLeft: "1rem" }}
+      >
+        <TextField
+          multiline
+          rows={4}
+          placeholder="Write something nice ✨"
+          style={{ width: "100%" }}
+          value={total.review}
+          onChange={(e) => {
+            setTotal({ ...total, review: e.target.value });
+          }}
+        />
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
+      >
+        <FormLabel>Rating</FormLabel>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        style={{ marginTop: "0.1rem", paddingLeft: "1rem" }}
+      >
+        <Rating
+          value={total.rating}
+          onChange={(event, newValue) => {
+            setTotal({ ...total, rating: newValue });
+          }}
+          style={{ fontSize: "2rem" }}
+        />
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
+      >
+        <FormLabel>Review URL</FormLabel>
+      </Grid>
+      <Grid
+        container
+        spacing={2}
+        style={{ marginTop: "0.1rem", paddingLeft: "1rem" }}
+      >
+        <FormInput
+          placeholder="https://"
+          value={total.url}
+          onChange={(e) => {
+            setTotal({ ...total, url: e.target.value });
+          }}
+        />
+      </Grid>
+      <FormLabel>Date</FormLabel>
+      <LocalizationProvider dateAdapter={AdapterDayjs}>
+        <DatePicker
+          label=""
+          value={total.date}
+          onChange={(newValue) => {
+            setTotal({ ...total, date: newValue });
+          }}
+          renderInput={(params) => <TextField {...params} />}
+        />
+      </LocalizationProvider>
+      <Grid
+        container
+        spacing={2}
+        style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
+      >
+        <FormGrid>
+          <DefaultButton
+            style={{ borderRadius: "9999px" }}
+            onClick={() => {
+              onSubmit();
+            }}
+          >
+            Import Review
+          </DefaultButton>
+        </FormGrid>
+      </Grid>
+    </div>
+  );
   React.useEffect(() => {
     onSubmit();
   }, [box]);
@@ -784,7 +1002,7 @@ export const ImportChannel = (props) => {
         flexDirection: "column",
       }}
     >
-      {isGoogle ? google : notGoogle}
+      {isGoogle ? google : isVideo ? video : text}
     </div>
   );
 };
