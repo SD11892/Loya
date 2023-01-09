@@ -14,7 +14,23 @@ import { ReactSVG } from "react-svg";
 import Description from "../../components/uielements/description";
 import moment from "moment";
 import { isEmpty } from "../../util/isEmpty";
+import VideoImageThumbnail from "react-video-thumbnail-image";
+import { LazyLoadComponent } from "react-lazy-load-image-component";
 
+const SESConfig = {
+  accessKeyId: process.env.REACT_APP_ACCESS,
+  secretAccessKey: process.env.REACT_APP_SECRET,
+  region: process.env.REACT_APP_REGION,
+};
+
+AWS.config.update(SESConfig);
+
+const s3 = new AWS.S3({
+  params: {
+    Bucket: "loya-bucket",
+  },
+  region: process.env.REACT_APP_REGION,
+});
 export const ImportHistory = (props) => {
   return (
     <div
@@ -142,11 +158,30 @@ export const ImportHistory = (props) => {
                           </div>
                         </ListItemText>
                       </div>
-                      <div style={{fontSize:"10px", color:"#333"}}>
+                      <div style={{ fontSize: "16px", color: "#333" }}>
                         {row.importDate !== ""
                           ? row.importDate
                           : moment(row.updatedAt).format("ll")}
                       </div>
+                    </div>
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        width: "100%",
+                      }}
+                    >
+                      {row.video ? (
+                        <LazyLoadComponent>
+                          <VideoImageThumbnail
+                            videoUrl={s3.getSignedUrl("getObject", {
+                              Bucket: "loya-bucket",
+                              Key: row.video,
+                            })}
+                            alt="my test video"
+                          />
+                        </LazyLoadComponent>
+                      ) : null}
                     </div>
                     <div
                       style={{

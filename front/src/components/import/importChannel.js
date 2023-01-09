@@ -50,6 +50,7 @@ export const ImportChannel = (props) => {
   const [testimonials, setTestimonials] = React.useState([]);
   const [data, setData] = React.useState([]);
   const [count, setCount] = React.useState(0);
+  const [videoName, setVideoName] = React.useState("");
   const [total, setTotal] = React.useState({
     name: "",
     headline: "",
@@ -58,10 +59,13 @@ export const ImportChannel = (props) => {
     selectedImage: null,
     imageUrl: "",
     importDate: "",
+    selectedFile: null,
   });
+  const [selectedFile, setSelectedFile] = React.useState(null);
   const [box, setBox] = React.useState([]);
 
   const hiddenFileInput = React.useRef(null);
+  const hiddenFile = React.useRef(null);
   const infor = {
     index: "",
     content: "",
@@ -75,40 +79,99 @@ export const ImportChannel = (props) => {
     query: "",
     imageUrl: "",
     importDate: "",
+    video: "",
   };
   const projects = JSON.parse(localStorage.getItem("projects"));
   const projectId = projects[0].id;
   const userId = `${localStorage.getItem("userId")}`;
 
   const onSubmit = () => {
-    if (isEmpty(box)) {
-      if (total.name !== "") {
-        if (total.selectedImage) {
-          infor.name = total.selectedImage.name;
-          infor.type = total.selectedImage.type;
-        }
-        infor.content = total.review;
-        infor.key = ["Your Name", "Email Address", "Your Website"];
-        infor.value[0] = total.name;
-        infor.value[1] = total.headline;
-        infor.value[2] = total.url;
-        infor.rating = total.rating;
-        infor.index = props.testimonials.length;
-        infor.projectId = projectId;
-        infor.userId = userId;
-        infor.imageUrl = total.imageUrl;
-        infor.importDate = total.importDate;
-        infor.url = null;
-
-        console.log(infor, total.selectedImage);
-
-        createTestimonial(infor, total.selectedImage).then(() => {
-          dispatch(getImport());
-        });
+    if (props.select === "text") {
+      if (total.selectedImage) {
+        infor.name = total.selectedImage.name;
+        infor.type = total.selectedImage.type;
       }
-    } else {
+      infor.content = total.review;
+      infor.key = ["Your Name", "Email Address", "Your Website"];
+      infor.value[0] = total.name;
+      infor.value[1] = total.headline;
+      infor.value[2] = total.url;
+      infor.rating = total.rating;
+      infor.index = props.testimonials.length;
+      infor.projectId = projectId;
+      infor.userId = userId;
+      infor.imageUrl = total.imageUrl;
+      infor.importDate = total.importDate;
+      infor.url = null;
+
+      console.log(infor, total.selectedImage);
+
+      createTestimonial(infor, total.selectedImage).then(() => {
+        dispatch(getImport()).then(() => {
+          toastr.success("Imported Text Testimonials");
+        });
+      });
+    } else if (props.select === "google") {
       importSeveralTestimonials(box).then(() => {
-        dispatch(getImport());
+        dispatch(getImport()).then(() => {
+          toastr.success("Imported Google Testimonials");
+          setVisible(false);
+        });
+      });
+    } else if (props.select === "video") {
+      console.log("videoName=", videoName);
+      if (total.selectedImage) {
+        infor.name = total.selectedImage.name;
+        infor.type = total.selectedImage.type;
+      }
+      infor.content = total.review;
+      infor.key = ["Your Name", "Email Address", "Your Website"];
+      infor.value[0] = total.name;
+      infor.value[1] = total.headline;
+      infor.value[2] = total.url;
+      infor.rating = total.rating;
+      infor.index = props.testimonials.length;
+      infor.projectId = projectId;
+      infor.userId = userId;
+      infor.imageUrl = total.imageUrl;
+      infor.importDate = total.importDate;
+      infor.url = null;
+      infor.video = videoName;
+      createTestimonial(infor, total.selectedImage).then(() => {
+        const SESConfig = {
+          accessKeyId: process.env.REACT_APP_ACCESS,
+          secretAccessKey: process.env.REACT_APP_SECRET,
+          region: process.env.REACT_APP_REGION,
+        };
+
+        AWS.config.update(SESConfig);
+
+        const s3 = new AWS.S3({
+          params: {
+            Bucket: "loya-bucket",
+          },
+          region: process.env.REACT_APP_REGION,
+        });
+        s3.putObject(
+          {
+            Key: selectedFile.name,
+            Body: selectedFile,
+            ContentType: "video/*",
+            ACL: "public-read",
+            Bucket: "loya-bucket",
+            ServerSideEncryption: "AES256",
+          },
+          (err) => {
+            console.log(err);
+            if (err) {
+              // On Error
+            } else {
+              dispatch(getImport()).then(() => {
+                toastr.success("Imported Video Testimonials");
+              });
+            }
+          }
+        );
       });
     }
   };
@@ -345,26 +408,6 @@ export const ImportChannel = (props) => {
             setTotal({ ...total, rating: newValue });
           }}
           style={{ fontSize: "2rem" }}
-        />
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-        style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
-      >
-        <FormLabel>Review URL</FormLabel>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-        style={{ marginTop: "0.1rem", paddingLeft: "1rem" }}
-      >
-        <FormInput
-          placeholder="https://"
-          value={total.url}
-          onChange={(e) => {
-            setTotal({ ...total, url: e.target.value });
-          }}
         />
       </Grid>
       <FormLabel>Date</FormLabel>
@@ -782,13 +825,7 @@ export const ImportChannel = (props) => {
             color: "#333",
           }}
         >
-          {props.select === "text" ? (
-            <PencilIcon />
-          ) : props.select === "video" ? (
-            <CameraIcon />
-          ) : (
-            <FacebookIcon />
-          )}
+          <CameraIcon />
         </Avatar>
       </Grid>
       <Grid
@@ -896,10 +933,46 @@ export const ImportChannel = (props) => {
       </Grid>
       <Grid
         container
+        style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
+        spacing={2}
+      >
+        <FormLabel>Pick a video</FormLabel>
+      </Grid>
+      <Grid
+        container
         spacing={2}
         style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
       >
-        <FormLabel>Review</FormLabel>
+        <UploadButton
+          htmlFor="icon-button-file"
+          onClick={() => {
+            hiddenFile.current.click();
+          }}
+        >
+          Choose File
+        </UploadButton>
+        <input
+          ref={hiddenFile}
+          type="file"
+          multiple=""
+          accept="video/*"
+          autocomplete="off"
+          style={{ display: "none" }}
+          onChange={(e) => {
+            setVideoName(e.target.files[0].name);
+            setSelectedFile(e.target.files[0]);
+          }}
+        />
+        <FormLabel>
+          {selectedFile !== null ? selectedFile.name : "No File Chosen"}
+        </FormLabel>
+      </Grid>
+      <Grid
+        container
+        style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
+        spacing={2}
+      >
+        <FormLabel>Excerpt</FormLabel>
       </Grid>
       <Grid
         container
@@ -909,7 +982,6 @@ export const ImportChannel = (props) => {
         <TextField
           multiline
           rows={4}
-          placeholder="Write something nice ✨"
           style={{ width: "100%" }}
           value={total.review}
           onChange={(e) => {
@@ -935,26 +1007,6 @@ export const ImportChannel = (props) => {
             setTotal({ ...total, rating: newValue });
           }}
           style={{ fontSize: "2rem" }}
-        />
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-        style={{ marginTop: "0.25rem", paddingLeft: "1rem" }}
-      >
-        <FormLabel>Review URL</FormLabel>
-      </Grid>
-      <Grid
-        container
-        spacing={2}
-        style={{ marginTop: "0.1rem", paddingLeft: "1rem" }}
-      >
-        <FormInput
-          placeholder="https://"
-          value={total.url}
-          onChange={(e) => {
-            setTotal({ ...total, url: e.target.value });
-          }}
         />
       </Grid>
       <FormLabel>Date</FormLabel>
@@ -987,7 +1039,9 @@ export const ImportChannel = (props) => {
     </div>
   );
   React.useEffect(() => {
-    onSubmit();
+    if (!isEmpty(box)) {
+      onSubmit();
+    }
   }, [box]);
 
   return (

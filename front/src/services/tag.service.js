@@ -2,7 +2,7 @@ import axios from "axios";
 import { isEmpty } from "../util/isEmpty";
 
 const API_URL = "/api/tag/";
-const userId = JSON.parse(localStorage.getItem("user")).id;
+const userId = JSON.parse(localStorage.getItem("userId"));
 const create = (tagname) => {
   console.log(tagname);
   return axios.post(API_URL + "create", null, {
