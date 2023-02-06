@@ -30,7 +30,6 @@ import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import VideoImageThumbnail from 'react-video-thumbnail-image';
 import AWS from 'aws-sdk';
 import Input from '../uielements/form/FormInput';
-import GroupButton from '../uielements/buttons/groupButton';
 import DefaultButton from '../uielements/buttons/defaultButton';
 
 import { Pencil as PencilIcon } from '../../icons/pencil';
@@ -41,13 +40,15 @@ import { Thanknote as ThanknoteIcon } from '../../icons/thanknote';
 
 import UploadButton from '../uielements/buttons/uploadButton';
 import StatusButton from '../../components/uielements/buttons/statusButton';
+import EmbedButton from '../../components/uielements/buttons/embedButton';
 import { Embed } from '../../icons/embed';
-import GBContainer from '../uielements/containers/groupButtonContainer';
+
 import {
   updateTestimonial,
   deleteTestimonial,
 } from '../../actions/testimonial';
 import { useDispatch, useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 import { getAll } from '../../actions/testimonial';
 import PageTitle from '../uielements/pageTitle';
 import FormLabel from '../uielements/form/FormLabel';
@@ -59,6 +60,7 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const TestTable = () => {
   const dispatch = useDispatch();
+  const navigate = useNavigate();
   const testimonials = useSelector((state) => state.testimonial.testimonial);
   const [status, setStatus] = useState(0);
   const [name, setName] = useState('');
@@ -121,92 +123,6 @@ const TestTable = () => {
   const handleClose = () => {
     setEditState(false);
   };
-
-  const buttons = [
-    <GroupButton key="one">
-      <div
-        style={{
-          display: 'flex',
-          width: '1rem',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0.5rem 1rem',
-          color: '#fff',
-          background: '#6701e6',
-          borderTopLeftRadius: '6px',
-        }}
-      >
-        <div
-          style={{
-            position: 'relative',
-            justifyContent: 'center',
-            alignItems: 'center',
-            display: 'flex',
-          }}
-        >
-          <ImageIcon />
-        </div>
-      </div>
-      <GBContainer
-        style={{ borderTop: '1px solid #ddd', borderTopRightRadius: '6px' }}
-      >
-        Create an image
-      </GBContainer>
-    </GroupButton>,
-    <GroupButton key="two">
-      <div
-        style={{
-          display: 'flex',
-          width: '1rem',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0.5rem 1rem',
-          color: '#fff',
-          background: '#000',
-        }}
-      >
-        <div
-          style={{
-            position: 'relative',
-            justifyContent: 'center',
-            alignItems: 'center',
-            display: 'flex',
-          }}
-        >
-          <Embed />
-        </div>
-      </div>
-      <GBContainer>Embed on your website</GBContainer>
-    </GroupButton>,
-    <GroupButton key="three">
-      <div
-        style={{
-          display: 'flex',
-          width: '1rem',
-          alignItems: 'center',
-          justifyContent: 'center',
-          padding: '0.5rem 1rem',
-          color: '#fff',
-          background: '#db2777',
-          borderBottomLeftRadius: '6px',
-        }}
-      >
-        <div
-          style={{
-            position: 'relative',
-            justifyContent: 'center',
-            alignItems: 'center',
-            display: 'flex',
-          }}
-        >
-          <ThanknoteIcon />
-        </div>
-      </div>
-      <GBContainer style={{ borderBottomRightRadius: '6px' }}>
-        Send a thank you note
-      </GBContainer>
-    </GroupButton>,
-  ];
 
   useEffect(() => {}, [
     key,
@@ -419,7 +335,7 @@ const TestTable = () => {
                     <></>
                   )}
                   <div style={{ color: 'rgb(107,114,128)', maxWidth: '28rem' }}>
-                    {row.rating === null ? null : (
+                    {row.rating === null || row.rating === 0 ? null : (
                       <div>
                         <Rating
                           value={row.rating}
@@ -507,7 +423,7 @@ const TestTable = () => {
             }}
           >
             <Grid item xs={7.75}></Grid>
-            <Grid item xs={2.25} style={{ paddingLeft: '10px' }}>
+            <Grid item xs={2.25} style={{ gap: '0.5rem' }}>
               <Tooltip
                 title={
                   <p style={{ fontSize: '0.85rem' }}>
@@ -519,7 +435,11 @@ const TestTable = () => {
               >
                 <Button
                   variant="outlined"
-                  style={{ color: status === 1 ? '#059689' : '#D97706' }}
+                  style={{
+                    color: status === 1 ? '#059689' : '#D97706',
+                    textTransform: 'unset',
+                    fontSize: '1rem',
+                  }}
                   onClick={(e) => {
                     inf.id = id;
                     inf.status = 1 - status;
@@ -660,56 +580,16 @@ const TestTable = () => {
               <p>Date:{moment(date).format('LL')}</p>
             </div>
             <br />
-            <p style={{ fontSize: '1.1rem' }}>
-              <b>Do more with your review ✨</b>
-            </p>
-            <div
-              style={{
-                display: 'table',
+            <EmbedButton
+              variant="contained"
+              onClick={() => {
+                localStorage.setItem('testimonialId', id);
+                navigate('/only_one_widget');
               }}
             >
-              <Card
-                style={{
-                  width: '10em',
-                  height: '10rem',
-                  float: 'left',
-                }}
-              >
-                {/* <img
-                src={Title1}
-                alt="Title1"
-                style={{
-                  width: "12rem",
-                  height: "12rem",
-                }}
-              /> */}
-              </Card>
-              <Card
-                style={{
-                  width: '10em',
-                  height: '10rem',
-                  float: 'left',
-                  marginLeft: '1rem',
-                }}
-              >
-                {/* <img
-                src={Title2}
-                alt="Title2"
-                style={{
-                  width: "12rem",
-                  height: "12rem",
-                }}
-              /> */}
-              </Card>
-            </div>
-            <div style={{ marginTop: '1rem' }}>
-              <ButtonGroup
-                orientation="vertical"
-                aria-label="vertical outlined button group"
-              >
-                {buttons}
-              </ButtonGroup>
-            </div>
+              <Embed />
+              Embed on your website
+            </EmbedButton>
           </div>
         </div>
         <div style={{ display: editState === true ? 'block' : 'none' }}>
@@ -902,7 +782,6 @@ const TestTable = () => {
                   inf.url = url;
                   inf.value = value;
                   updateTestimonial(inf, selectedImage).then((e) => {
-                    console.log('e=', e);
                     dispatch(getAll());
                     setOpen(true);
                     setEditState(false);

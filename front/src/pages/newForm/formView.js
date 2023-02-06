@@ -5,6 +5,7 @@ import { Grid, TextField, Rating, Avatar } from '@mui/material';
 import MainButton from '../../components/uielements/buttons/mainButton';
 import PageTitle from '../../components/uielements/pageTitle';
 import { Camera as CameraIcon } from '../../icons/camera';
+import WestIcon from '@mui/icons-material/West';
 import PreviewContainer from '../../components/uielements/previewContainer';
 import TopLinkContainer from '../../components/uielements/topLinkContainer';
 import { createTestimonial, getAll } from '../../actions/testimonial';
@@ -15,6 +16,7 @@ import FormLabel from '../../components/uielements/form/FormLabel';
 import FormInput from '../../components/uielements/form/FormInput';
 import FormGrid from '../../components/uielements/form/FormGrid';
 import VideoRecorder from '../../components/uielements/recorder/VideoRecorder';
+import { IconButton } from '@mui/material';
 
 const FormView = () => {
   const url = window.location.pathname.slice(-6);
@@ -57,10 +59,10 @@ const FormView = () => {
   const testimonials = useSelector((state) => state.testimonial.testimonial);
   const dispatch = useDispatch();
 
-  const projects = JSON.parse(localStorage.getItem('projects'));
-  const projectId = projects.id;
+  const projectId = localStorage.getItem('projectId');
   const userId = `${localStorage.getItem('userId')}`;
   const onSubmit = () => {
+    console.log('values=', values);
     if (selectedImage) {
       infor.name = selectedImage.name;
       infor.type = selectedImage.type;
@@ -99,7 +101,7 @@ const FormView = () => {
       );
     });
   }, []);
-  useEffect(() => {}, [visible, selectedImage, checked]);
+  useEffect(() => {}, [visible, selectedImage, checked, content]);
 
   const ShareTestimonial = (
     <PreviewContainer
@@ -124,7 +126,14 @@ const FormView = () => {
           Powered by Loya
         </a>
       </TopLinkContainer>
-      <Grid container style={{ marginBottom: '1rem' }}>
+      <Grid
+        container
+        style={{
+          marginBottom: '1rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
         {selectedImage !== null ? (
           <img
             src={URL.createObjectURL(selectedImage)}
@@ -201,7 +210,14 @@ const FormView = () => {
           Powered by Loya
         </a>
       </TopLinkContainer>
-      <Grid container style={{ marginTop: '1rem' }}>
+      <Grid
+        container
+        style={{
+          marginTop: '1rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
         {selectedImage !== null ? (
           <img
             src={URL.createObjectURL(selectedImage)}
@@ -213,9 +229,16 @@ const FormView = () => {
         ) : (
           <img src={`../../../../../heart.png`} width={'32px'} />
         )}
+        <IconButton
+          onClick={() => {
+            setVisible(1);
+          }}
+        >
+          <WestIcon />
+        </IconButton>
       </Grid>
       <Grid container style={{ marginTop: '1rem' }}>
-        <PageTitle>Write a text textimonial</PageTitle>
+        <PageTitle>Write a text testimonial</PageTitle>
       </Grid>
       <Grid
         container
@@ -233,7 +256,10 @@ const FormView = () => {
         }}
       >
         <Rating
-          style={{ display: checked[2] === 'true' ? 'flex' : 'none' }}
+          style={{
+            display: checked[2] === 'true' ? 'flex' : 'none',
+            fontSize: '2rem',
+          }}
           value={rating}
           onChange={(event, newValue) => {
             setRating(newValue);
@@ -253,6 +279,9 @@ const FormView = () => {
           rows={4}
           placeholder="Write something nice ✨"
           style={{ width: '100%' }}
+          onChange={(e) => {
+            setContent(e.target.value);
+          }}
         />
       </Grid>
       <Grid container style={{ marginTop: '1rem' }}>
@@ -302,7 +331,14 @@ const FormView = () => {
           Powered by Loya
         </a>
       </TopLinkContainer>
-      <Grid container style={{ marginTop: '1rem' }}>
+      <Grid
+        container
+        style={{
+          marginTop: '1rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
         {selectedImage !== null ? (
           <img
             src={URL.createObjectURL(selectedImage)}
@@ -314,6 +350,13 @@ const FormView = () => {
         ) : (
           <img src={`../../../../../heart.png`} width={'32px'} />
         )}
+        <IconButton
+          onClick={() => {
+            setVisible(2);
+          }}
+        >
+          <WestIcon />
+        </IconButton>
       </Grid>
       <Grid container style={{ marginTop: '1rem' }}>
         <PageTitle>Almost done</PageTitle>
@@ -394,7 +437,14 @@ const FormView = () => {
               return (
                 <FormGrid>
                   <FormLabel>{addingFields[index]}</FormLabel>
-                  <FormInput placeholder="Enter details here" />
+                  <FormInput
+                    placeholder="Enter details here"
+                    onChange={(e) => {
+                      let i = key.indexOf(value);
+                      values[i] = e.target.value;
+                      setValues([...values]);
+                    }}
+                  />
                 </FormGrid>
               );
             })}
@@ -467,7 +517,14 @@ const FormView = () => {
           Powered by Loya
         </a>
       </TopLinkContainer>
-      <Grid container style={{ marginTop: '1rem' }}>
+      <Grid
+        container
+        style={{
+          marginTop: '1rem',
+          display: 'flex',
+          justifyContent: 'space-between',
+        }}
+      >
         {selectedImage !== null ? (
           <img
             src={URL.createObjectURL(selectedImage)}
@@ -479,6 +536,13 @@ const FormView = () => {
         ) : (
           <img src={`../../../../../heart.png`} width={'32px'} />
         )}
+        <IconButton
+          onClick={() => {
+            setVisible(1);
+          }}
+        >
+          <WestIcon />
+        </IconButton>
       </Grid>
       <Grid container style={{ marginTop: '1rem' }}>
         <PageTitle>Record a video textimonial</PageTitle>
@@ -499,7 +563,10 @@ const FormView = () => {
         }}
       >
         <Rating
-          style={{ display: checked[2] === 'true' ? 'flex' : 'none' }}
+          style={{
+            display: checked[2] === 'true' ? 'flex' : 'none',
+            fontSize: '2rem',
+          }}
           value={rating}
           onChange={(event, newValue) => {
             setRating(newValue);
@@ -563,6 +630,7 @@ const FormView = () => {
         height: '100vh',
         width: '100%',
         justifyContent: 'center',
+        background: bgColor,
       }}
     >
       {Content()}

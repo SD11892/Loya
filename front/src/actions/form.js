@@ -1,5 +1,5 @@
-import FormService from "../services/form.service";
-import { GETALL_SUCCESS } from "./types";
+import FormService from '../services/form.service';
+import { GETALL_SUCCESS } from './types';
 
 export const getAll = () => (dispatch) => {
   return FormService.getAll().then(
@@ -24,21 +24,18 @@ export const getAll = () => (dispatch) => {
 };
 
 export const createForm = (name) => {
-  const projects = JSON.parse(localStorage.getItem("projects"));
-  const projectId = projects.id;
-  const userId = `${localStorage.getItem("userId")}`;
+  const projectId = localStorage.getItem('projectId');
+  const userId = `${localStorage.getItem('userId')}`;
   const url = makeid(6);
   const fname = name;
   return FormService.create(url, projectId, userId, fname);
 };
 
 export const saveForm = (info, data) => {
-  console.log("FormInfo=", info);
   return FormService.update(info, data);
 };
 
 export const deleteForm = (Ids) => {
-  console.log("Ids=", Ids);
   return FormService.deleteForms(Ids);
 };
 
@@ -61,8 +58,8 @@ export const getByFormUrl = (url) => {
 };
 
 function makeid(length) {
-  var result = "";
-  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   var charactersLength = characters.length;
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));

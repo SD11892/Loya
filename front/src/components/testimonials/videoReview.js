@@ -15,6 +15,7 @@ const VideoReview = () => {
       style={{
         backgroundColor: 'black',
         borderRadius: '1rem',
+        color: 'white',
       }}
     >
       <Grid

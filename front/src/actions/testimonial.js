@@ -1,5 +1,5 @@
-import testimonialService from "../services/testimonial.service";
-import { ALL_SUCCESS, SAVE_INDEX, ALL_IMPORT } from "./types";
+import testimonialService from '../services/testimonial.service';
+import { ALL_SUCCESS, SAVE_INDEX, ALL_IMPORT } from './types';
 
 export const getAll = (data) => (dispatch) => {
   return testimonialService.getAll(data).then(
@@ -25,6 +25,10 @@ export const getAll = (data) => (dispatch) => {
 
 export const createTestimonial = (info, data) => {
   return testimonialService.create(info, data);
+};
+
+export const getById = (id) => {
+  return testimonialService.getById(id);
 };
 
 export const importSeveralTestimonials = (array) => {

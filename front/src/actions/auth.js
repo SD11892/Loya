@@ -18,6 +18,10 @@ export const login = (email, password) => (dispatch) => {
   return AuthService.login(email, password);
 };
 
+export const update = (email, password) => {
+  return AuthService.update(email, password);
+};
+
 export const logout = () => (dispatch) => {
   AuthService.logout();
 
@@ -36,6 +40,19 @@ export const verify = (email) => {
     })
     .catch((err) => {
       console.log('err=', err);
+      return Promise.reject();
+    });
+};
+
+export const getByGmail = (gmail) => {
+  return AuthService.gmailGet(gmail)
+    .then((res) => {
+      return {
+        CODE: 200,
+        data: res.data,
+      };
+    })
+    .catch((err) => {
       return Promise.reject();
     });
 };

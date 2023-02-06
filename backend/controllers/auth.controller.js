@@ -1,15 +1,15 @@
-const db = require("../models");
-const config = require("../config/auth.config");
-const { OAuth2Client } = require("google-auth-library");
+const db = require('../models');
+const config = require('../config/auth.config');
+const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(
-  "382447144454-18kdqo71vffauq6c6q2t53bi8u7artae.apps.googleusercontent.com"
+  '382447144454-18kdqo71vffauq6c6q2t53bi8u7artae.apps.googleusercontent.com'
 );
 const User = db.user;
 
 const Op = db.Sequelize.Op;
 
-var jwt = require("jsonwebtoken");
-var bcrypt = require("bcryptjs");
+var jwt = require('jsonwebtoken');
+var bcrypt = require('bcryptjs');
 
 exports.signup = (req, res) => {
   // Save User to Database
@@ -17,10 +17,11 @@ exports.signup = (req, res) => {
     username: req.query.username,
     email: req.query.email,
     password: bcrypt.hashSync(req.query.password, 8),
+    upgrade: 'free',
   })
     .then((user) => {
       res.json({
-        message: "User was registered successfully!",
+        message: 'User was registered successfully!',
         user: { user },
       });
     })
@@ -37,27 +38,42 @@ exports.verify = (req, res) => {
   }).then((user) => {
     if (user) {
       res.status(400).send({
-        message: "Failed! Email is already in use!",
+        message: 'Failed! Email is already in use!',
       });
       return;
     } else {
       res.status(200).send({
-        message: "No use",
+        message: 'No use',
       });
     }
   });
 };
 
+exports.update = (req, res) => {
+  User.update(
+    {
+      password: bcrypt.hashSync(req.query.password, 8),
+    },
+    {
+      where: {
+        email: req.query.email,
+      },
+    }
+  ).then(() => {
+    res.status(200).send({ CODE: 200, message: 'success' });
+  });
+};
+
 exports.google = async (req, res) => {
-  console.log("here=", req);
+  console.log('here=', req);
   const { token } = req.body;
   const ticket = await client.verifyIdToken({
     idToken: token,
     audience:
-      "382447144454-18kdqo71vffauq6c6q2t53bi8u7artae.apps.googleusercontent.com",
+      '382447144454-18kdqo71vffauq6c6q2t53bi8u7artae.apps.googleusercontent.com',
   });
   const { name, email } = ticket.getPayload();
-  console.log("payload=", ticket.getPayload());
+  console.log('payload=', ticket.getPayload());
   const user = await User.upsert({
     where: { email: email },
     update: { name },
@@ -68,17 +84,16 @@ exports.google = async (req, res) => {
 };
 
 exports.signin = (req, res) => {
-  console.log("signinAction herer");
   User.findOne({
     where: {
       email: req.query.email,
     },
   })
     .then((user) => {
-      console.log("user=", user);
+      console.log('user=', user);
       if (!user) {
-        console.log("User Not Found");
-        return res.status(404).send({ message: "User Not found." });
+        console.log('User Not Found');
+        return res.status(404).send({ message: 'User Not found.' });
       }
 
       var passwordIsValid = bcrypt.compareSync(
@@ -89,7 +104,7 @@ exports.signin = (req, res) => {
       if (!passwordIsValid) {
         return res.status(401).send({
           accessToken: null,
-          message: "Invalid Password!",
+          message: 'Invalid Password!',
         });
       }
 
@@ -103,11 +118,26 @@ exports.signin = (req, res) => {
         id: user.id,
         username: user.username,
         email: user.email,
+        upgrade: user.upgrade,
         accessToken: token,
       });
     })
     .catch((err) => {
-      console.log("err=", err);
+      console.log('err=', err);
       res.status(500).send({ message: err.message });
     });
+};
+
+exports.getByGmail = (req, res) => {
+  User.findOne({
+    where: {
+      email: req.query.gmail,
+    },
+  }).then((user) => {
+    if (!user) {
+      res.status(200).send({ message: 'have to register', data: 0 });
+    } else {
+      res.status(200).send({ message: 'found', data: user });
+    }
+  });
 };

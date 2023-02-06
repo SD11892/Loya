@@ -7,15 +7,16 @@ import {
   Avatar,
   ListItemText,
   Rating,
-} from "@mui/material";
-import * as React from "react";
-import PageTitle from "../uielements/pageTitle";
-import { ReactSVG } from "react-svg";
-import Description from "../../components/uielements/description";
-import moment from "moment";
-import { isEmpty } from "../../util/isEmpty";
-import VideoImageThumbnail from "react-video-thumbnail-image";
-import { LazyLoadComponent } from "react-lazy-load-image-component";
+} from '@mui/material';
+import * as React from 'react';
+import PageTitle from '../uielements/pageTitle';
+import { ReactSVG } from 'react-svg';
+import Description from '../../components/uielements/description';
+import moment from 'moment';
+import { isEmpty } from '../../util/isEmpty';
+import VideoImageThumbnail from 'react-video-thumbnail-image';
+import { LazyLoadComponent } from 'react-lazy-load-image-component';
+import AWS from 'aws-sdk';
 
 const SESConfig = {
   accessKeyId: process.env.REACT_APP_ACCESS,
@@ -27,7 +28,7 @@ AWS.config.update(SESConfig);
 
 const s3 = new AWS.S3({
   params: {
-    Bucket: "loya-bucket",
+    Bucket: 'loya-bucket',
   },
   region: process.env.REACT_APP_REGION,
 });
@@ -35,26 +36,26 @@ export const ImportHistory = (props) => {
   return (
     <div
       style={{
-        overflowY: "auto",
+        overflowY: 'auto',
       }}
     >
-      <Grid container pt={"1rem"}>
-        <Grid item xs={12} style={{ marginBottom: "1rem" }}>
+      <Grid container pt={'1rem'}>
+        <Grid item xs={12} style={{ marginBottom: '1rem' }}>
           <PageTitle>Import History</PageTitle>
         </Grid>
         {isEmpty(props.imports) ? (
           <Grid
             container
-            style={{ paddingTop: "1rem", borderTop: "1px solid #ddd" }}
+            style={{ paddingTop: '1rem', borderTop: '1px solid #ddd' }}
           >
             <Grid item xs={2}>
-              <ReactSVG src="history.svg" style={{ color: "#000" }} />
+              <ReactSVG src="history.svg" style={{ color: '#000' }} />
             </Grid>
             <Grid item xs={10}>
-              <Description style={{ fontWeight: "bold" }}>
+              <Description style={{ fontWeight: 'bold' }}>
                 No testimonials imported yet.
               </Description>
-              <Description style={{ fontSize: "1rem" }}>
+              <Description style={{ fontSize: '1rem' }}>
                 Pick a testimonial source from the sidebar to get started.
               </Description>
             </Grid>
@@ -63,8 +64,8 @@ export const ImportHistory = (props) => {
           <List
             dense
             sx={{
-              width: "100%",
-              background: "transparent",
+              width: '100%',
+              background: 'transparent',
             }}
           >
             {props.imports.map((row) => {
@@ -72,35 +73,35 @@ export const ImportHistory = (props) => {
                 <ListItem
                   key={row.id}
                   style={{
-                    marginTop: "1rem",
-                    borderTop: "1px solid #ddd",
-                    width: "100%",
+                    marginTop: '1rem',
+                    borderTop: '1px solid #ddd',
+                    width: '100%',
                   }}
                 >
-                  <ListItemButton style={{ flexDirection: "column" }}>
+                  <ListItemButton style={{ flexDirection: 'column' }}>
                     <div
                       style={{
-                        justifyContent: "space-between",
-                        display: "flex",
-                        flexDirection: "row",
-                        width: "100%",
+                        justifyContent: 'space-between',
+                        display: 'flex',
+                        flexDirection: 'row',
+                        width: '100%',
                       }}
                     >
                       <div
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          width: "100%",
+                          display: 'flex',
+                          alignItems: 'center',
+                          width: '100%',
                         }}
                       >
                         <ListItemAvatar>
                           {row.data !== null ? (
                             <Avatar
                               style={{
-                                width: "24px",
-                                height: "24px",
-                                borderRadius: "50%",
-                                border: "1px solid #ddd",
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '50%',
+                                border: '1px solid #ddd',
                               }}
                               alt={`Avatar n°${row + 1}`}
                               src={`data:image/png;base64,${btoa(
@@ -109,16 +110,16 @@ export const ImportHistory = (props) => {
                                 )
                               )}`}
                             />
-                          ) : row.data === null && row.imageUrl !== "" ? (
+                          ) : row.data === null && row.imageUrl !== '' ? (
                             <Avatar
                               style={{
-                                width: "24px",
-                                height: "24px",
-                                borderRadius: "50%",
-                                border: "1px solid #ddd",
-                                background: "#000",
-                                color: "#fff",
-                                fontSize: "0.8rem",
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '50%',
+                                border: '1px solid #ddd',
+                                background: '#000',
+                                color: '#fff',
+                                fontSize: '0.8rem',
                               }}
                               alt={`Avatar n°${row + 1}`}
                             >
@@ -131,13 +132,13 @@ export const ImportHistory = (props) => {
                           ) : (
                             <Avatar
                               style={{
-                                width: "24px",
-                                height: "24px",
-                                borderRadius: "50%",
-                                border: "1px solid #ddd",
-                                background: "#000",
-                                color: "#fff",
-                                fontSize: "0.8rem",
+                                width: '24px',
+                                height: '24px',
+                                borderRadius: '50%',
+                                border: '1px solid #ddd',
+                                background: '#000',
+                                color: '#fff',
+                                fontSize: '0.8rem',
                               }}
                               alt={`Avatar n°${row + 1}`}
                             >
@@ -145,37 +146,37 @@ export const ImportHistory = (props) => {
                             </Avatar>
                           )}
                         </ListItemAvatar>
-                        <ListItemText style={{ letterSpacing: "1px" }}>
+                        <ListItemText style={{ letterSpacing: '1px' }}>
                           <div
-                            style={{ fontSize: "0.8rem", fontWeight: "500" }}
+                            style={{ fontSize: '0.8rem', fontWeight: '500' }}
                           >
-                            {row.value.split(",")[0]}
+                            {row.value.split(',')[0]}
                           </div>
                           <div
-                            style={{ fontSize: "0.8rem", fontWeight: "200" }}
+                            style={{ fontSize: '0.8rem', fontWeight: '200' }}
                           >
-                            {row.value.split(",")[1]}
+                            {row.value.split(',')[1]}
                           </div>
                         </ListItemText>
                       </div>
-                      <div style={{ fontSize: "16px", color: "#333" }}>
-                        {row.importDate !== ""
+                      <div style={{ fontSize: '16px', color: '#333' }}>
+                        {row.importDate !== ''
                           ? row.importDate
-                          : moment(row.updatedAt).format("ll")}
+                          : moment(row.updatedAt).format('ll')}
                       </div>
                     </div>
                     <div
                       style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        width: "100%",
+                        display: 'flex',
+                        flexDirection: 'column',
+                        width: '100%',
                       }}
                     >
                       {row.video ? (
                         <LazyLoadComponent>
                           <VideoImageThumbnail
-                            videoUrl={s3.getSignedUrl("getObject", {
-                              Bucket: "loya-bucket",
+                            videoUrl={s3.getSignedUrl('getObject', {
+                              Bucket: 'loya-bucket',
                               Key: row.video,
                             })}
                             alt="my test video"
@@ -185,9 +186,9 @@ export const ImportHistory = (props) => {
                     </div>
                     <div
                       style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        width: "100%",
+                        display: 'flex',
+                        flexDirection: 'column',
+                        width: '100%',
                       }}
                     >
                       <div>{row.content}</div>

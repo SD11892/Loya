@@ -314,7 +314,7 @@ function NewForm() {
                   style={{ border: '1px solid #ddd' }}
                   onClick={() => {
                     let path = `/forms/p/${
-                      localStorage.getItem("projects").slug
+                      localStorage.getItem('projects').slug
                     }/r/${url}`;
                     navigate(path);
                   }}
@@ -1326,21 +1326,7 @@ function NewForm() {
                   }}
                 />
               </Grid>
-              <Grid
-                container
-                style={{
-                  marginTop: '1rem',
-                  whiteSpace: 'pre-wrap',
-                }}
-              >
-                <TextField
-                  id="outlined-multiline-static"
-                  multiline
-                  rows={4}
-                  placeholder="Write something nice ✨"
-                  style={{ width: '100%' }}
-                />
-              </Grid>
+              {checked[0] === 'true' ? <VideoReview /> : TextReviews}
               <Grid container style={{ marginTop: '1rem' }}>
                 <DefaultButton primary>Submit</DefaultButton>
               </Grid>

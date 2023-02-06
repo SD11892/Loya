@@ -10,7 +10,7 @@ import { validator } from './Validator';
 import { Button } from '@mui/material';
 import DefaultButton from '../../components/uielements/buttons/defaultButton';
 import FormGrid from '../../components/uielements/form/FormGrid';
-import { createForm } from '../../actions/form';
+import { createProject } from '../../actions/project';
 
 import { Auth } from 'aws-amplify';
 
@@ -44,8 +44,8 @@ const Profile = () => {
       password,
       username: state.fname + ' ' + state.lname,
       project: state.projectName,
+      url: state.projectUrl,
     };
-    console.log('proData=', data);
 
     Auth.signUp({
       username: email,
@@ -57,18 +57,25 @@ const Profile = () => {
       },
     })
       .then((user) => {
-        dispatch(
-          register(data.username, data.email, data.password, data.project)
-        )
+        dispatch(register(data.username, data.email, data.password))
           .then((res) => {
-            console.log('here');
-            navigate('/complete');
+            let id = res.data.user.user.id;
+            localStorage.setItem('userId', id);
+            createProject(state.projectName, id, state.projectUrl)
+              .then((project) => {
+                localStorage.setItem('projectId', project.data.projects.id);
+                navigate('/complete');
+              })
+              .catch((createErr) => {
+                console.log('createErr=', createErr);
+              });
           })
-          .catch((err) => {
+          .catch((e) => {
+            console.log('err=', e);
             toastr.warning('Already in');
           });
       })
-      .catch((err) => {
+      .catch(async (err) => {
         // Something is Wrong
         if (err.code === 'UserNotConfirmedException') {
           dispatch(
@@ -82,12 +89,10 @@ const Profile = () => {
               toastr.warning('Already in');
             });
         } else {
-          toastr.error(err.message);
-          console.log(err);
+          await toastr.error(err.message);
+          navigate('/signup');
         }
       });
-
-    //localstorage
   };
   const { handleChange, handleSubmit, handleBlur, state, errors } = useForm({
     initState,

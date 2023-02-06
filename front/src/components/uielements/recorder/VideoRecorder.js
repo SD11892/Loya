@@ -99,7 +99,9 @@ export default function VideoRecorder(props) {
           }}
         >
           <div>
-            <p>Camera status: {recordWebcam.status}</p>
+            <p style={{ color: 'white' }}>
+              Camera status: {recordWebcam.status}
+            </p>
 
             <video
               ref={recordWebcam.webcamRef}

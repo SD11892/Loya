@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect } from 'react';
 import {
   Grid,
   Modal,
@@ -7,47 +7,47 @@ import {
   Button,
   InputBase,
   IconButton,
-} from "@mui/material";
-import moment from "moment";
-import List from "@mui/material/List";
-import ListItem from "@mui/material/ListItem";
-import ListItemButton from "../../../components/uielements/buttons/listItemButton";
-import ListItemText from "@mui/material/ListItemText";
-import ListItemAvatar from "@mui/material/ListItemAvatar";
-import Checkbox from "@mui/material/Checkbox";
-import Avatar from "@mui/material/Avatar";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-import PlusButton from "../../../components/uielements/buttons/plusButton";
-import PageTitle from "../../../components/uielements/pageTitle";
-import Description from "../../../components/uielements/description";
-import IconContainer from "../../../components/uielements/iconContainer";
-import { Plus as PlusIcon } from "../../../icons/plus";
-import { Qmark } from "../../../icons/qmark";
-import { Close as CloseIcon } from "../../../icons/close";
-import { Delete as DeleteIcon } from "../../../icons/delete";
-import MainButton from "../../../components/uielements/buttons/mainButton";
-import DeleteButton from "../../../components/uielements/buttons/deleteButton";
+} from '@mui/material';
+import moment from 'moment';
+import List from '@mui/material/List';
+import ListItem from '@mui/material/ListItem';
+import ListItemButton from '../../../components/uielements/buttons/listItemButton';
+import ListItemText from '@mui/material/ListItemText';
+import ListItemAvatar from '@mui/material/ListItemAvatar';
+import Checkbox from '@mui/material/Checkbox';
+import Avatar from '@mui/material/Avatar';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import PlusButton from '../../../components/uielements/buttons/plusButton';
+import PageTitle from '../../../components/uielements/pageTitle';
+import Description from '../../../components/uielements/description';
+import IconContainer from '../../../components/uielements/iconContainer';
+import { Plus as PlusIcon } from '../../../icons/plus';
+import { Qmark } from '../../../icons/qmark';
+import { Close as CloseIcon } from '../../../icons/close';
+import { Delete as DeleteIcon } from '../../../icons/delete';
+import MainButton from '../../../components/uielements/buttons/mainButton';
+import DeleteButton from '../../../components/uielements/buttons/deleteButton';
 import {
   getAll,
   createForm,
   deleteForm,
-} from "../../../actions/testimonialForm";
-import { isEmpty } from "../../../util/isEmpty";
-import { useNavigate } from "react-router-dom";
-import { useDispatch, useSelector } from "react-redux";
-import { CopyUrl } from "../../../icons/copyUrl";
-import { Edit } from "../../../icons/edit";
-import FileCopyOutlinedIcon from "@mui/icons-material/FileCopyOutlined";
+} from '../../../actions/testimonialForm';
+import { isEmpty } from '../../../util/isEmpty';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { CopyUrl } from '../../../icons/copyUrl';
+import { Edit } from '../../../icons/edit';
+import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
 
 const style = {
-  position: "absolute",
-  top: "50%",
-  left: "50%",
-  borderRadius: "10px",
-  transform: "translate(-50%, -50%)",
+  position: 'absolute',
+  top: '50%',
+  left: '50%',
+  borderRadius: '10px',
+  transform: 'translate(-50%, -50%)',
   width: 500,
-  bgcolor: "background.paper",
+  bgcolor: 'background.paper',
   boxShadow: 24,
   pl: 4,
   pt: 0,
@@ -66,8 +66,8 @@ const Widgets = () => {
   );
   const [checked, setChecked] = React.useState([]);
   const [open, setOpen] = React.useState(false);
-  const [formName, setFormName] = React.useState("New Testimonial Form");
-  const [text, setText] = React.useState("New Testimonial Form");
+  const [formName, setFormName] = React.useState('New Widget');
+  const [text, setText] = React.useState('New Widget');
   const [openSnack, setOpenSnack] = React.useState(false);
 
   const navigate = useNavigate();
@@ -78,14 +78,14 @@ const Widgets = () => {
     let text = window.location.href + `/p/${info.url}`;
 
     try {
-      var inputc = document.body.appendChild(document.createElement("input"));
+      var inputc = document.body.appendChild(document.createElement('input'));
       inputc.value = text;
       inputc.select();
-      document.execCommand("copy");
+      document.execCommand('copy');
       inputc.parentNode.removeChild(inputc);
       setOpenSnack(true);
     } catch (err) {
-      console.error("Failed to copy: ", err);
+      console.error('Failed to copy: ', err);
     }
   };
 
@@ -98,17 +98,17 @@ const Widgets = () => {
         });
         return {
           CODE: 200,
-          message: "success",
+          message: 'success',
           data: res,
         };
       })
       .catch((err) => {
-        console.log("createErr=", err);
+        console.log('createErr=', err);
       });
   };
 
   const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
 
@@ -151,10 +151,10 @@ const Widgets = () => {
         spacing={2}
         justifyContent="space-between"
         style={{
-          width: "100%",
-          lineHeight: "0.8rem",
-          marginLeft: "2rem",
-          alignItems: "center",
+          width: '100%',
+          lineHeight: '0.8rem',
+          marginLeft: '2rem',
+          alignItems: 'center',
         }}
       >
         <Grid item>
@@ -167,7 +167,7 @@ const Widgets = () => {
           {isEmpty(checked) === true ? null : (
             <DeleteButton onClick={handleDelete}>
               <DeleteIcon fill="white" stroke="red" />
-              <span style={{ marginLeft: "1rem" }}>Delete</span>
+              <span style={{ marginLeft: '1rem' }}>Delete</span>
             </DeleteButton>
           )}
 
@@ -179,21 +179,21 @@ const Widgets = () => {
       </Grid>
       <div
         style={{
-          width: "100%",
-          lineHeight: "0.8rem",
-          marginLeft: "2rem",
-          marginTop: "2rem",
+          width: '100%',
+          lineHeight: '0.8rem',
+          marginLeft: '2rem',
+          marginTop: '2rem',
         }}
       >
         {isEmpty(testimonialForms) ? (
-          <div>No Testimonial Forms Created Here</div>
+          <div>No Widgets Created Here</div>
         ) : (
-          <List dense sx={{ width: "100%", bgcolor: "background.paper" }}>
+          <List dense sx={{ width: '100%', bgcolor: 'background.paper' }}>
             {testimonialForms.map((value) => {
               const labelId = `checkbox-list-secondary-label-${value}`;
 
               return (
-                <ListItem key={value.id} style={{ marginTop: "1rem" }}>
+                <ListItem key={value.id} style={{ marginTop: '1rem' }}>
                   <ListItemButton
                     onClick={(e) => {
                       console.log(e);
@@ -205,36 +205,36 @@ const Widgets = () => {
                     <Checkbox
                       id={`check[${value.Id}]`}
                       style={{
-                        marginRight: "5px",
-                        color: "#ddd",
-                        borderRadius: "10px",
+                        marginRight: '5px',
+                        color: '#ddd',
+                        borderRadius: '10px',
                       }}
                       edge="end"
                       onChange={handleToggle(value)}
                       checked={checked.indexOf(value) !== -1}
-                      inputProps={{ "aria-labelledby": labelId }}
+                      inputProps={{ 'aria-labelledby': labelId }}
                     />
                     <ListItemAvatar>
                       <Avatar
                         style={{
-                          width: "15px",
-                          paddingLeft: "5px",
-                          paddingRight: "5px",
-                          height: "30px",
-                          borderRadius: "20%",
-                          border: "1px solid #ddd",
+                          width: '15px',
+                          paddingLeft: '5px',
+                          paddingRight: '5px',
+                          height: '30px',
+                          borderRadius: '20%',
+                          border: '1px solid #ddd',
                         }}
                         alt={`Avatar n°${value + 1}`}
-                        src={"./item.svg"}
+                        src={'./item.svg'}
                       />
                     </ListItemAvatar>
-                    <ListItemText style={{ letterSpacing: "1px" }}>
-                      <div style={{ fontSize: "1rem", fontWeight: "600" }}>
+                    <ListItemText style={{ letterSpacing: '1px' }}>
+                      <div style={{ fontSize: '1rem', fontWeight: '600' }}>
                         {value.name}
                       </div>
                       <div>
-                        {value.testimonials} responses,created on{" "}
-                        {moment(value.createdAt).format("LL")}
+                        {value.testimonials} responses,created on{' '}
+                        {moment(value.createdAt).format('LL')}
                       </div>
                     </ListItemText>
                     <IconContainer>
@@ -252,7 +252,7 @@ const Widgets = () => {
                       <IconButton
                         onClick={(ev) => {
                           ev.stopPropagation();
-                          createForm(value.name + " copy").then((res) => {
+                          createForm(value.name + ' copy').then((res) => {
                             dispatch(getAll());
                           });
                         }}
@@ -287,7 +287,7 @@ const Widgets = () => {
         open={open}
         onClose={handleClose}
         closeAfterTransition
-        style={{ borderRadius: "2rem" }}
+        style={{ borderRadius: '2rem' }}
       >
         <Fade in={open}>
           <Box sx={style}>
@@ -295,37 +295,37 @@ const Widgets = () => {
             <Button
               onClick={handleClose}
               sx={{
-                position: "absolute",
+                position: 'absolute',
                 right: 8,
                 top: 8,
-                color: "#444",
+                color: '#444',
               }}
             >
               <CloseIcon />
             </Button>
-            <Description style={{ fontSize: "1rem" }}>
+            <Description style={{ fontSize: '1rem' }}>
               You can create different testimonial forms to collect make
               beautiful testimonials.
             </Description>
-            <div style={{ marginTop: "2rem" }}>
+            <div style={{ marginTop: '2rem' }}>
               <div
                 style={{
-                  marginBottom: "0.5rem",
-                  alignItems: "center",
-                  display: "flex",
-                  gap: "0.5rem",
-                  fontSize: "1rem",
-                  fontWeight: "600",
+                  marginBottom: '0.5rem',
+                  alignItems: 'center',
+                  display: 'flex',
+                  gap: '0.5rem',
+                  fontSize: '1rem',
+                  fontWeight: '600',
                 }}
               >
                 Testimonial Form Name <Qmark />
               </div>
               <InputBase
                 style={{
-                  width: "100%",
-                  border: "1px solid #ddd",
-                  borderRadius: "5px",
-                  paddingLeft: "5px",
+                  width: '100%',
+                  border: '1px solid #ddd',
+                  borderRadius: '5px',
+                  paddingLeft: '5px',
                 }}
                 onChange={(e) => {
                   setText(e.target.value);
@@ -333,10 +333,10 @@ const Widgets = () => {
                 value={text}
               ></InputBase>
             </div>
-            <div style={{ marginTop: "1rem" }}>
+            <div style={{ marginTop: '1rem' }}>
               <MainButton
                 onClick={handleCreate}
-                style={{ width: "100%", marginLeft: "unset" }}
+                style={{ width: '100%', marginLeft: 'unset' }}
               >
                 Create form
               </MainButton>
@@ -345,7 +345,7 @@ const Widgets = () => {
         </Fade>
       </Modal>
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={openSnack}
         autoHideDuration={6000}
         onClose={handleCloseSnack}
@@ -353,7 +353,7 @@ const Widgets = () => {
         <Alert
           onClose={handleCloseSnack}
           severity="success"
-          sx={{ width: "100%" }}
+          sx={{ width: '100%' }}
         >
           Copied to Clipboard
         </Alert>

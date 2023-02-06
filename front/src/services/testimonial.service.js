@@ -48,9 +48,10 @@ const update = (info, data) => {
 
 const getAll = (searchData) => {
   let userId = `${localStorage.getItem('userId')}`;
-  let projects = JSON.parse(localStorage.getItem('projects'));
+  let projectId = localStorage.getItem('projectId');
+  console.log(userId, projectId);
   return axios
-    .post(API_URL + `all`, null, { params: { userId, projects, searchData } })
+    .post(API_URL + `all`, null, { params: { userId, projectId, searchData } })
     .then((response) => {
       if (isEmpty(response.data)) {
         return {
@@ -72,9 +73,24 @@ const getAll = (searchData) => {
     });
 };
 
+const getById = (id) => {
+  return axios
+    .post(API_URL + `byId`, null, { params: { id } })
+    .then((res) => {
+      return {
+        CODE: 200,
+        message: 'success',
+        data: res,
+      };
+    })
+    .catch((err) => {
+      console.log('createErr=', err);
+    });
+};
+
 const getByFormUrl = async (url) => {
   try {
-    const res = await axios.get(API_URL + ':' + url + '/');
+    const res = await axios.post(API_URL + ':' + id + '/');
     return {
       CODE: 200,
       message: 'success',
@@ -161,5 +177,6 @@ export default {
   deleteTest,
   update,
   search_target,
+  getById,
   uploadVideo,
 };

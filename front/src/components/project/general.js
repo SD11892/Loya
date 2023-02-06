@@ -1,17 +1,22 @@
-import * as React from "react";
-import { Grid, FormLabel, ButtonBase } from "@mui/material";
-import Description from "../uielements/description";
-import PageTitle from "../uielements/pageTitle";
-import FormGrid from "../uielements/form/FormGrid";
-import FormInput from "../uielements/form/FormInput";
-import MainButton from "../uielements/buttons/mainButton";
-import { getByProjectId } from "../../actions/project";
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+
+import { Grid, FormLabel, ButtonBase } from '@mui/material';
+
+import Description from '../uielements/description';
+import PageTitle from '../uielements/pageTitle';
+import FormGrid from '../uielements/form/FormGrid';
+import FormInput from '../uielements/form/FormInput';
+import MainButton from '../uielements/buttons/mainButton';
+
+import { getByProjectId } from '../../actions/project';
 
 const General = () => {
-  const id = window.location.pathname.replace("/settings/", "");
-  const [projectName, setProjectName] = React.useState("");
-  const [projectSlug, setProjectSlug] = React.useState("");
-  const [projectUrl, setProjectUrl] = React.useState("");
+  const navigate = useNavigate();
+  const id = window.location.pathname.replace('/settings/', '');
+  const [projectName, setProjectName] = React.useState('');
+  const [projectSlug, setProjectSlug] = React.useState('');
+  const [projectUrl, setProjectUrl] = React.useState('');
   React.useEffect(() => {
     getByProjectId(id).then((res) => {
       const result = res.data.data.result[0];
@@ -23,10 +28,10 @@ const General = () => {
   return (
     <div
       style={{
-        width: "50%",
-        display: "flex",
-        flexDirection: "column",
-        gap: "1rem",
+        width: '50%',
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '1rem',
       }}
     >
       <FormGrid>
@@ -57,10 +62,10 @@ const General = () => {
           }}
         />
       </FormGrid>
-      <div style={{ display: "flex", marginLeft: "0.5rem" }}>
+      <div style={{ display: 'flex', marginLeft: '0.5rem' }}>
         <MainButton>Update</MainButton>
       </div>
-      <Grid container style={{ marginTop: "2rem" }}>
+      <Grid container style={{ marginTop: '2rem' }}>
         <Grid item>
           <PageTitle>Custom Domain</PageTitle>
         </Grid>
@@ -73,13 +78,16 @@ const General = () => {
         <Grid item>
           <ButtonBase
             style={{
-              width: "100%",
-              background: "#6701E60D",
-              color: "#6701E6",
-              gap: "0.5rem",
-              display: "flex",
-              padding: "1rem 2rem",
-              borderRadius: "0.5rem",
+              width: '100%',
+              background: '#6701E60D',
+              color: '#6701E6',
+              gap: '0.5rem',
+              display: 'flex',
+              padding: '1rem 2rem',
+              borderRadius: '0.5rem',
+            }}
+            onClick={() => {
+              navigate('/upgrade');
             }}
           >
             <img src="../heart.png" />

@@ -15,6 +15,7 @@ const SiderButton = (ComponentName) => styled(ComponentName)`
       margin-top: 1rem;
       margin-bottom: 1rem;
       padding: unset;
+      text-transform: unset;
     }
   }
 `;
@@ -35,6 +36,7 @@ const MenuButton = (ComponentName) => styled(ComponentName)`
       padding-right: 0.5rem;
       letter-spacing: 0.02rem;
       border: unset;
+      text-transform: unset;
     }
     &.MuiToggleButton-root:hover {
       background: #e4e4e7b3;
@@ -107,6 +109,9 @@ const EmbedButton = (ComponentName) => styled(ComponentName)`
       cursor: pointer;
       background: rgb(103, 1, 230);
       color: white;
+      gap: 0.5rem;
+      text-transform: unset;
+      justify-content: space-between;
       border-radius: 0.25rem;
     }
   }
@@ -114,9 +119,13 @@ const EmbedButton = (ComponentName) => styled(ComponentName)`
 const StatusButton = (ComponentName) => styled(ComponentName)`
    {
     &.MuiButton-root {
-      cursor: pointer;
-      border-radius: 1rem;
       border: 1px solid transparent;
+      text-transform: unset;
+      font-size: 0.8rem;
+      padding-bottom: 2px;
+      padding-top: 2px;
+      cursor: pointer;
+      border-radius: 9999px;
     }
     &.MuiButton-root:hover {
       border: 1px solid #f59e0b00;
@@ -163,16 +172,6 @@ const ListButton = (ComponentName) => styled(ComponentName)`
   }
 `;
 
-const GroupButton = (ComponentName) => styled(ComponentName)`
-   {
-    &.MuiButtonBase-root {
-      width: 28rem;
-      align-items: inherit;
-      padding: unset;
-    }
-  }
-`;
-
 const DefaultButton = (ComponentName) => styled(ComponentName)`
    {
     &.MuiButtonBase-root {
@@ -182,9 +181,14 @@ const DefaultButton = (ComponentName) => styled(ComponentName)`
       color: white;
       gap: 0.5rem;
       line-height: 1.5rem;
+      text-transform: unset;
     }
     &.MuiButtonBase-root:hover {
-      background: ${(props) => (props.primary ? 'rgb(146, 50, 254)' : '#222')};
+      background: ${(props) => (props.primary ? `${props.primary}dd` : '#222')};
+    }
+    &.MuiButtonBase-root.Mui-disabled {
+      background: #e4e4e7;
+      color: #000;
     }
   }
 `;
@@ -304,8 +308,9 @@ const NoteButton = (ComponentName) => styled(ComponentName)`
       border-color: #e5e7eb;
       transition-duration: 0.1s;
     }
-    }
-  `;
+  }
+`;
+
 const EmbedToolButton = (ComponentName) => styled(ComponentName)`
    {
     &.MuiToggleButton-root {
@@ -341,7 +346,6 @@ export {
   DeleteButton,
   BackwardButton,
   ListButton,
-  GroupButton,
   DefaultButton,
   UploadButton,
   LinkButton,

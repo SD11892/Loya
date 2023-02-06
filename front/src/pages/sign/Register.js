@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
-import { Paper, Button, Grid } from '@material-ui/core';
-import { makeStyles } from '@material-ui/core/styles';
+import { Button, Grid } from '@material-ui/core';
 import toastr from 'toastr';
 import { validator } from './Validator';
 import useForm from './useForm';
@@ -8,8 +7,7 @@ import CssTextField from '../../components/uielements/cssTextField';
 import { Heart as HeartIcon } from '../../icons/heart';
 import PageTitle from '../../components/uielements/pageTitle';
 import Description from '../../components/uielements/description';
-import MainButton from '../../components/uielements/buttons/mainButton';
-import BackwardButton from '../../components/uielements/buttons/backwardButton';
+import { Auth } from 'aws-amplify';
 import { verify } from '../../actions/auth';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
@@ -17,12 +15,8 @@ import SignPanel from './SignPanel';
 import { Googlesm } from '../../icons/google_sm';
 
 import AuthService from '../../services/auth.service';
-
-const useStyles = makeStyles((theme) => ({
-  margin: {
-    margin: theme.spacing(1),
-  },
-}));
+import FormGrid from '../../components/uielements/form/FormGrid';
+import DefaultButton from '../../components/uielements/buttons/defaultButton';
 
 const Register = () => {
   const navigate = useNavigate();
@@ -56,7 +50,14 @@ const Register = () => {
     validator,
   });
 
-  const { margin, papper } = useStyles();
+  const handleLoginWithProvider = async (provider) => {
+    try {
+      localStorage.setItem('signIn', true);
+      await Auth.federatedSignIn({ provider });
+    } catch (e) {
+      await Auth.federatedSignIn({ provider });
+    }
+  };
 
   let isValidForm =
     Object.values(errors).filter((error) => typeof error !== 'undefined')
@@ -64,103 +65,103 @@ const Register = () => {
 
   return (
     <Grid container>
-      <Grid
-        item
-        spacing={0}
-        direction="column"
-        alignItems="center"
-        justify="center"
-        xs={6}
-        style={{ minHeight: '100vh', display: 'flex' }}
-      >
-        <div>
-          <Grid container style={{ marginBottom: '0.5rem' }}>
-            <HeartIcon />
-          </Grid>
-          <Grid container style={{ marginBottom: '1rem' }}>
-            <PageTitle>Sign up to Loya</PageTitle>
-          </Grid>
-          <Grid container style={{ marginBottom: '1rem' }}>
-            <Description>
-              Loya helps you start collecting, managing and sharing your
-              testimonials in minutes, not days.
-            </Description>
-          </Grid>
-          <Grid container style={{ marginBottom: '1rem' }}>
-            <form onSubmit={handleSubmit} style={{ width: '100%' }}>
-              <div>
-                {/* EMAIL */}
-                <CssTextField
-                  required
-                  label="email"
-                  name="email"
-                  className={margin}
-                  defaultValue={state.email}
-                  onChange={handleChange}
-                  error={errors.email ? true : false}
-                  helperText={errors.email}
-                  onBlur={handleBlur}
+      <Grid item xs={6} style={{ minHeight: '100vh', display: 'flex' }}>
+        <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
+          <div
+            style={{
+              alignSelf: 'center',
+              padding: '1rem',
+            }}
+          >
+            <FormGrid>
+              <HeartIcon />
+            </FormGrid>
+            <FormGrid>
+              <PageTitle>Sign up to Loya</PageTitle>
+            </FormGrid>
+            <FormGrid>
+              <Description>
+                Loya helps you start collecting, managing and sharing your
+                testimonials in minutes, not days.
+              </Description>
+            </FormGrid>
+            <FormGrid>
+              <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+                <div>
+                  {/* EMAIL */}
+                  <CssTextField
+                    required
+                    label="email"
+                    name="email"
+                    defaultValue={state.email}
+                    onChange={handleChange}
+                    error={errors.email ? true : false}
+                    helperText={errors.email}
+                    onBlur={handleBlur}
+                    style={{
+                      width: '100%',
+                      padding: 'unset',
+                      marginBottom: '1rem',
+                    }}
+                  />
+                  <br />
+                  {/* PASSWORD */}
+                  <CssTextField
+                    required
+                    label="password"
+                    name="password"
+                    type="password"
+                    defaultValue={state.password}
+                    onChange={handleChange}
+                    error={errors.password ? true : false}
+                    helperText={errors.password}
+                    onBlur={handleBlur}
+                    style={{ width: '100%' }}
+                  />
+                </div>
+                <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
+                  <DefaultButton
+                    primary="#6701e6"
+                    disabled={!isValidForm}
+                    type="submit"
+                    variant="contained"
+                    color="primary"
+                  >
+                    Sign up
+                  </DefaultButton>
+                </div>
+                <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
+                  <Button
+                    disabled={
+                      process.env.REACT_APP_COGNITO_GOOGLE_SIGN_IN === 'enabled'
+                        ? false
+                        : true
+                    }
+                    fullWidth
+                    startIcon={<Googlesm />}
+                    onClick={() => handleLoginWithProvider('Google')}
+                    size="large"
+                    variant="outlined"
+                    color="secondary"
+                  >
+                    Sign up with Google
+                  </Button>
+                </div>
+                <div
                   style={{
-                    width: '100%',
-                    padding: 'unset',
                     marginBottom: '1rem',
+                    marginTop: '1rem',
+                    display: 'flex',
                   }}
-                />
-                <br />
-                {/* PASSWORD */}
-                <CssTextField
-                  required
-                  label="password"
-                  name="password"
-                  type="password"
-                  className={margin}
-                  defaultValue={state.password}
-                  onChange={handleChange}
-                  error={errors.password ? true : false}
-                  helperText={errors.password}
-                  onBlur={handleBlur}
-                  style={{ width: '100%' }}
-                />
-              </div>
-              <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
-                <MainButton
-                  style={{ width: '100%', marginLeft: 'unset' }}
-                  disabled={!isValidForm}
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  className={margin}
                 >
-                  Sign up
-                </MainButton>
-              </div>
-              <div style={{ marginBottom: '1rem', marginTop: '1rem' }}>
-                <BackwardButton
-                  style={{ width: '100%', marginLeft: 'unset' }}
-                  disabled={!isValidForm}
-                  type="submit"
-                  variant="contained"
-                  color="primary"
-                  className={margin}
-                >
-                  <Googlesm />
-                  Sign up with Google
-                </BackwardButton>
-              </div>
-              <div
-                style={{
-                  marginBottom: '1rem',
-                  marginTop: '1rem',
-                  display: 'flex',
-                }}
-              >
-                <Description style={{ marginRight: '1rem' }}>
-                  Already have an account?
-                </Description>
-                <a href="/">Sign in</a>
-              </div>
-            </form>
-          </Grid>
+                  <Description style={{ marginRight: '1rem' }}>
+                    Already have an account?
+                  </Description>
+                  <a href="/">Sign in</a>
+                </div>
+              </form>
+            </FormGrid>
+          </div>
         </div>
       </Grid>
       <Grid item xs={6}>

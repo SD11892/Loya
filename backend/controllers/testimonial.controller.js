@@ -1,5 +1,5 @@
-const db = require("../models");
-const fs = require("fs");
+const db = require('../models');
+const fs = require('fs');
 const Form = db.form;
 const Testimonial = db.testimonial;
 
@@ -7,6 +7,8 @@ const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
   const data = req.query.info;
+  console.log('data===============', data);
+  console.log('file==============', req.file);
   if (req.file !== undefined) {
     if (data.url !== undefined) {
       Form.findAll({
@@ -35,7 +37,7 @@ exports.create = (req, res) => {
               name: data.name,
               rating: data.rating,
               video: data.video,
-              data: fs.readFileSync("../upload/" + req.file.filename),
+              data: fs.readFileSync('../upload/' + req.file.filename),
               index: data.index,
               projectId: data.projectId,
               userId: data.userId,
@@ -57,7 +59,7 @@ exports.create = (req, res) => {
         name: data.name,
         video: data.video,
         rating: data.rating,
-        data: fs.readFileSync("../upload/" + req.file.filename),
+        data: fs.readFileSync('../upload/' + req.file.filename),
         index: data.index,
         projectId: data.projectId,
         userId: data.userId,
@@ -84,8 +86,8 @@ exports.create = (req, res) => {
           }
         ).then(() => {
           Testimonial.create({
-            imageUrl: data.imageUrl,
-            importDate: data.importDate,
+            content: data.content,
+            url: data.url,
             key: data.key.toString(),
             value: data.value.toString(),
             content: data.content,
@@ -123,15 +125,15 @@ exports.update = (req, res) => {
     Testimonial.update(
       {
         url: data.url,
-        key: typeof data.key === "string" ? data.key : data.key.toString(),
+        key: typeof data.key === 'string' ? data.key : data.key.toString(),
         value:
-          typeof data.value === "string" ? data.value : data.value.toString(),
+          typeof data.value === 'string' ? data.value : data.value.toString(),
         content: data.content,
         status: data.status,
         type: data.type,
         name: data.name,
         rating: data.rating,
-        data: fs.readFileSync("../upload/" + req.file.filename),
+        data: fs.readFileSync('../upload/' + req.file.filename),
         index: data.index,
       },
       {
@@ -140,15 +142,15 @@ exports.update = (req, res) => {
         },
       }
     ).then((result) => {
-      res.json({ code: 200, data: result, message: "success" });
+      res.json({ code: 200, data: result, message: 'success' });
     });
   } else {
     Testimonial.update(
       {
         url: data.url,
-        key: typeof data.key === "string" ? data.key : data.key.toString(),
+        key: typeof data.key === 'string' ? data.key : data.key.toString(),
         value:
-          typeof data.value === "string" ? data.value : data.value.toString(),
+          typeof data.value === 'string' ? data.value : data.value.toString(),
         content: data.content,
         status: data.status,
         rating: data.rating,
@@ -167,12 +169,11 @@ exports.update = (req, res) => {
 
 exports.getAll = (req, res) => {
   const data = req.query;
-  console.log(data.projects);
   if (data.searchData) {
     Testimonial.findAll({
       where: {
         userId: data.userId,
-        projectId: data.projects.map((row) => row.id),
+        projectId: data.projectId,
         [Op.or]: [
           {
             content: { [Op.like]: `%${data.searchData}%` },
@@ -183,11 +184,11 @@ exports.getAll = (req, res) => {
         ],
       },
 
-      order: [["index", "ASC"]],
+      order: [['index', 'ASC']],
     })
       .then((testimonials) => {
         if (!testimonials) {
-          return res.status(200).send({ message: "Empty" });
+          return res.status(200).send({ message: 'Empty' });
         } else {
           res.status(200).send({ testimonials });
         }
@@ -199,13 +200,13 @@ exports.getAll = (req, res) => {
     Testimonial.findAll({
       where: {
         userId: data.userId,
-        projectId: data.projects.map((row) => row.id),
+        projectId: data.projectId,
       },
-      order: [["index", "ASC"]],
+      order: [['index', 'ASC']],
     })
       .then((testimonials) => {
         if (!testimonials) {
-          return res.status(200).send({ message: "Empty" });
+          return res.status(200).send({ message: 'Empty' });
         } else {
           res.status(200).send({ testimonials });
         }
@@ -255,12 +256,12 @@ exports.delete = (req, res) => {
 };
 
 exports.getByUrl = (req, res) => {
-  const formUrl = req.params.url.replace(":", "");
+  const formUrl = req.params.url.replace(':', '');
   const info = {
     key: [],
     value: [],
-    content: "",
-    data: "",
+    content: '',
+    data: '',
     rating: 0,
   };
   Testimonial.findAll({
@@ -277,7 +278,7 @@ exports.getByUrl = (req, res) => {
       res.status(200).send({ data: info });
     })
     .catch((err) => {
-      console.log("err=", err);
+      console.log('err=', err);
       res.status(500).send({ message: err.message });
     });
 };
@@ -285,7 +286,7 @@ exports.getByUrl = (req, res) => {
 exports.uploadVideo = (req, res) => {
   const data = req.query.info;
   if (req.file !== undefined) {
-    fs.readFileSync("../upload/" + req.file.filename);
+    fs.readFileSync('../upload/' + req.file.filename);
     Testimonial.update(
       {
         video: data.video,
@@ -297,10 +298,10 @@ exports.uploadVideo = (req, res) => {
         },
       }
     ).then((result) => {
-      res.json({ code: 200, data: result, message: "success" });
+      res.json({ code: 200, data: result, message: 'success' });
     });
   } else {
-    res.json({ code: 404, message: "Require a video file" });
+    res.json({ code: 404, message: 'Require a video file' });
   }
 };
 
@@ -311,7 +312,7 @@ exports.importAll = async (req, res) => {
   for (var i = 0; i < length; i++) {
     await Testimonial.create({
       value: array[i].name,
-      key: "",
+      key: '',
       content: array[i].review,
       status: 0,
       rating: array[i].rating,
@@ -322,7 +323,7 @@ exports.importAll = async (req, res) => {
       userId: array[i].userId,
     });
   }
-  res.json({ code: 200, message: "imported testimonials exactly!" });
+  res.json({ code: 200, message: 'imported testimonials exactly!' });
 };
 
 exports.importHistory = (req, res) => {
