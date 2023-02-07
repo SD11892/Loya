@@ -1,25 +1,53 @@
 import * as React from 'react';
+import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
-import { Grid, FormLabel, ButtonBase } from '@mui/material';
+import { Grid, ButtonBase } from '@mui/material';
 
 import Description from '../uielements/description';
 import PageTitle from '../uielements/pageTitle';
 import FormGrid from '../uielements/form/FormGrid';
 import FormInput from '../uielements/form/FormInput';
+import FormLabel from '../uielements/form/FormLabel';
 import MainButton from '../uielements/buttons/mainButton';
 
-import { getByProjectId } from '../../actions/project';
+import { getByProjectId, updateProject, getAll } from '../../actions/project';
+import toastr from 'toastr';
 
 const General = () => {
   const navigate = useNavigate();
-  const id = window.location.pathname.replace('/settings/', '');
+  const dispatch = useDispatch();
   const [projectName, setProjectName] = React.useState('');
   const [projectSlug, setProjectSlug] = React.useState('');
   const [projectUrl, setProjectUrl] = React.useState('');
+  const inf = {
+    name: '',
+    slug: '',
+    url: '',
+    projectId: localStorage.getItem('projectId'),
+  };
+
+  const handleUpdate = () => {
+    inf.name = projectName;
+    inf.slug = projectSlug;
+    inf.url = projectUrl;
+    updateProject(inf)
+      .then((r) => {
+        dispatch(getAll()).then(() => {
+          toastr.success('Updated successfully');
+        });
+      })
+      .catch((err) => {
+        console.log('updateErr==========', err);
+        toastr.error('Update Error');
+      });
+  };
+
   React.useEffect(() => {
-    getByProjectId(id).then((res) => {
-      const result = res.data.data.result[0];
+    const id = window.location.pathname.replace('/settings/', '');
+    getByProjectId(id).then((row) => {
+      console.log('projectRow=======', row);
+      let result = row.data.data.result[0];
       setProjectName(result.name);
       setProjectSlug(result.slug);
       setProjectUrl(result.url);
@@ -28,7 +56,7 @@ const General = () => {
   return (
     <div
       style={{
-        width: '50%',
+        width: '100%',
         display: 'flex',
         flexDirection: 'column',
         gap: '1rem',
@@ -51,7 +79,6 @@ const General = () => {
             setProjectSlug(e.target.value);
           }}
         />
-        <Description>https://getloya.co/p/{projectSlug}</Description>
       </FormGrid>
       <FormGrid>
         <FormLabel>Project URL</FormLabel>
@@ -63,18 +90,15 @@ const General = () => {
         />
       </FormGrid>
       <div style={{ display: 'flex', marginLeft: '0.5rem' }}>
-        <MainButton>Update</MainButton>
+        <MainButton
+          onClick={() => {
+            handleUpdate();
+          }}
+        >
+          Update
+        </MainButton>
       </div>
       <Grid container style={{ marginTop: '2rem' }}>
-        <Grid item>
-          <PageTitle>Custom Domain</PageTitle>
-        </Grid>
-        <Grid item>
-          <Description>
-            Personalize the url of your Senja page by connecting a custom
-            domain. You can use any subdomain that you own.
-          </Description>
-        </Grid>
         <Grid item>
           <ButtonBase
             style={{
@@ -87,12 +111,11 @@ const General = () => {
               borderRadius: '0.5rem',
             }}
             onClick={() => {
-              navigate('/upgrade');
+              window.open('/upgrade', '_blank');
             }}
           >
-            <img src="../heart.png" />
-            Upgrade to pro or higher to add a custom domain to your Loya pages
-            and forms.
+            {/* <img src="../heart.png" /> */}
+            Upgrade to pro or higher to add project to Loya.
           </ButtonBase>
         </Grid>
       </Grid>

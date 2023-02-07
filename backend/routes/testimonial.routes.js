@@ -14,6 +14,7 @@ router.use(function (req, res, next) {
 router.post('/api/testimonial/all', controller.getAll);
 router.post('/api/testimonial/import', controller.importAll);
 router.post('/api/testimonial/history', controller.importHistory);
+router.post('/api/testimonial/googleReviews', controller.googleReview);
 router.post(
   '/api/testimonial/create',
   upload.single('file'),
@@ -25,6 +26,7 @@ router.post(
   controller.update
 );
 router.post('/api/testimonial/delete', controller.delete);
+router.post('/api/testimonial/byId', controller.getById);
 
 router.get('/api/testimonial/:url', controller.getByUrl);
 

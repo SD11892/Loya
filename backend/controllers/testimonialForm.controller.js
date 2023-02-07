@@ -1,22 +1,28 @@
-const db = require("../models");
-const fs = require("fs");
+const db = require('../models');
+const fs = require('fs');
 const TestimonialForm = db.testimonialForm;
 
 const Op = db.Sequelize.Op;
 
 exports.getAll = (req, res) => {
-  TestimonialForm.findAll()
+  const data = req.query;
+  TestimonialForm.findAll({
+    where: {
+      projectId: data.projectId,
+      userId: data.userId,
+    },
+  })
     .then((forms) => {
       if (!forms) {
-        console.log("Forms Not Found");
-        return res.status(200).send({ message: "Empty" });
+        console.log('Forms Not Found');
+        return res.status(200).send({ message: 'Empty' });
       } else {
-        console.log("forms=", forms);
+        console.log('forms=', forms);
         res.status(200).send({ forms });
       }
     })
     .catch((err) => {
-      console.log("err=", err);
+      console.log('err=', err);
       res.status(500).send({ message: err.message });
     });
 };
@@ -26,24 +32,27 @@ exports.create = (req, res) => {
     url: data.url,
     testimonials: data.testimonials,
     name: data.name,
-    spacing: "medium",
-    shadow: "medium",
-    border: "medium",
-    bgColor: "#ffffff",
-    txtColor: "#374151",
-    ratingColor: "#fbbf24",
+    spacing: 'medium',
+    shadow: 'medium',
+    border: 'medium',
+    bgColor: '#ffffff',
+    txtColor: '#374151',
+    ratingColor: '#fbbf24',
     theme: 1,
+    single: data.single,
+    userId: Number(data.userId),
+    projectId: Number(data.projectId),
   }).then((result) => {
     return res.json({
       CODE: 200,
-      message: "Success Form",
+      message: 'Success Form',
       data: result,
     });
   });
 };
 exports.delete = (req, res) => {
   const Ids = req.query.ids;
-  console.log("ids=", Ids);
+  console.log('ids=', Ids);
   Ids.map((value) => {
     TestimonialForm.destroy({
       where: {
@@ -57,7 +66,7 @@ exports.delete = (req, res) => {
 
 exports.update = (req, res) => {
   const data = req.query;
-  console.log("req=", data);
+  console.log('req=', data);
   TestimonialForm.update(
     {
       spacing: data.info.spacing,
@@ -70,6 +79,7 @@ exports.update = (req, res) => {
       blColor: data.info.blColor,
       bfColor: data.info.bfColor,
       fgColor: data.info.fgColor,
+      checked: data.info.checked,
     },
     {
       where: {
@@ -79,26 +89,26 @@ exports.update = (req, res) => {
   ).then((result) => {
     return res.json({
       CODE: 200,
-      message: "Success Form",
+      message: 'Success Form',
       data: result,
     });
   });
 };
 
 exports.getByUrl = (req, res) => {
-  const formUrl = req.params.url.replace(":", "");
+  const formUrl = req.params.url.replace(':', '');
   const designInfo = {
     id: 0,
-    spacing: "",
-    shadow: "",
-    border: "",
-    bgColor: "",
-    txtColor: "",
-    ratingColor: "",
+    spacing: '',
+    shadow: '',
+    border: '',
+    bgColor: '',
+    txtColor: '',
+    ratingColor: '',
     theme: 0,
-    blColor: "",
-    bfColor: "",
-    fgColor: "",
+    blColor: '',
+    bfColor: '',
+    fgColor: '',
   };
   TestimonialForm.findAll({
     where: {
@@ -117,9 +127,10 @@ exports.getByUrl = (req, res) => {
       designInfo.blColor = fdata[0].dataValues.blColor;
       designInfo.fgColor = fdata[0].dataValues.fgColor;
       designInfo.theme = fdata[0].dataValues.theme;
+      designInfo.checked = fdata[0].dataValues.checked;
       res.status(200).send({ data: designInfo });
     })
     .catch((err) => {
-      console.log("testimonialFormERR=", err);
+      console.log('testimonialFormERR=', err);
     });
 };

@@ -1,4 +1,4 @@
-import { ALL_SUCCESS, SAVE_INDEX, ALL_IMPORT } from "../actions/types";
+import { ALL_SUCCESS, SAVE_INDEX, ALL_IMPORT } from '../actions/types';
 
 const initialState = {
   testimonial: [],

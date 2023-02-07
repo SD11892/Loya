@@ -1,34 +1,50 @@
-import * as React from "react";
-import Site from "../../components/wall/Site";
-import Sitetwo from "../../components/wall/Sitetwo";
-import { getAll } from "../../actions/testimonial";
-import { useDispatch, useSelector } from "react-redux";
-import { getByWallUrl, saveWall } from "../../actions/wall";
-import BackwardButton from "../../components/uielements/buttons/backwardButton";
-import { Grid, IconButton, Input } from "@mui/material";
-import PageTitle from "../../components/uielements/pageTitle";
-import { Share as ShareIcon } from "../../icons/wall/share";
-import { useNavigate } from "react-router-dom";
-import { styled } from "@mui/material/styles";
-import MuiAccordion from "@mui/material/Accordion";
-import MuiAccordionSummary from "@mui/material/AccordionSummary";
-import MuiAccordionDetails from "@mui/material/AccordionDetails";
-import Snackbar from "@mui/material/Snackbar";
-import MuiAlert from "@mui/material/Alert";
-import Typography from "@mui/material/Typography";
-import { DownArrow } from "../../icons/downArrow";
-import { Design as DesignIcon } from "../../icons/wall/design";
-import { Navigation as NavigationIcon } from "../../icons/wall/navigation";
-import { Copy as CopyIcon } from "../../icons/wall/copy";
-import { CallToAction as CallToActionIcon } from "../../icons/wall/calltoaction";
-import { Reorder as ReorderIcon } from "../../icons/wall/Reorder";
-import DesignPane from "../../components/wall/DesignPane";
-import NavigationPane from "../../components/wall/NavigationPane";
-import CopyPane from "../../components/wall/CopyPane";
-import CTAPane from "../../components/wall/CTAPane";
-import SiderText from "../../components/uielements/siderText";
-import DefaultButton from "../../components/uielements/buttons/defaultButton";
-import FormGrid from "../../components/uielements/form/FormGrid";
+import * as React from 'react';
+import { useNavigate } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import moment from 'moment';
+
+import { getAll, saveIndex } from '../../actions/testimonial';
+import { getByWallUrl, saveWall } from '../../actions/wall';
+
+import { Grid, IconButton, Input, Popover } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import MuiAccordion from '@mui/material/Accordion';
+import MuiAccordionSummary from '@mui/material/AccordionSummary';
+import MuiAccordionDetails from '@mui/material/AccordionDetails';
+import Snackbar from '@mui/material/Snackbar';
+import MuiAlert from '@mui/material/Alert';
+import Dialog from '@mui/material/Dialog';
+import Slide from '@mui/material/Slide';
+import Avatar from '@mui/material/Avatar';
+import Rating from '@mui/material/Rating';
+import Card from '@mui/material/Card';
+
+import { DownArrow } from '../../icons/downArrow';
+import { Design as DesignIcon } from '../../icons/wall/design';
+import { Navigation as NavigationIcon } from '../../icons/wall/navigation';
+import { Copy as CopyIcon } from '../../icons/wall/copy';
+import { CallToAction as CallToActionIcon } from '../../icons/wall/calltoaction';
+import { Close as CloseIcon } from '../../icons/close';
+import { Share as ShareIcon } from '../../icons/wall/share';
+import CheckIcon from '@mui/icons-material/Check';
+
+import DesignPane from '../../components/wall/DesignPane';
+import NavigationPane from '../../components/wall/NavigationPane';
+import CopyPane from '../../components/wall/CopyPane';
+import CTAPane from '../../components/wall/CTAPane';
+import Site from '../../components/wall/Site';
+import Sitetwo from '../../components/wall/Sitetwo';
+import SiderText from '../../components/uielements/siderText';
+import DefaultButton from '../../components/uielements/buttons/defaultButton';
+import FormGrid from '../../components/uielements/form/FormGrid';
+import WidgetCard from '../../components/uielements/widgetCard';
+import BackwardButton from '../../components/uielements/buttons/backwardButton';
+import PageTitle from '../../components/uielements/pageTitle';
+import SiderButton from '../../components/uielements/buttons/siderButton';
+import MenuButton from '../../components/uielements/buttons/menuButton';
+import MainButton from '../../components/uielements/buttons/mainButton';
+
+import { isEmpty } from '../../util/isEmpty';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -37,32 +53,32 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 const Accordion = styled((props) => (
   <MuiAccordion disableGutters elevation={0} square {...props} />
 ))(() => ({
-  borderBottom: "1px solid #e5e7eb",
-  width: "inherit",
-  "&:not(:last-child)": {},
-  "&:before": {},
+  borderBottom: '1px solid #e5e7eb',
+  width: 'inherit',
+  '&:not(:last-child)': {},
+  '&:before': {},
 }));
 
 const AccordionSummary = styled((props) => (
   <MuiAccordionSummary expandIcon={<DownArrow />} {...props} />
 ))(({ theme }) => ({
-  backgroundColor: "#fff",
-  flexDirection: "row-reverse",
-  "& .MuiAccordionSummary-expandIconWrapper.Mui-expanded": {
-    paddingTop: "1rem",
-    paddingBottom: "1rem",
-    transform: "rotate(180deg)",
+  backgroundColor: '#fff',
+  flexDirection: 'row-reverse',
+  '& .MuiAccordionSummary-expandIconWrapper.Mui-expanded': {
+    paddingTop: '1rem',
+    paddingBottom: '1rem',
+    transform: 'rotate(180deg)',
   },
-  "& .MuiAccordionSummary-content": {
+  '& .MuiAccordionSummary-content': {
     marginLeft: theme.spacing(1),
   },
 }));
 
 const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
   padding: theme.spacing(2),
-  borderTop: "1px solid rgba(0, 0, 0, .125)",
-  overflow: "visible",
-  overflowX: "auto",
+  borderTop: '1px solid rgba(0, 0, 0, .125)',
+  overflow: 'visible',
+  overflowX: 'auto',
 }));
 
 const WallDesign = () => {
@@ -70,71 +86,100 @@ const WallDesign = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const [name, setName] = React.useState("");
+  const [filter, setFilter] = React.useState('Pick Testimonials');
+  const [name, setName] = React.useState('');
   const [theme, setTheme] = React.useState(0);
-  const [pColor, setPColor] = React.useState("");
+  const [pColor, setPColor] = React.useState('');
   const [key, setKey] = React.useState([]);
   const [value, setValue] = React.useState([]);
-  const [pTitle, setPTitle] = React.useState("");
-  const [subTitle, setSubTitle] = React.useState("");
-  const [ctaTitle, setCtaTitle] = React.useState("");
-  const [ctaUrl, setCtaUrl] = React.useState("");
+  const [pTitle, setPTitle] = React.useState('');
+  const [subTitle, setSubTitle] = React.useState('');
+  const [ctaTitle, setCtaTitle] = React.useState('');
+  const [ctaUrl, setCtaUrl] = React.useState('');
   const [data, setData] = React.useState(null);
-  const [fileName, setFileName] = React.useState("");
-  const [type, setType] = React.useState("");
-  const [expanded, setExpanded] = React.useState("panel1");
+  const [fileName, setFileName] = React.useState('');
+  const [type, setType] = React.useState('');
+  const [expanded, setExpanded] = React.useState('panel1');
   const [open, setOpen] = React.useState(false);
+  const [checked, setChecked] = React.useState([]);
+  const [chooseOpen, setChooseOpen] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [ifText, setIfText] = React.useState(
+    '(item.status === 1 || item.status === 0)'
+  );
 
+  const openPop = Boolean(anchorEl);
+  const index = openPop ? 'simple-popover' : undefined;
   const infor = {
-    url: "",
-    name: "",
+    url: '',
+    name: '',
     theme: 0,
-    pColor: "",
-    pTitle: "",
-    subTitle: "",
-    ctaTitle: "",
-    ctaUrl: "",
+    pColor: '',
+    pTitle: '',
+    subTitle: '',
+    ctaTitle: '',
+    ctaUrl: '',
     data: null,
-    fileName: "",
-    type: "",
+    fileName: '',
+    type: '',
     key: [],
     value: [],
+    checked: '',
   };
   const handleCloseSnack = (event, reason) => {
-    if (reason === "clickaway") {
+    if (reason === 'clickaway') {
       return;
     }
 
     setOpen(false);
   };
+  const handleChooseClose = () => {
+    setChooseOpen(false);
+  };
   const handleChange = (panel) => (event, newExpanded) => {
     setExpanded(newExpanded ? panel : false);
   };
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
 
-  const url = window.location.pathname.replace(/walls/i, "").replace("//", "");
+  const userId = localStorage.getItem('userId');
+  const projectId = localStorage.getItem('projectId');
+
+  const url = window.location.pathname.replace(/walls/i, '').replace('//', '');
 
   React.useEffect(() => {
-    console.log("URL=", url);
+    dispatch(getAll());
     getByWallUrl(url)
-      .then((res) => {
+      .then(async (res) => {
         const result = res.data.data.data;
-        setName(result.name);
-        setTheme(result.theme);
-        setPColor(result.pColor);
-        setPTitle(result.pTitle);
-        setSubTitle(result.subTitle);
-        setCtaTitle(result.ctaTitle);
-        setCtaUrl(result.ctaUrl);
-        setData(result.data);
-        setFileName(result.fileName);
-        setType(result.type);
-        setKey(result.key.split(","));
-        setValue(result.value.split(","));
+        console.log('result=', result);
+
+        await setName(result.name);
+        await setTheme(result.theme);
+        await setPColor(result.pColor);
+        await setPTitle(result.pTitle);
+        await setSubTitle(result.subTitle);
+        await setCtaTitle(result.ctaTitle);
+        await setCtaUrl(result.ctaUrl);
+        await setData(result.data);
+        await setFileName(result.fileName);
+        await setType(result.type);
+        await setKey(result.key.split(','));
+        await setValue(result.value.split(','));
+        if (isEmpty(result.checked)) {
+          await setChecked(result.checked);
+        } else {
+          await setChecked(result.checked.split(','));
+        }
       })
       .catch((err) => {
-        alert("Invalid Form");
+        console.log('wallErr=', err);
+        alert('Invalid Form');
       });
-    dispatch(getAll());
   }, []);
 
   const onSave = () => {
@@ -148,41 +193,42 @@ const WallDesign = () => {
     infor.ctaUrl = ctaUrl;
     infor.key = key;
     infor.value = value;
+    infor.checked = checked.toString();
     saveWall(infor).then(() => {
       setOpen(true);
     });
   };
-  React.useEffect(() => {}, [theme, pColor, key, value]);
+  React.useEffect(() => {}, [theme, pColor, key, value, ifText, filter]);
 
   return (
     <Grid container justifyContent="space-between">
       <Grid
         item
         style={{
-          background: "#fff",
-          paddingLeft: "2rem",
-          paddingRight: "2rem",
-          borderRight: "1px solid #e5e7eb",
-          width: "24rem",
-          overflow: "auto",
+          background: '#fff',
+          paddingLeft: '2rem',
+          paddingRight: '2rem',
+          borderRight: '1px solid #e5e7eb',
+          width: '24rem',
+          overflow: 'auto',
         }}
       >
         <div
           style={{
-            width: "100%",
-            height: "100vh",
+            width: '100%',
+            height: '100vh',
           }}
         >
           <Grid
             container
-            pt={"2rem"}
+            pt={'2rem'}
             justifyContent="space-between"
-            style={{ alignItems: "center" }}
+            style={{ alignItems: 'center' }}
           >
             <Grid item>
               <BackwardButton
                 onClick={() => {
-                  navigate("/walls");
+                  navigate('/walls');
                 }}
               >
                 <SiderText>← Dashboard</SiderText>
@@ -190,7 +236,7 @@ const WallDesign = () => {
             </Grid>
             <Grid item>
               <IconButton
-                style={{ border: "1px solid #ddd" }}
+                style={{ border: '1px solid #ddd' }}
                 onClick={() => {
                   infor.name = name;
                   infor.theme = theme;
@@ -203,8 +249,9 @@ const WallDesign = () => {
                   infor.pTitle = pTitle;
                   infor.subTitle = subTitle;
                   infor.url = url;
+                  infor.checked = checked.toString();
                   saveWall(infor).then(() => {
-                    let path = `/walls/p/1/testimonials/${url}`;
+                    let path = `/walls/p/${userId}-${projectId}/testimonials/${url}`;
                     navigate(path);
                   });
                 }}
@@ -213,8 +260,8 @@ const WallDesign = () => {
               </IconButton>
             </Grid>
           </Grid>
-          <Grid container pt={"2rem"}>
-            <Grid item xs={12} style={{ marginBottom: "1rem" }}>
+          <Grid container pt={'2rem'}>
+            <Grid item xs={12} style={{ marginBottom: '1rem' }}>
               <Input
                 value={name}
                 onChange={(e) => {
@@ -227,10 +274,10 @@ const WallDesign = () => {
             container
             xs={12}
             style={{
-              padding: "1rem",
-              marginBottom: "1rem",
-              background: "#F3F4F6",
-              overflowY: "auto",
+              padding: '1rem',
+              marginBottom: '1rem',
+              background: '#F3F4F6',
+              overflowY: 'auto',
             }}
           >
             <Grid item xs={1}>
@@ -245,12 +292,12 @@ const WallDesign = () => {
             container
             xs={12}
             style={{
-              marginBottom: "1rem",
+              marginBottom: '1rem',
             }}
           >
             <Accordion
-              expanded={expanded === "panel1"}
-              onChange={handleChange("panel1")}
+              expanded={expanded === 'panel1'}
+              onChange={handleChange('panel1')}
             >
               <AccordionSummary
                 aria-controls="panel1d-content"
@@ -269,8 +316,8 @@ const WallDesign = () => {
               </AccordionDetails>
             </Accordion>
             <Accordion
-              expanded={expanded === "panel2"}
-              onChange={handleChange("panel2")}
+              expanded={expanded === 'panel2'}
+              onChange={handleChange('panel2')}
             >
               <AccordionSummary
                 aria-controls="panel2d-content"
@@ -289,8 +336,8 @@ const WallDesign = () => {
               </AccordionDetails>
             </Accordion>
             <Accordion
-              expanded={expanded === "panel3"}
-              onChange={handleChange("panel3")}
+              expanded={expanded === 'panel3'}
+              onChange={handleChange('panel3')}
             >
               <AccordionSummary
                 aria-controls="panel3d-content"
@@ -309,8 +356,8 @@ const WallDesign = () => {
               </AccordionDetails>
             </Accordion>
             <Accordion
-              expanded={expanded === "panel4"}
-              onChange={handleChange("panel4")}
+              expanded={expanded === 'panel4'}
+              onChange={handleChange('panel4')}
             >
               <AccordionSummary
                 aria-controls="panel4d-content"
@@ -331,7 +378,25 @@ const WallDesign = () => {
           </Grid>
           <FormGrid>
             <DefaultButton
-              style={{ padding: "0.5rem", borderRadius: "9999px" }}
+              primary="#6701e6"
+              style={{ padding: '0.5rem', borderRadius: '9999px' }}
+              onClick={() => {
+                let temp = [];
+                if (isEmpty(checked)) {
+                  testimonials.map((row, index) => {
+                    temp[index] = 'true';
+                  });
+                  setChecked(temp);
+                  setChooseOpen(true);
+                } else {
+                  setChooseOpen(true);
+                }
+              }}
+            >
+              Pick Testimonials
+            </DefaultButton>
+            <DefaultButton
+              style={{ padding: '0.5rem', borderRadius: '9999px' }}
               onClick={onSave}
             >
               Save Changes
@@ -339,15 +404,16 @@ const WallDesign = () => {
           </FormGrid>
         </div>
       </Grid>
-      <Grid
-        item
-        style={{
-          width: "calc(100% - 24rem)",
-          overflowY: "scroll",
-          overflowX: "unset",
-        }}
-      >
-        {theme === 1 ? (
+      {theme === 1 ? (
+        <Grid
+          item
+          style={{
+            width: 'calc(100% - 24rem)',
+            overflowY: 'scroll',
+            height: '100vh',
+            overflowX: 'unset',
+          }}
+        >
           <Site
             testimonials={testimonials}
             pColor={pColor}
@@ -357,10 +423,23 @@ const WallDesign = () => {
             subTitle={subTitle}
             ctaTitle={ctaTitle}
             ctaUrl={ctaUrl}
+            checked={checked}
           />
-        ) : (
+        </Grid>
+      ) : (
+        <Grid
+          item
+          style={{
+            width: 'calc(100% - 24rem)',
+            overflowY: 'scroll',
+            height: '100vh',
+            overflowX: 'unset',
+            background: 'rgb(240, 237, 230)',
+          }}
+        >
           <Sitetwo
             testimonials={testimonials}
+            checked={checked}
             keys={key}
             values={value}
             pTitle={pTitle}
@@ -368,10 +447,247 @@ const WallDesign = () => {
             ctaTitle={ctaTitle}
             ctaUrl={ctaUrl}
           />
-        )}
-      </Grid>
+        </Grid>
+      )}
+      <Dialog fullScreen open={chooseOpen}>
+        <Grid container>
+          <Grid item xs={1}></Grid>
+          <Grid
+            item
+            xs={10}
+            style={{
+              alignSelf: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              marginTop: '2rem',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: '10rem',
+              }}
+            >
+              <SiderButton onClick={handleClick}>
+                <PageTitle>{filter}</PageTitle>
+                <DownArrow />
+              </SiderButton>
+
+              <MainButton
+                onClick={() => {
+                  handleChooseClose();
+                }}
+              >
+                Done
+              </MainButton>
+            </div>
+            <div
+              style={{
+                width: '100%',
+                marginTop: '2rem',
+              }}
+            >
+              <div
+                style={{
+                  gap: '0.5rem',
+                  padding: '2rem',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  height: 'min-content',
+                }}
+              >
+                {testimonials.map((item, index) => {
+                  if (!isEmpty(checked) && ifText.replace(/["']/g, '')) {
+                    return (
+                      <Card
+                        style={{
+                          width: '20rem',
+                          padding: '1rem',
+                          height: 'min-content',
+                          color: '#374151',
+                          borderRadius: 'unset',
+                          boxShadow: '0 1px 2px 0 rgb(0, 0, 0 / 0.05)',
+                        }}
+                        onClick={() => {
+                          let temp = [];
+                          temp = JSON.parse(JSON.stringify(checked));
+                          if (temp[index] === 'true') {
+                            temp[index] = 'false';
+                          } else {
+                            temp[index] = 'true';
+                          }
+                          setChecked(temp);
+                        }}
+                      >
+                        <Grid
+                          container
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                          }}
+                        >
+                          <Grid
+                            item
+                            style={{
+                              marginTop: '0.5rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                            }}
+                          >
+                            {item.data !== null ? (
+                              <Avatar
+                                style={{
+                                  borderRadius: '50%',
+                                  border: '1px solid #ddd',
+                                  borderColor: 'rgb(237, 243, 249)',
+                                  borderWidth: '4px',
+                                }}
+                                sx={{ width: 56, height: 56 }}
+                              >
+                                <img
+                                  src={`data:image/png;base64,${btoa(
+                                    String.fromCharCode(
+                                      ...new Uint8Array(item.data.data)
+                                    )
+                                  )}`}
+                                  width={'60px'}
+                                />
+                              </Avatar>
+                            ) : item.data === null && item.imageUrl !== '' ? (
+                              <Avatar
+                                style={{
+                                  width: '48px',
+                                  height: '48px',
+                                  borderRadius: '50%',
+                                  border: '1px solid #ddd',
+                                  background: '#000',
+                                  color: '#fff',
+                                  fontSize: '0.8rem',
+                                }}
+                                alt={`Avatar n°${item + 1}`}
+                              >
+                                <img
+                                  src={item.imageUrl}
+                                  width="48px"
+                                  height="48px"
+                                />
+                              </Avatar>
+                            ) : (
+                              <Avatar
+                                style={{
+                                  borderRadius: '50%',
+                                  border: '1px solid #ddd',
+                                  borderColor: 'rgb(237, 243, 249)',
+                                  borderWidth: '4px',
+                                }}
+                                sx={{ width: 56, height: 56 }}
+                              >
+                                <img
+                                  src={`../../../../../user.png`}
+                                  width={'60px'}
+                                />
+                              </Avatar>
+                            )}
+
+                            <div>
+                              <div>{item.value.split(',')[0]}</div>
+                              <div>
+                                {item.key.indexOf('Headline') !== -1
+                                  ? item.value.split(',')[
+                                      item.key.split(',').indexOf('Headline')
+                                    ]
+                                  : null}
+                              </div>
+                            </div>
+                            <div
+                              style={{
+                                alignItems: 'end',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '100%',
+                              }}
+                            >
+                              <div
+                                style={{
+                                  fontSize: '0.875rem',
+                                  lineHeight: '1.25rem',
+                                  borderRadius: '9999px',
+                                  justifyContent: 'center',
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  width: 'fit-content',
+                                  background:
+                                    checked[index] === 'true'
+                                      ? '#6701e6'
+                                      : '#9CA3AF',
+                                }}
+                              >
+                                {checked[index] === 'true' ? (
+                                  <CheckIcon style={{ fill: 'white' }} />
+                                ) : (
+                                  <CheckIcon style={{ fill: '#333' }} />
+                                )}
+                              </div>
+                            </div>
+                          </Grid>
+                          <Grid item style={{ marginTop: '0.5rem' }}>
+                            <Rating readOnly value={item.rating} />
+                          </Grid>
+                          <Grid item style={{ marginTop: '0.5rem' }}>
+                            {item.content}
+                          </Grid>
+                          <Grid item style={{ marginTop: '0.5rem' }}>
+                            {moment(item.date).format('ll')}
+                          </Grid>
+                        </Grid>
+                      </Card>
+                    );
+                  }
+                })}
+              </div>
+            </div>
+          </Grid>
+          <Grid item xs={1}></Grid>
+        </Grid>
+      </Dialog>
+      <Popover
+        id={index}
+        open={openPop}
+        anchorEl={anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        style={{ padding: '0.5rem', fontSize: '8px' }}
+      >
+        <MenuButton
+          sx={{ p: 2 }}
+          key="1"
+          onClick={() => {
+            setIfText('(item.status === 1 || item.status === 0)');
+            setFilter('Pick Testimonials');
+            handleClose();
+          }}
+        >
+          Pick Testimonials
+        </MenuButton>
+        <MenuButton
+          sx={{ p: 2 }}
+          key="2"
+          onClick={() => {
+            setIfText('item.status === 1');
+            setFilter('Public Testimonials');
+            handleClose();
+          }}
+        >
+          Public Testimonials
+        </MenuButton>
+      </Popover>
       <Snackbar
-        anchorOrigin={{ vertical: "top", horizontal: "right" }}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={open}
         autoHideDuration={6000}
         onClose={handleCloseSnack}
@@ -379,7 +695,7 @@ const WallDesign = () => {
         <Alert
           onClose={handleCloseSnack}
           severity="success"
-          sx={{ width: "100%" }}
+          sx={{ width: '100%' }}
         >
           Save Changed
         </Alert>

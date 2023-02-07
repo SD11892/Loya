@@ -1,5 +1,5 @@
-import projectService from "../services/project.service";
-import { ALL_PROJECT } from "./types";
+import projectService from '../services/project.service';
+import { ALL_PROJECT } from './types';
 
 export const getAll = () => (dispatch) => {
   return projectService.getAll().then(
@@ -23,12 +23,12 @@ export const getAll = () => (dispatch) => {
   );
 };
 
-export const createProject = (name, id, url) => {
-  return projectService.create(name, id, url);
+export const createProject = (name, id, slug, url) => {
+  return projectService.create(name, id, slug, url);
 };
 
-export const updateProject = (info, data) => {
-  return projectService.update(info, data);
+export const updateProject = (info) => {
+  return projectService.update(info);
 };
 
 export const deleteProject = (id) => {
@@ -38,7 +38,6 @@ export const deleteProject = (id) => {
 export const getByProjectId = (id) => {
   return projectService.getById(id).then(
     (data) => {
-      console.log("data=", data);
       return Promise.resolve(data);
     },
     (error) => {

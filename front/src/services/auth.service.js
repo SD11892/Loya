@@ -4,7 +4,7 @@ const API_URL = '/api/auth/';
 
 const register = (username, email, password) => {
   return axios
-    .post(API_URL + 'signup', null, {
+    .post('https://dashboard.tryloya.com:9000/api/auth/' + 'signup', null, {
       params: {
         username,
         email,
@@ -12,7 +12,6 @@ const register = (username, email, password) => {
       },
     })
     .then((response) => {
-      console.log('response=', response);
       return {
         CODE: '200',
         message: 'Sign In Successfully',
@@ -29,7 +28,7 @@ const register = (username, email, password) => {
 
 const emailVerify = (email) => {
   return axios
-    .post(API_URL + 'email', null, {
+    .post('https://dashboard.tryloya.com:9000/api/auth/' + 'email', null, {
       params: {
         email,
       },
@@ -52,35 +51,47 @@ const emailVerify = (email) => {
 
 const login = (email, password) => {
   return axios
-    .post(API_URL + `signin`, null, {
+    .post('https://dashboard.tryloya.com:9000/api/auth/' + `signin`, null, {
       params: {
         email,
         password,
       },
     })
     .then((response) => {
+      ///////////Database Success////////////////////////
       console.log('response=', response);
-      localStorage.setItem('user', JSON.stringify(response.data.username));
-      localStorage.setItem('email', JSON.stringify(response.data.email));
-      localStorage.setItem('upgrade', JSON.stringify(response.data.upgrade));
+      localStorage.setItem(
+        'user',
+        JSON.parse(JSON.stringify(response.data.username))
+      );
+      localStorage.setItem(
+        'email',
+        JSON.parse(JSON.stringify(response.data.email))
+      );
+      localStorage.setItem(
+        'upgrade',
+        JSON.parse(JSON.stringify(response.data.upgrade))
+      );
       localStorage.setItem('userId', response.data.id);
       return {
-        CODE: '200',
+        CODE: 200,
         message: 'Sign In Successfully',
         data: response.data,
       };
     })
     .catch((err) => {
+      console.log('er-', err);
       if (err.code === 'ERR_BAD_REQUEST') {
-        return { CODE: '404', message: 'Incorrect User or Password' };
+        return { CODE: 404, message: 'Incorrect User or Password' };
       } else {
         return { CODE: 500, message: 'Server error occured' };
       }
     });
 };
 const gmailGet = (gmail) => {
+  console.log('gmail');
   return axios
-    .post(API_URL + `gmailGet`, null, {
+    .post('https://dashboard.tryloya.com:9000/api/auth/' + `gmailGet`, null, {
       params: {
         gmail,
       },
@@ -93,6 +104,7 @@ const gmailGet = (gmail) => {
       };
     })
     .catch((err) => {
+      console.log('Axios with https server error=', err);
       return {
         CODE: 500,
         message: 'Server error occured',
@@ -102,16 +114,51 @@ const gmailGet = (gmail) => {
 
 const update = (email, password) => {
   return axios
-    .post(API_URL + `change_password`, null, {
+    .post(
+      'https://dashboard.tryloya.com:9000/api/auth/' + `change_password`,
+      null,
+      {
+        params: {
+          email,
+          password,
+        },
+      }
+    )
+    .then((response) => {
+      return {
+        CODE: 200,
+        message: 'Password Changed',
+      };
+    });
+};
+const upgrade = (level) => {
+  const id = localStorage.getItem('userId');
+  return axios
+    .post('https://dashboard.tryloya.com:9000/api/auth/' + `upgrade`, null, {
       params: {
-        email,
-        password,
+        id,
+        level,
       },
     })
     .then((response) => {
       return {
         CODE: 200,
-        message: 'Password Changed',
+        message: 'Upgrade',
+      };
+    });
+};
+const account = (username, email) => {
+  return axios
+    .post('https://dashboard.tryloya.com:9000/api/auth/' + `account`, null, {
+      params: {
+        username,
+        email,
+      },
+    })
+    .then((response) => {
+      return {
+        CODE: 200,
+        message: 'Changed',
       };
     });
 };
@@ -120,10 +167,12 @@ const logout = () => {
 };
 
 export default {
+  upgrade,
   emailVerify,
   register,
   login,
   logout,
   gmailGet,
   update,
+  account,
 };

@@ -12,8 +12,8 @@ router.use(function (req, res, next) {
 
 router.post("/api/project/all", controller.getAll);
 router.post("/api/project/create", controller.create);
-// router.post("/api/project/update", controller.update);
-// router.post("/api/project/delete", controller.delete);
+router.post("/api/project/update", controller.update);
+router.post("/api/project/delete", controller.delete);
 
 router.get("/api/project/:id", controller.getById);
 

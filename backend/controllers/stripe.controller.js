@@ -5,6 +5,18 @@ const stripe = Stripe(
 );
 const payment = async (req, res) => {
   const data = req.query;
+  let price = '';
+  switch (Number(data.data.amount)) {
+    case 0:
+      price = 'price_1MQwSaCzEqaIGqKymtg375nP';
+      break;
+    case 19:
+      price = 'price_1MPPlMCzEqaIGqKySYL7XofU';
+      break;
+    case 59:
+      price = 'price_1MPPlMCzEqaIGqKyX0Hjaqnh';
+      break;
+  }
 
   const paymentMethod = await stripe.paymentMethods.create({
     type: 'card',
@@ -17,7 +29,6 @@ const payment = async (req, res) => {
     description: 'New Customer',
   });
 
-  console.log(data);
   try {
     await stripe.paymentMethods.attach(paymentMethod.id, {
       customer: customer.id,
@@ -33,15 +44,15 @@ const payment = async (req, res) => {
       },
     }
   );
-
+  console.log(price);
   stripe.subscriptions.create(
     {
       customer: customer.id,
-      items: [{ price: 'price_1MPPlMCzEqaIGqKySYL7XofU' }],
+      items: [{ price: price }],
     },
     (err, result) => {
       if (err) console.log('error===============================', err);
-      console.log(result);
+      res.json({ code: 200, data: result, message: 'success' });
     }
   );
 };

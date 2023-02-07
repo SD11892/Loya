@@ -1,10 +1,9 @@
-import testimonialFormService from "../services/testimonialForm.service";
-import { TEST_SUCCESS } from "./types";
+import testimonialFormService from '../services/testimonialForm.service';
+import { TEST_SUCCESS } from './types';
 
 export const getAll = () => (dispatch) => {
   return testimonialFormService.getAll().then(
     (res) => {
-      console.log("data=", res.data);
       dispatch({
         type: TEST_SUCCESS,
         payload: res.data,
@@ -24,11 +23,21 @@ export const getAll = () => (dispatch) => {
   );
 };
 
-export const createForm = (name) => {
+export const createForm = (name, value) => {
   const test = 0;
   const url = makeid(6);
   const fname = name;
-  return testimonialFormService.create(url, fname, test);
+  const single = value;
+  const projectId = localStorage.getItem('projectId');
+  const userId = `${localStorage.getItem('userId')}`;
+  return testimonialFormService.create(
+    url,
+    fname,
+    test,
+    single,
+    projectId,
+    userId
+  );
 };
 
 export const deleteForm = (Ids) => {
@@ -36,6 +45,7 @@ export const deleteForm = (Ids) => {
 };
 
 export const saveForm = (info) => {
+  console.log('info');
   return testimonialFormService.update(info);
 };
 
@@ -58,8 +68,8 @@ export const getByFormUrl = (url) => {
 };
 
 function makeid(length) {
-  var result = "";
-  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   var charactersLength = characters.length;
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));

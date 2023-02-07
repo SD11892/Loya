@@ -22,6 +22,10 @@ export const update = (email, password) => {
   return AuthService.update(email, password);
 };
 
+export const upgrade = (level) => {
+  return AuthService.upgrade(level);
+};
+
 export const logout = () => (dispatch) => {
   AuthService.logout();
 
@@ -30,6 +34,9 @@ export const logout = () => (dispatch) => {
   });
 };
 
+export const setAccount = (username, email) => {
+  return AuthService.account(username, email);
+};
 export const verify = (email) => {
   return AuthService.emailVerify(email)
     .then((res) => {

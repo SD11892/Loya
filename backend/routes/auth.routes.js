@@ -16,6 +16,8 @@ router.post('/api/auth/google', controller.google);
 router.post('/api/auth/signin', controller.signin);
 router.post('/api/auth/email', controller.verify);
 router.post('/api/auth/change_password', controller.update);
+router.post('/api/auth/upgrade', controller.upgrade);
+router.post('/api/auth/account', controller.account);
 router.post('/api/auth/gmailGet', controller.getByGmail);
 
 module.exports = router;

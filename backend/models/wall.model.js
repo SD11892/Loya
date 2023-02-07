@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const Wall = sequelize.define("wall", {
+  const Wall = sequelize.define('wall', {
     url: {
       type: Sequelize.STRING,
     },
@@ -38,6 +38,15 @@ module.exports = (sequelize, Sequelize) => {
     },
     type: {
       type: Sequelize.STRING,
+    },
+    checked: {
+      type: Sequelize.INTEGER,
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+    },
+    projectId: {
+      type: Sequelize.INTEGER,
     },
   });
   return Wall;

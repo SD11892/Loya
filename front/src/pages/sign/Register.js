@@ -4,7 +4,7 @@ import toastr from 'toastr';
 import { validator } from './Validator';
 import useForm from './useForm';
 import CssTextField from '../../components/uielements/cssTextField';
-import { Heart as HeartIcon } from '../../icons/heart';
+// import { Heart as HeartIcon } from '../../icons/heart';
 import PageTitle from '../../components/uielements/pageTitle';
 import Description from '../../components/uielements/description';
 import { Auth } from 'aws-amplify';
@@ -73,9 +73,7 @@ const Register = () => {
               padding: '1rem',
             }}
           >
-            <FormGrid>
-              <HeartIcon />
-            </FormGrid>
+            <FormGrid>{/* <HeartIcon /> */}</FormGrid>
             <FormGrid>
               <PageTitle>Sign up to Loya</PageTitle>
             </FormGrid>

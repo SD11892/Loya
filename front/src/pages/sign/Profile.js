@@ -59,9 +59,15 @@ const Profile = () => {
       .then((user) => {
         dispatch(register(data.username, data.email, data.password))
           .then((res) => {
+            console.log('res=', res);
             let id = res.data.user.user.id;
             localStorage.setItem('userId', id);
-            createProject(state.projectName, id, state.projectUrl)
+            createProject(
+              state.projectName,
+              id,
+              state.projectName.toLowerCase(),
+              state.projectUrl
+            )
               .then((project) => {
                 localStorage.setItem('projectId', project.data.projects.id);
                 navigate('/complete');

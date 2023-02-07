@@ -17,7 +17,7 @@ import Description from '../../components/uielements/description';
 import DefaultButton from '../../components/uielements/buttons/defaultButton';
 
 import { Googlesm } from '../../icons/google_sm';
-import { Heart as HeartIcon } from '../../icons/heart';
+// import { Heart as HeartIcon } from '../../icons/heart';
 
 import { login } from '../../actions/auth';
 import { getAll } from '../../actions/project';
@@ -52,9 +52,7 @@ const Reset = () => {
               padding: '1rem',
             }}
           >
-            <FormGrid>
-              <HeartIcon />
-            </FormGrid>
+            <FormGrid>{/* <HeartIcon /> */}</FormGrid>
             <FormGrid>
               <PageTitle>Reset Password</PageTitle>
             </FormGrid>

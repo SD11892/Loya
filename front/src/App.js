@@ -1,7 +1,7 @@
 import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useRoutes, useNavigate } from 'react-router-dom';
-import { MuiThemeProvider, createMuiTheme } from '@material-ui/core/styles';
+import { MuiThemeProvider } from '@material-ui/core/styles';
 import { routes } from './routes';
 import GlobalStyle from './theme/globalStyle';
 import { theme } from './theme/theme';
@@ -13,6 +13,8 @@ import awsConfig from './aws-exports';
 import 'toastr/toastr.js';
 import 'toastr/build/toastr.css';
 import toastr from 'toastr';
+import { isEmpty } from './util/isEmpty';
+import { resolveComponentProps } from '@mui/base';
 
 Amplify.configure(awsConfig);
 
@@ -25,47 +27,48 @@ const App = () => {
   async function getUser() {
     try {
       await Auth.currentSession()
-        .then((data) => {
+        .then(async (data) => {
+          console.log('data=', data);
           let idToken = data.getIdToken();
           let gmail = idToken.payload.email;
-          getByGmail(gmail)
-            .then(async (result) => {
-              console.log('result=', result);
-              if (result.CODE === 200) {
-                if (result.data.data.data === 0) {
-                  localStorage.setItem('email', gmail);
-                  localStorage.setItem('password', 'abcd!@#$1234');
-                  localStorage.setItem('upgrade', 'free');
-                  await navigate('/profile');
-                } else {
-                  await localStorage.setItem(
-                    'email',
-                    JSON.stringify(result.data.data.data.email)
-                  );
-                  await localStorage.setItem(
-                    'upgrade',
-                    JSON.stringify(result.data.data.data.upgrade)
-                  );
-                  await localStorage.setItem(
-                    'user',
-                    JSON.stringify(result.data.data.data.username)
-                  );
-                  await localStorage.setItem(
-                    'userId',
-                    result.data.data.data.id
-                  );
-                  await dispatch(getAll()).then(() =>
-                    navigate('/testimonials')
-                  );
-                }
-              }
-            })
-            .catch((err) => {
-              toastr.error('Server error occured');
-            });
+          await getByGmail(gmail).then(async (result) => {
+            console.log('result=========+++++', result);
+            if (result.data.status === 200) {
+              console.log('here Register');
+              localStorage.setItem('email', gmail);
+              localStorage.setItem('password', 'abcd!@#$1234');
+              localStorage.setItem('upgrade', 'free');
+              await navigate('/profile');
+            } else if (result.data.status === 201) {
+              const promise = new Promise((resolve, reject) => {
+                localStorage.setItem('email', result.data.data.data.email);
+                localStorage.setItem(
+                  'upgrade',
+                  JSON.parse(JSON.stringify(result.data.data.data.upgrade))
+                );
+                localStorage.setItem('user', result.data.data.data.username);
+                localStorage.setItem('userId', result.data.data.data.id);
+                resolve();
+              });
+              promise
+                .then(() => {
+                  dispatch(getAll()).then((res) => {
+                    console.log('projects=', res);
+                    let projectId = res.data.projects[0].id;
+                      localStorage.setItem('projectId', projectId);
+                      navigate('/testimonials');
+                  });
+                })
+                .catch((err) => {
+                  toastr.error(err);
+                });
+            }
+          });
         })
-        .catch((err) => console.log(err));
-      setLoading(false);
+        .catch((err) => {
+          console.log('errrr=', err);
+          toastr.error('Server error occured');
+        });
     } catch (err) {
       console.log(err);
       setLoading(false);
@@ -75,7 +78,13 @@ const App = () => {
   React.useEffect(() => {
     Hub.listen('auth', ({ payload }) => {
       if (payload.event === 'signIn') {
+        console.log('AUthaction HERE!!!');
         return getUser();
+      }
+      if (payload.event === 'signOut') {
+        console.log('Sign Out HERE!!!');
+        localStorage.clear();
+        navigate('/');
       }
     });
   }, []);

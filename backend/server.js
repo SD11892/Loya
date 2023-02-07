@@ -1,9 +1,18 @@
+const https = require(`https`);
+const fs = require(`fs`);
 const express = require('express');
 const cors = require('cors');
+const compression = require('compression');
+const helmet = require('helmet');
 const bodyParser = require('body-parser');
+const privateKey = fs.readFileSync('../cert/private.key');
+const certificate = fs.readFileSync('../cert/cert.crt');
+const authority = fs.readFileSync('../cert/bundle.crt');
 global.__basedir = __dirname;
 const app = express();
 
+app.use(helmet());
+app.use(compression());
 app.use(cors());
 
 app.use(require('./routes/auth.routes'));
@@ -34,7 +43,47 @@ app.get('/', (req, res) => {
 });
 
 // set port, listen for requests
-const PORT = process.env.PORT || 8080;
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}.`);
-});
+var host = process.env.HOST || '0.0.0.0';
+// Listen on a specific port via the PORT environment variable
+var port = process.env.PORT || 8080;
+const PORT = process.env.PORT || 9000;
+var cors_proxy = require('cors-anywhere');
+
+cors_proxy
+  .createServer({
+    httpsOptions: {
+      key: privateKey,
+      cert: certificate,
+    },
+    originWhitelist: [], // Allow all origins
+    requireHeader: ['origin', 'x-requested-with'],
+    removeHeaders: ['cookie', 'cookie2'],
+  })
+  .listen(port, host, function () {
+    console.log('Running CORS Anywhere on ' + host + ':' + port);
+  });
+https
+  .createServer(
+    {
+      key: privateKey,
+      cert: certificate,
+      ca: authority,
+      requestCert: true,
+      rejectUnauthorized: false,
+    },
+    app
+  )
+  .listen(PORT, '0.0.0.0');
+
+// var cors_proxy = require('cors-anywhere');
+// var host = process.env.HOST || '0.0.0.0';
+
+// cors_proxy
+//   .createServer({
+//     originWhitelist: [], // Allow all origins
+//     requireHeader: ['origin', 'x-requested-with'],
+//     removeHeaders: ['cookie', 'cookie2'],
+//   })
+//   .listen(PORT, host, function () {
+//     console.log('Running CORS Anywhere on ' + host + ':' + PORT);
+//   });

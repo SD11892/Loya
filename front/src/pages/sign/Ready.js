@@ -79,7 +79,7 @@ const Ready = () => {
             }}
           >
             👍
-            <img src="../../../../heart.png" width="32px" height="32px" />
+            {/* <img src="../../../../heart.png" width="32px" height="32px" /> */}
             🎉
           </div>
           <FormGrid>

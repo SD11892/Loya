@@ -1,21 +1,27 @@
-const db = require("../models");
-const fs = require("fs");
+const db = require('../models');
+const fs = require('fs');
 const Wall = db.wall;
 
 const Op = db.Sequelize.Op;
 
 exports.getAll = (req, res) => {
-  Wall.findAll()
+  const data = req.query;
+  Wall.findAll({
+    where: {
+      projectId: data.projectId,
+      userId: data.userId,
+    },
+  })
     .then((walls) => {
       if (!walls) {
-        console.log("walls Not Found");
-        return res.status(200).send({ message: "Empty" });
+        console.log('walls Not Found');
+        return res.status(200).send({ message: 'Empty' });
       } else {
         res.status(200).send({ walls });
       }
     })
     .catch((err) => {
-      console.log("err=", err);
+      console.log('err=', err);
       res.status(500).send({ message: err.message });
     });
 };
@@ -25,27 +31,29 @@ exports.create = (req, res) => {
     url: data.url,
     name: data.name,
     theme: 1,
-    pColor: "#6701e6",
-    key: "",
-    value: "",
-    pTitle: "Wall of Love",
-    subTitle: "",
-    ctaTitle: "Visit Our Website",
-    ctaUrl: "http://getloya.co",
+    pColor: '#6701e6',
+    key: '',
+    value: '',
+    pTitle: 'Wall of Love',
+    subTitle: '',
+    ctaTitle: 'Visit Our Website',
+    ctaUrl: 'http://getloya.co',
     data: null,
-    fileName: "",
-    type: "",
+    fileName: '',
+    type: '',
+    userId: Number(data.userId),
+    projectId: Number(data.projectId),
   }).then((result) => {
     return res.json({
       CODE: 200,
-      message: "Success Form",
+      message: 'Success Form',
       data: result,
     });
   });
 };
 exports.delete = (req, res) => {
   const Ids = req.query.ids;
-  console.log("ids=", Ids);
+  console.log('ids=', Ids);
   Ids.map((value) => {
     Wall.destroy({
       where: {
@@ -59,7 +67,7 @@ exports.delete = (req, res) => {
 
 exports.update = (req, res) => {
   const data = req.query.info;
-  console.log("info=", req.query.info);
+  console.log('info=', req.query.info);
   Wall.update(
     {
       name: data.name,
@@ -71,6 +79,7 @@ exports.update = (req, res) => {
       pColor: data.pColor,
       pTitle: data.pTitle,
       subTitle: data.subTitle,
+      checked: data.checked,
     },
     {
       where: {
@@ -80,27 +89,28 @@ exports.update = (req, res) => {
   ).then((result) => {
     return res.json({
       CODE: 200,
-      message: "Success Form",
+      message: 'Success Form',
       data: result,
     });
   });
 };
 
 exports.getByUrl = (req, res) => {
-  const wallUrl = req.params.url.replace(":", "");
+  const wallUrl = req.params.url.replace(':', '');
   const designInfo = {
     data: null,
-    fileName: "",
-    type: "",
-    name: "",
+    fileName: '',
+    type: '',
+    name: '',
     theme: 0,
-    pColor: "",
-    key: "",
-    value: "",
-    pTitle: "",
-    subTitle: "",
-    ctaTitle: "",
-    ctaUrl: "",
+    pColor: '',
+    key: '',
+    value: '',
+    pTitle: '',
+    subTitle: '',
+    ctaTitle: '',
+    ctaUrl: '',
+    checked: '',
   };
   Wall.findAll({
     where: {
@@ -120,9 +130,10 @@ exports.getByUrl = (req, res) => {
       designInfo.subTitle = fdata[0].dataValues.subTitle;
       designInfo.ctaTitle = fdata[0].dataValues.ctaTitle;
       designInfo.ctaUrl = fdata[0].dataValues.ctaUrl;
+      designInfo.checked = fdata[0].dataValues.checked;
       res.status(200).send({ data: designInfo });
     })
     .catch((err) => {
-      console.log("wallERR=", err);
+      console.log('wallERR=', err);
     });
 };

@@ -1,52 +1,59 @@
 const db = require('../models');
+const Outscraper = require('outscraper');
 const fs = require('fs');
 const Form = db.form;
 const Testimonial = db.testimonial;
+const client = new Outscraper(
+  'Z29vZ2xlLW9hdXRoMnwxMDMyNDg4NDYzMjYzNDM5MjEyMTF8NGZjZWI0YjU3MA'
+);
 
 const Op = db.Sequelize.Op;
 
 exports.create = (req, res) => {
   const data = req.query.info;
-  console.log('data===============', data);
-  console.log('file==============', req.file);
   if (req.file !== undefined) {
     if (data.url !== undefined) {
       Form.findAll({
         where: {
           formUrl: data.url,
         },
-      }).then((value) => {
-        Form.update(
-          {
-            response: value[0].dataValues.response + 1,
-          },
-          {
-            where: {
-              formUrl: data.url,
+      })
+        .then((value) => {
+          Form.update(
+            {
+              response: value[0].dataValues.response + 1,
             },
-          }
-        )
-          .then(() => {
-            Testimonial.create({
-              url: data.url,
-              key: data.key.toString(),
-              value: data.value.toString(),
-              content: data.content,
-              status: 0,
-              type: data.type,
-              name: data.name,
-              rating: data.rating,
-              video: data.video,
-              data: fs.readFileSync('../upload/' + req.file.filename),
-              index: data.index,
-              projectId: data.projectId,
-              userId: data.userId,
+            {
+              where: {
+                formUrl: data.url,
+              },
+            }
+          )
+            .then(() => {
+              Testimonial.create({
+                url: data.url,
+                key: data.key.toString(),
+                value: data.value.toString(),
+                content: data.content,
+                status: 0,
+                type: data.type,
+                name: data.name,
+                rating: data.rating,
+                video: data.video,
+                data: fs.readFileSync('../upload/' + req.file.filename),
+                index: data.index,
+                note: data.note,
+                projectId: Number(data.projectId),
+                userId: Number(data.userId),
+              });
+            })
+            .then((r) => {
+              res.json({ r });
             });
-          })
-          .then((r) => {
-            res.json({ r });
-          });
-      });
+        })
+        .catch((err) => {
+          console.log('CreateTestimonialErr=', err);
+        });
     } else {
       Testimonial.create({
         imageUrl: data.imageUrl,
@@ -56,6 +63,7 @@ exports.create = (req, res) => {
         content: data.content,
         status: 0,
         type: data.type,
+        note: data.note,
         name: data.name,
         video: data.video,
         rating: data.rating,
@@ -63,9 +71,13 @@ exports.create = (req, res) => {
         index: data.index,
         projectId: data.projectId,
         userId: data.userId,
-      }).then((result) => {
-        res.json({ result });
-      });
+      })
+        .then((result) => {
+          res.json({ result });
+        })
+        .catch((err) => {
+          console.log('CreateTestimonialErr=', err);
+        });
     }
   } else {
     if (data.url !== undefined) {
@@ -93,12 +105,18 @@ exports.create = (req, res) => {
             content: data.content,
             status: 0,
             rating: data.rating,
+            note: data.note,
             index: data.index,
+            video: data.video,
             projectId: data.projectId,
             userId: data.userId,
-          }).then((r) => {
-            res.json({ r });
-          });
+          })
+            .then((r) => {
+              res.json({ r });
+            })
+            .catch((err) => {
+              console.log('CreateTestimonialErr=', err);
+            });
         });
       });
     } else {
@@ -108,14 +126,20 @@ exports.create = (req, res) => {
         key: data.key.toString(),
         value: data.value.toString(),
         content: data.content,
+        note: data.note,
         status: 0,
         index: data.index,
+        video: data.video,
         rating: data.rating,
         projectId: data.projectId,
         userId: data.userId,
-      }).then((result) => {
-        res.json({ result });
-      });
+      })
+        .then((result) => {
+          res.json({ result });
+        })
+        .catch((err) => {
+          console.log('CreateTestimonialErr=', err);
+        });
     }
   }
 };
@@ -169,33 +193,131 @@ exports.update = (req, res) => {
 
 exports.getAll = (req, res) => {
   const data = req.query;
+  console.log('data=====', data);
   if (data.searchData) {
-    Testimonial.findAll({
-      where: {
-        userId: data.userId,
-        projectId: data.projectId,
-        [Op.or]: [
-          {
-            content: { [Op.like]: `%${data.searchData}%` },
-          },
-          {
-            value: { [Op.like]: `%${data.searchData}%` },
-          },
-        ],
-      },
-
-      order: [['index', 'ASC']],
-    })
-      .then((testimonials) => {
-        if (!testimonials) {
-          return res.status(200).send({ message: 'Empty' });
-        } else {
-          res.status(200).send({ testimonials });
-        }
+    if (data.searchData === 'google') {
+      Testimonial.findAll({
+        where: {
+          userId: Number(data.userId),
+          projectId: Number(data.projectId),
+          note: null,
+        },
+        order: [['index', 'ASC']],
       })
-      .catch((err) => {
-        res.status(500).send({ message: err.message });
-      });
+        .then((testimonials) => {
+          if (!testimonials) {
+            return res.status(200).send({ message: 'Empty' });
+          } else {
+            res.status(200).send({ testimonials });
+          }
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+        });
+    } else if (data.searchData === 'facebook') {
+      Testimonial.findAll({
+        where: {
+          userId: data.userId,
+          projectId: data.projectId,
+          note: 'facebook',
+        },
+        order: [['index', 'ASC']],
+      })
+        .then((testimonials) => {
+          if (!testimonials) {
+            return res.status(200).send({ message: 'Empty' });
+          } else {
+            res.status(200).send({ testimonials });
+          }
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+        });
+    } else if (data.searchData === 'text') {
+      Testimonial.findAll({
+        where: {
+          userId: data.userId,
+          projectId: data.projectId,
+          note: 'text',
+        },
+        order: [['index', 'ASC']],
+      })
+        .then((testimonials) => {
+          if (!testimonials) {
+            return res.status(200).send({ message: 'Empty' });
+          } else {
+            res.status(200).send({ testimonials });
+          }
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+        });
+    } else if (data.searchData === 'video') {
+      Testimonial.findAll({
+        where: {
+          userId: data.userId,
+          projectId: data.projectId,
+          note: 'video',
+        },
+        order: [['index', 'ASC']],
+      })
+        .then((testimonials) => {
+          if (!testimonials) {
+            return res.status(200).send({ message: 'Empty' });
+          } else {
+            res.status(200).send({ testimonials });
+          }
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+        });
+    } else if (data.searchData.includes('rating===') === true) {
+      let rating = data.searchData.slice(-1).replace(/["']/g, '');
+      Testimonial.findAll({
+        where: {
+          userId: data.userId,
+          projectId: data.projectId,
+          rating: rating,
+        },
+        order: [['index', 'ASC']],
+      })
+        .then((testimonials) => {
+          if (!testimonials) {
+            return res.status(200).send({ message: 'Empty' });
+          } else {
+            res.status(200).send({ testimonials });
+          }
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+        });
+    } else {
+      Testimonial.findAll({
+        where: {
+          userId: data.userId,
+          projectId: data.projectId,
+          [Op.or]: [
+            {
+              content: { [Op.like]: `%${data.searchData}%` },
+            },
+            {
+              value: { [Op.like]: `%${data.searchData}%` },
+            },
+          ],
+        },
+        order: [['index', 'ASC']],
+      })
+        .then((testimonials) => {
+          if (!testimonials) {
+            return res.status(200).send({ message: 'Empty' });
+          } else {
+            res.status(200).send({ testimonials });
+          }
+        })
+        .catch((err) => {
+          res.status(500).send({ message: err.message });
+        });
+    }
   } else {
     Testimonial.findAll({
       where: {
@@ -283,6 +405,21 @@ exports.getByUrl = (req, res) => {
     });
 };
 
+exports.getById = (req, res) => {
+  const id = req.query.id;
+  Testimonial.findOne({
+    where: {
+      Id: id,
+    },
+  })
+    .then((fdata) => {
+      res.status(200).send({ fdata });
+    })
+    .catch((err) => {
+      res.status(500).send({ message: err.message });
+    });
+};
+
 exports.uploadVideo = (req, res) => {
   const data = req.query.info;
   if (req.file !== undefined) {
@@ -307,7 +444,6 @@ exports.uploadVideo = (req, res) => {
 
 exports.importAll = async (req, res) => {
   const array = req.query.array;
-  console.log(array);
   const length = Object.keys(array).length;
   for (var i = 0; i < length; i++) {
     await Testimonial.create({
@@ -331,15 +467,35 @@ exports.importHistory = (req, res) => {
   Testimonial.findAll({
     where: {
       userId: data.userId,
-      projectId: data.projects.map((row) => row.id),
+      projectId: data.projectId,
     },
-  }).then((testimonials) => {
-    let imports = [];
-    for (var i = 0; i < testimonials.length; i++) {
-      if (testimonials[i].url === null) {
-        imports.push(testimonials[i]);
+  })
+    .then((testimonials) => {
+      let imports = [];
+      for (var i = 0; i < testimonials.length; i++) {
+        if (testimonials[i].url === null) {
+          imports.push(testimonials[i]);
+        }
       }
-    }
-    res.status(200).send({ imports });
-  });
+      res.status(200).send({ imports });
+    })
+    .catch((err) => {
+      console.log('importHistory=', err);
+    });
+};
+
+exports.googleReview = (req, res) => {
+  const placeId = req.query.info;
+  const reviews = [];
+    client.googleMapsReviews(
+      [placeId],
+      limit=0 // limit of palces per each query
+    ).then(response => {
+      response.forEach(place => {
+        place.reviews_data.forEach(review => {
+          reviews.push(review);
+        });
+        res.json({code:200, message:'Import google reviews using outscraper', data:reviews});
+      });
+    });
 };

@@ -55,6 +55,7 @@ const MenuButton = (ComponentName) => styled(ComponentName)`
 const MainButton = (ComponentName) => styled(ComponentName)`
    {
     &.MuiButton-root {
+      text-transform: unset;
       display: flex;
       flex-direction: row;
       align-items: center;
@@ -122,8 +123,8 @@ const StatusButton = (ComponentName) => styled(ComponentName)`
       border: 1px solid transparent;
       text-transform: unset;
       font-size: 0.8rem;
-      padding-bottom: 2px;
-      padding-top: 2px;
+      padding-bottom: 4px;
+      padding-top: 4px;
       cursor: pointer;
       border-radius: 9999px;
     }
@@ -202,6 +203,7 @@ const UploadButton = (ComponentName) => styled(ComponentName)`
       color: black;
       margin-left: 1rem;
       margin-right: 1rem;
+      text-transform: unset;
     }
   }
 `;

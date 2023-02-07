@@ -6,7 +6,7 @@ export const Facebooksm = () => {
       width="16px"
       height="16px"
       viewBox="0 0 1024 1024"
-      style={{ marginRight: "4px", marginTop: "-4px", verticalAlign: "middle" }}
+      style={{ marginTop: '-2px', marginRight: '2px', verticalAlign: 'middle' }}
     >
       <path
         fill="#1877f2"

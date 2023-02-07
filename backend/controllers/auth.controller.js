@@ -63,6 +63,36 @@ exports.update = (req, res) => {
     res.status(200).send({ CODE: 200, message: 'success' });
   });
 };
+exports.account = (req, res) => {
+  User.update(
+    {
+      username: req.query.username,
+    },
+    {
+      where: {
+        email: req.query.email,
+      },
+    }
+  ).then(() => {
+    res.json({ CODE: 200, message: 'success' });
+  });
+};
+
+exports.upgrade = (req, res) => {
+  console.log(req);
+  User.update(
+    {
+      upgrade: req.query.level,
+    },
+    {
+      where: {
+        id: req.query.id,
+      },
+    }
+  ).then(() => {
+    res.json({ message: 'success' });
+  });
+};
 
 exports.google = async (req, res) => {
   console.log('here=', req);
@@ -129,15 +159,20 @@ exports.signin = (req, res) => {
 };
 
 exports.getByGmail = (req, res) => {
+  console.log('++++++++++++++++++++++++++++++++++++++++');
   User.findOne({
     where: {
       email: req.query.gmail,
     },
-  }).then((user) => {
-    if (!user) {
-      res.status(200).send({ message: 'have to register', data: 0 });
-    } else {
-      res.status(200).send({ message: 'found', data: user });
-    }
-  });
+  })
+    .then((user) => {
+      if (!user) {
+        res.status(200).send({ message: 'have to register', data: 0 });
+      } else {
+        res.status(201).send({ message: 'found', data: user });
+      }
+    })
+    .catch((err) => {
+      console.log('googleSinginErr=', err);
+    });
 };

@@ -10,7 +10,7 @@ import PageTitle from '../../components/uielements/pageTitle';
 import Description from '../../components/uielements/description';
 import DefaultButton from '../../components/uielements/buttons/defaultButton';
 
-import { Heart as HeartIcon } from '../../icons/heart';
+// import { Heart as HeartIcon } from '../../icons/heart';
 
 import { update } from '../../actions/auth';
 import FormInput from '../../components/uielements/form/FormInput';
@@ -79,9 +79,7 @@ const NewPassword = () => {
             }}
           >
             <form onSubmit={handleConfirmClick}>
-              <FormGrid>
-                <HeartIcon />
-              </FormGrid>
+              <FormGrid>{/* <HeartIcon /> */}</FormGrid>
               <FormGrid>
                 <PageTitle>Reset Your Password</PageTitle>
               </FormGrid>

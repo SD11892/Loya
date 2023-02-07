@@ -9,7 +9,7 @@ import ListItem from '@mui/material/ListItem';
 import ListItemIcon from '@mui/material/ListItemIcon';
 import ListItemText from '@mui/material/ListItemText';
 import CheckIcon from '@mui/icons-material/Check';
-import { HeartBig } from '../../icons/heart_big';
+// import { HeartBig } from '../../icons/heart_big';
 
 import toRenderProps from 'recompose/toRenderProps';
 import PaymentCard from '../../components/uielements/PaymentCard';
@@ -17,40 +17,18 @@ import DefaultButton from '../../components/uielements/buttons/defaultButton';
 import { useNavigate } from 'react-router-dom';
 
 const Upgrade = () => {
-  const freeArray = [
-    '10 testimonials',
-    '1 form',
-    '1 project',
-    '1 embed',
-    '1 seat',
-    'SD video download quality',
-    'Loya in your language',
-  ];
+  const freeArray = ['10 testimonials', '1 form', '1 project', '1 embed'];
   const proArray = [
     'Unlimited testimonials',
     'Unlimited forms',
     'Up to 2 Projects',
     'Unlimited embeds',
-    'Remove Loya Branding',
-    'Up to 2 seats',
-    'HD video downloads',
-    'Loya in your language',
-    'Custom Domains',
-    'Rich snippets',
-    'Zapier Integration',
   ];
   const teamArray = [
     'Unlimited testimonials',
     'Unlimited forms',
     'Up to 5 Projects',
     'Unlimited embeds',
-    'Remove Loya Branding',
-    'Up to 5 seats',
-    'HD video downloads',
-    'Loya in your language',
-    'Custom Domains',
-    'Rich snippets',
-    'Zapier Integration',
   ];
   const Payment = () => {
     const navigate = useNavigate();
@@ -82,7 +60,6 @@ const Upgrade = () => {
           <div style={{ marginTop: '0.5rem' }}>
             <DefaultButton
               primary="#6701e6"
-              disabled={true}
               onClick={async () => {
                 await localStorage.setItem('level', 'free');
                 navigate('/checkout');
@@ -210,7 +187,7 @@ const Upgrade = () => {
         style={{ marginTop: '3rem', maxWidth: '72rem', marginBottom: '3rem' }}
       >
         <Container style={{ textAlign: 'center' }}>
-          <HeartBig />
+          {/* <HeartBig /> */}
         </Container>
         <Container
           style={{ fontSize: '2.5rem', textAlign: 'center', padding: '1rem' }}

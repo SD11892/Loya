@@ -17,6 +17,7 @@ import { isEmpty } from '../../util/isEmpty';
 import VideoImageThumbnail from 'react-video-thumbnail-image';
 import { LazyLoadComponent } from 'react-lazy-load-image-component';
 import AWS from 'aws-sdk';
+import ReactPlayer from 'react-player';
 
 const SESConfig = {
   accessKeyId: process.env.REACT_APP_ACCESS,
@@ -174,12 +175,16 @@ export const ImportHistory = (props) => {
                     >
                       {row.video ? (
                         <LazyLoadComponent>
-                          <VideoImageThumbnail
-                            videoUrl={s3.getSignedUrl('getObject', {
+                          <ReactPlayer
+                            className="react-player"
+                            url={s3.getSignedUrl('getObject', {
                               Bucket: 'loya-bucket',
                               Key: row.video,
                             })}
                             alt="my test video"
+                            controls={true}
+                            height="10rem"
+                            width="10rem"
                           />
                         </LazyLoadComponent>
                       ) : null}

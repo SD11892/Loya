@@ -111,12 +111,12 @@ const FormView = () => {
       }}
     >
       <TopLinkContainer>
-        <img
+        {/* <img
           src={`../../../../../heart.png`}
           width="16px"
           height="16px"
           style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-        />
+        /> */}
         <a
           href="http://tryloya.com"
           style={{
@@ -140,11 +140,15 @@ const FormView = () => {
             width={'48px'}
             alt="not found"
           />
-        ) : data !== '' ? (
+        ) : 
+        // data !== '' ? 
+        (
           <img src={`data:image/png;base64,${data}`} alt="" width={'48px'} />
-        ) : (
-          <img src={`../../../../../heart.png`} width={'32px'} />
-        )}
+        ) 
+        // : (
+          // <img src={`../../../../../heart.png`} width={'32px'} />
+        // )
+      }
       </Grid>
       <Grid container style={{ marginBottom: '1rem' }}>
         <PageTitle>{title}</PageTitle>
@@ -195,12 +199,12 @@ const FormView = () => {
   const WriteReview = (
     <PreviewContainer style={{ display: 'flex' }}>
       <TopLinkContainer>
-        <img
+        {/* <img
           src={`../../../../../heart.png`}
           width="16px"
           height="16px"
           style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-        />
+        /> */}
         <a
           href="http://tryloya.com"
           style={{
@@ -224,11 +228,15 @@ const FormView = () => {
             width={'48px'}
             alt="not found"
           />
-        ) : data !== '' ? (
+        ) :
+        //  data !== '' ? 
+         (
           <img src={`data:image/png;base64,${data}`} alt="" width={'48px'} />
-        ) : (
-          <img src={`../../../../../heart.png`} width={'32px'} />
-        )}
+        ) 
+        // : (
+        //   <img src={`../../../../../heart.png`} width={'32px'} />
+        // )
+        }
         <IconButton
           onClick={() => {
             setVisible(1);
@@ -316,12 +324,12 @@ const FormView = () => {
       }}
     >
       <TopLinkContainer>
-        <img
+        {/* <img
           src={`../../../../../heart.png`}
           width="16px"
           height="16px"
           style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-        />
+        /> */}
         <a
           href="http://tryloya.com"
           style={{
@@ -345,11 +353,15 @@ const FormView = () => {
             width={'48px'}
             alt="not found"
           />
-        ) : data !== '' ? (
+        ) :
+        //  data !== '' ? 
+         (
           <img src={`data:image/png;base64,${data}`} alt="" width={'48px'} />
-        ) : (
-          <img src={`../../../../../heart.png`} width={'32px'} />
-        )}
+        ) 
+        // : (
+          // <img src={`../../../../../heart.png`} width={'32px'} />
+        // )
+        }
         <IconButton
           onClick={() => {
             setVisible(2);
@@ -457,12 +469,12 @@ const FormView = () => {
   const ThanksView = (
     <PreviewContainer style={{ display: 'flex' }}>
       <TopLinkContainer>
-        <img
+        {/* <img
           src={`../../../../../heart.png`}
           width="16px"
           height="16px"
           style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-        />
+        /> */}
         <a
           href="http://tryloya.com"
           style={{
@@ -479,11 +491,15 @@ const FormView = () => {
             width={'48px'}
             alt="not found"
           />
-        ) : selectedImage === null && data !== '' ? (
+        ) : 
+        // selectedImage === null && data !== '' ? 
+        (
           <img src={`data:image/png;base64,${data}`} alt="" width={'48px'} />
-        ) : (
-          <img src={`../../../../../heart.png`} width={'32px'} />
-        )}
+        ) 
+        // : (
+        //   <img src={`../../../../../heart.png`} width={'32px'} />
+        // )
+        }
       </Grid>
       <Grid container style={{ marginTop: '1rem' }}>
         <PageTitle>{thankTitle}</PageTitle>
@@ -502,12 +518,12 @@ const FormView = () => {
   const RecordVideo = (
     <PreviewContainer style={{ display: 'flex' }}>
       <TopLinkContainer>
-        <img
+        {/* <img
           src={`../../../../../heart.png`}
           width="16px"
           height="16px"
           style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-        />
+        /> */}
         <a
           href="http://tryloya.com"
           style={{
@@ -531,11 +547,15 @@ const FormView = () => {
             width={'48px'}
             alt="not found"
           />
-        ) : data !== '' ? (
+        ) : 
+        // data !== '' ? 
+        (
           <img src={`data:image/png;base64,${data}`} alt="" width={'48px'} />
-        ) : (
-          <img src={`../../../../../heart.png`} width={'32px'} />
-        )}
+        ) 
+        // : (
+        //   <img src={`../../../../../heart.png`} width={'32px'} />
+        // )
+        }
         <IconButton
           onClick={() => {
             setVisible(1);

@@ -27,7 +27,24 @@ const GlobalStyle = createGlobalStyle`
     -webkit-box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
     box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.3);
   }
-  
+  .react-player {
+    height: fit-content !important;
+    width: fit-content !important;
+  }
+  .react-player video {
+    height:10rem !important;
+    width: unset !important;
+    border-radius: 1rem;
+  }
+  .react-player-big {
+    height: fit-content !important;
+    width: fit-content !important;
+  }
+  .react-player-big video {
+    height:unset !important;
+    width: 24rem !important;
+    border-radius: 0.375rem;
+  }
   .profile-img-card {
     width: 96px;
     height: 96px;

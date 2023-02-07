@@ -1,5 +1,5 @@
 module.exports = (sequelize, Sequelize) => {
-  const TestimonialForm = sequelize.define("testforms", {
+  const TestimonialForm = sequelize.define('testforms', {
     url: {
       type: Sequelize.STRING,
     },
@@ -34,6 +34,18 @@ module.exports = (sequelize, Sequelize) => {
       type: Sequelize.STRING,
     },
     theme: {
+      type: Sequelize.INTEGER,
+    },
+    single: {
+      type: Sequelize.INTEGER,
+    },
+    checked: {
+      type: Sequelize.STRING,
+    },
+    userId: {
+      type: Sequelize.INTEGER,
+    },
+    projectId: {
       type: Sequelize.INTEGER,
     },
   });

@@ -3,7 +3,6 @@ import moment from 'moment';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
-import Editor from 'react-simple-code-editor';
 import SyntaxHighlighter from 'react-syntax-highlighter';
 import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
 import { CopyToClipboard } from 'react-copy-to-clipboard';
@@ -11,6 +10,7 @@ import { CopyToClipboard } from 'react-copy-to-clipboard';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Paper from '@mui/material/Paper';
+import { Popover } from '@mui/material';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
@@ -34,6 +34,9 @@ import MuiAlert from '@mui/material/Alert';
 
 import Picker from '../../../components/uielements/picker';
 import EmbedButton from '../../../components/uielements/buttons/embedButton';
+import SiderButton from '../../../components/uielements/buttons/siderButton';
+import MainButton from '../../../components/uielements/buttons/mainButton';
+import MenuButton from '../../../components/uielements/buttons/menuButton';
 import EmbedToolButton from '../../../components/uielements/buttons/embedToolButton';
 import ImageCard from '../../../components/uielements/imageCard';
 import WidgetCard from '../../../components/uielements/widgetCard';
@@ -41,6 +44,7 @@ import FormLabel from '../../../components/uielements/form/FormLabel';
 import PageTitle from '../../../components/uielements/pageTitle';
 import Description from '../../../components/uielements/description';
 
+import { DownArrow } from '../../../icons/downArrow';
 import { LeftArrow as LeftArrowIcon } from '../../../icons/leftArrow';
 import { Embed as EmbedIcon } from '../../../icons/embed';
 import { Menu as MenuIcon } from '../../../icons/menu';
@@ -48,6 +52,7 @@ import { Pencil as PencilIcon } from '../../../icons/pencil';
 import { MagicPencil as MagicPencilIcon } from '../../../icons/magicPencil';
 import { Switch as SwitchIcon } from '../../../icons/switch';
 import { Close as CloseIcon } from '../../../icons/close';
+import CheckIcon from '@mui/icons-material/Check';
 import { CopyEmbed as CopyEmbedIcon } from '../../../icons/copyEmbed';
 
 import {
@@ -60,6 +65,7 @@ import { getByFormUrl, saveForm } from '../../../actions/testimonialForm';
 
 import { createColor } from 'material-ui-color';
 import WidgetBubble from '../../../components/widgets/widgetBubble';
+import { isEmpty } from '../../../util/isEmpty';
 
 const Div = styled('div')(({ theme }) => ({
   ...theme.typography.button,
@@ -104,6 +110,7 @@ const infor = {
   blColor: '',
   fgColor: '',
   theme: 1,
+  checked: '',
 };
 
 export default function CreateWidget() {
@@ -126,14 +133,24 @@ export default function CreateWidget() {
   const [shadow, setShadow] = React.useState('');
   const [radius, setRadius] = React.useState('');
   const [open, setOpen] = React.useState(false);
+  const [chooseOpen, setChooseOpen] = React.useState(false);
   const [itemList, setItemList] = React.useState([]);
+  const [checked, setChecked] = React.useState([]);
   const [drawerState, setDrawerState] = React.useState(false);
   const [code, setCode] = React.useState(
-    `<div className="loya-frame-embed" data-id="${url}"></div>
-<script defer type="text/javascript" src="http://35.170.73.191:3000/embedTemplate.js"></script>`
+    `<div class="loya-frame-embed" data-id="${url}"></div>
+<script defer type="text/javascript" src="https://dashboard.tryloya.com/embedTemplate.js"></script>`
   );
   const [openSnack, setOpenSnack] = React.useState(false);
   const [openCopySnack, setOpenCopySnack] = React.useState(false);
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const [ifText, setIfText] = React.useState(
+    '(item.status === 1 || item.status === 0)'
+  );
+  const [filter, setFilter] = React.useState('Pick Testimonials');
+
+  const openPop = Boolean(anchorEl);
+  const index = openPop ? 'simple-popover' : undefined;
 
   const handleChange = (even, nextView) => {
     setView(nextView);
@@ -143,7 +160,7 @@ export default function CreateWidget() {
   };
   const handleSave = () => {
     itemList.map((row, index) => {
-      updateTestimonial(row, row.data);
+      updateTestimonial(row, null);
       if (index === itemList.length - 1) {
         setOpenSnack(true);
       }
@@ -159,6 +176,7 @@ export default function CreateWidget() {
     infor.bfColor = bfColor;
     infor.blColor = blColor;
     infor.fgColor = fgColor;
+    infor.checked = checked.toString();
     saveForm(infor);
   };
 
@@ -190,6 +208,16 @@ export default function CreateWidget() {
     setOpen(false);
   };
 
+  const handleChooseClose = () => {
+    setChooseOpen(false);
+  };
+  const handleAnchorClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleAnchorClose = () => {
+    setAnchorEl(null);
+  };
+
   const onDragEnd = (droppedItem) => {
     // Ignore drop outside droppable container
     if (!droppedItem.destination) return;
@@ -210,10 +238,12 @@ export default function CreateWidget() {
     setOpenSnack(false);
     setOpenCopySnack(false);
   };
+  const userId = localStorage.getItem('userId');
+  const projectId = localStorage.getItem('projectId');
 
-  React.useEffect(() => {
-    dispatch(getAll());
-    getByFormUrl(url)
+  React.useEffect(async () => {
+    await dispatch(getAll());
+    await getByFormUrl(url)
       .then((res) => {
         const result = res.data.data.data;
         setSpace(result.spacing);
@@ -226,11 +256,17 @@ export default function CreateWidget() {
         setBlColor(result.blColor);
         setBfColor(result.bfColor);
         setFgColor(result.fgColor);
+        if (isEmpty(result.checked)) {
+          setChecked(result.checked);
+        } else {
+          setChecked(result.checked.split(','));
+        }
       })
       .catch((err) => {
+        console.log('widgetErr=', err);
         alert('Invalid Form');
       });
-    setItemList(testimonials);
+    await setItemList(testimonials);
   }, []);
 
   React.useEffect(() => {
@@ -252,6 +288,7 @@ export default function CreateWidget() {
     fgColor,
     bfColor,
     blColor,
+    ifText,
   ]);
 
   const navigate = useNavigate();
@@ -276,6 +313,23 @@ export default function CreateWidget() {
             Create Widget
           </Typography>
           <Div>⚡ Beta</Div>
+          <ColorButton
+            variant="contained"
+            onClick={() => {
+              let temp = [];
+              if (isEmpty(checked)) {
+                testimonials.map((row, index) => {
+                  temp[index] = 'true';
+                });
+                setChecked(temp);
+                setChooseOpen(true);
+              } else {
+                setChooseOpen(true);
+              }
+            }}
+          >
+            Select Testimonials
+          </ColorButton>
           <Typography sx={{ flexGrow: 1 }} />
           <ColorButton
             variant="contained"
@@ -559,6 +613,8 @@ export default function CreateWidget() {
           style={{
             width: '100%',
             background: 'transparent',
+            height: '100vh',
+            overflowY: 'auto',
           }}
         >
           <div
@@ -580,113 +636,133 @@ export default function CreateWidget() {
               height: 'min-content',
             }}
           >
-            {itemList.map((row) =>
-              row.status === 1 && theme === 1 ? (
-                <WidgetCard
-                  bgColor={bgColor}
-                  txtColor={txtColor}
-                  radius={radius}
-                  shadow={shadow}
-                >
-                  <Grid
-                    container
-                    style={{
-                      display: 'flex',
-                      flexDirection: 'column',
-                    }}
-                  >
-                    <Grid
-                      item
-                      style={{
-                        marginTop: '0.5rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                      }}
-                    >
-                      {row.data !== null ? (
-                        <Avatar
+            {isEmpty(checked)
+              ? 'Please select your tetimonials'
+              : checked.map((row, index) => {
+                  if (checked[index] === 'true') {
+                    return testimonials[index] !== null && theme === 1 ? (
+                      <WidgetCard
+                        bgColor={bgColor}
+                        txtColor={txtColor}
+                        radius={radius}
+                        shadow={shadow}
+                      >
+                        <Grid
+                          container
                           style={{
-                            borderRadius: '50%',
-                            border: '1px solid #ddd',
-                            borderColor: 'rgb(237, 243, 249)',
-                            borderWidth: '4px',
+                            display: 'flex',
+                            flexDirection: 'column',
                           }}
-                          sx={{ width: 56, height: 56 }}
                         >
-                          <img
-                            src={`data:image/png;base64,${btoa(
-                              String.fromCharCode(
-                                ...new Uint8Array(row.data.data)
-                              )
-                            )}`}
-                            width={'60px'}
-                          />
-                        </Avatar>
-                      ) : (
-                        <Avatar
-                          style={{
-                            borderRadius: '50%',
-                            border: '1px solid #ddd',
-                            borderColor: 'rgb(237, 243, 249)',
-                            borderWidth: '4px',
-                          }}
-                          sx={{ width: 56, height: 56 }}
-                        >
-                          <img src={`../../../../../user.png`} width={'60px'} />
-                        </Avatar>
-                      )}
+                          <Grid
+                            item
+                            style={{
+                              marginTop: '0.5rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                            }}
+                          >
+                            {testimonials[index].data !== null ? (
+                              <Avatar
+                                style={{
+                                  borderRadius: '50%',
+                                  border: '1px solid #ddd',
+                                  borderColor: 'rgb(237, 243, 249)',
+                                  borderWidth: '4px',
+                                }}
+                                sx={{ width: 56, height: 56 }}
+                              >
+                                <img
+                                  src={`data:image/png;base64,${btoa(
+                                    String.fromCharCode(
+                                      ...new Uint8Array(
+                                        testimonials[index].data.data
+                                      )
+                                    )
+                                  )}`}
+                                  width={'60px'}
+                                />
+                              </Avatar>
+                            ) : (
+                              <Avatar
+                                style={{
+                                  borderRadius: '50%',
+                                  border: '1px solid #ddd',
+                                  borderColor: 'rgb(237, 243, 249)',
+                                  borderWidth: '4px',
+                                }}
+                                sx={{ width: 56, height: 56 }}
+                              >
+                                <img
+                                  src={`../../../../../user.png`}
+                                  width={'60px'}
+                                />
+                              </Avatar>
+                            )}
 
-                      <div>
-                        <div>{row.value.split(',')[0]}</div>
-                        <div>
-                          {row.key.indexOf('Headline') !== -1
-                            ? row.value.split(',')[
-                                row.key.split(',').indexOf('Headline')
+                            <div>
+                              <div>
+                                {testimonials[index].value.split(',')[0]}
+                              </div>
+                              <div>
+                                {testimonials[index].key.indexOf('Headline') !==
+                                -1
+                                  ? testimonials[index].value.split(',')[
+                                      testimonials[index].key
+                                        .split(',')
+                                        .indexOf('Headline')
+                                    ]
+                                  : null}
+                              </div>
+                            </div>
+                          </Grid>
+                          <Grid item style={{ marginTop: '0.5rem' }}>
+                            <Rating
+                              readOnly
+                              value={testimonials[index].rating}
+                              style={{
+                                color: ratingColor,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item style={{ marginTop: '0.5rem' }}>
+                            {testimonials[index].content}
+                          </Grid>
+                          <Grid item style={{ marginTop: '0.5rem' }}>
+                            {moment(testimonials[index].date).format('ll')}
+                          </Grid>
+                        </Grid>
+                      </WidgetCard>
+                    ) : testimonials[index] !== null && theme === 2 ? (
+                      <WidgetBubble
+                        fgColor={fgColor}
+                        bgColor={bgColor}
+                        ratingColor={ratingColor}
+                        content={testimonials[index].content}
+                        rating={testimonials[index].rating}
+                        bfColor={bfColor}
+                        blColor={blColor}
+                        name={testimonials[index].value.split(',')[0]}
+                        txtColor={txtColor}
+                        headline={
+                          testimonials[index].key.indexOf('Headline') !== -1
+                            ? testimonials[index].value.split(',')[
+                                testimonials[index].key
+                                  .split(',')
+                                  .indexOf('Headline')
                               ]
-                            : null}
-                        </div>
-                      </div>
-                    </Grid>
-                    <Grid item style={{ marginTop: '0.5rem' }}>
-                      <Rating
-                        readOnly
-                        value={row.rating}
-                        style={{
-                          color: ratingColor,
-                        }}
+                            : null
+                        }
+                        data={
+                          testimonials[index].data !== null
+                            ? testimonials[index].data.data
+                            : null
+                        }
                       />
-                    </Grid>
-                    <Grid item style={{ marginTop: '0.5rem' }}>
-                      {row.content}
-                    </Grid>
-                    <Grid item style={{ marginTop: '0.5rem' }}>
-                      {moment(row.date).format('ll')}
-                    </Grid>
-                  </Grid>
-                </WidgetCard>
-              ) : row.status === 1 && theme === 2 ? (
-                <WidgetBubble
-                  fgColor={fgColor}
-                  bgColor={bgColor}
-                  ratingColor={ratingColor}
-                  content={row.content}
-                  rating={row.rating}
-                  bfColor={bfColor}
-                  blColor={blColor}
-                  name={row.value.split(',')[0]}
-                  txtColor={txtColor}
-                  headline={
-                    row.key.indexOf('Headline') !== -1
-                      ? row.value.split(',')[
-                          row.key.split(',').indexOf('Headline')
-                        ]
-                      : null
+                    ) : null;
                   }
-                  data={row.data !== null ? row.data.data : null}
-                />
-              ) : null
-            )}
+                })}
           </div>
         </div>
       </div>
@@ -880,6 +956,220 @@ export default function CreateWidget() {
           <Grid item xs={3}></Grid>
         </Grid>
       </Dialog>
+
+      <Dialog fullScreen open={chooseOpen} TransitionComponent={Transition}>
+        <Grid container>
+          <Grid item xs={1}></Grid>
+          <Grid
+            item
+            xs={10}
+            style={{
+              alignSelf: 'center',
+              display: 'flex',
+              flexDirection: 'column',
+              marginTop: '2rem',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'space-between',
+                gap: '10rem',
+              }}
+            >
+              <SiderButton onClick={handleAnchorClick}>
+                <PageTitle>{filter}</PageTitle>
+                <DownArrow />
+              </SiderButton>
+              <MainButton
+                onClick={() => {
+                  handleChooseClose();
+                }}
+              >
+                Done
+              </MainButton>
+            </div>
+            <div
+              style={{
+                width: '100%',
+                marginTop: '2rem',
+              }}
+            >
+              <div
+                style={{
+                  gap:
+                    space === 'small'
+                      ? '0.5rem'
+                      : space === 'medium'
+                      ? '1rem'
+                      : space === 'large'
+                      ? '1.5rem'
+                      : space === 'extra large'
+                      ? '2rem'
+                      : 'unset',
+                  padding: '2rem',
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  height: 'min-content',
+                }}
+              >
+                {testimonials.map((item, index) => {
+                  if (!isEmpty(checked) && ifText.replace(/["']/g, '')) {
+                    return (
+                      <WidgetCard
+                        bgColor={bgColor}
+                        txtColor={txtColor}
+                        radius={radius}
+                        shadow={shadow}
+                        onClick={() => {
+                          let temp = [];
+                          temp = JSON.parse(JSON.stringify(checked));
+                          if (temp[index] === 'true') {
+                            temp[index] = 'false';
+                          } else {
+                            temp[index] = 'true';
+                          }
+                          setChecked(temp);
+                        }}
+                      >
+                        <Grid
+                          container
+                          style={{
+                            display: 'flex',
+                            flexDirection: 'column',
+                          }}
+                        >
+                          <Grid
+                            item
+                            style={{
+                              marginTop: '0.5rem',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '0.5rem',
+                            }}
+                          >
+                            {item.data !== null ? (
+                              <Avatar
+                                style={{
+                                  borderRadius: '50%',
+                                  border: '1px solid #ddd',
+                                  borderColor: 'rgb(237, 243, 249)',
+                                  borderWidth: '4px',
+                                }}
+                                sx={{ width: 56, height: 56 }}
+                              >
+                                <img
+                                  src={`data:image/png;base64,${btoa(
+                                    String.fromCharCode(
+                                      ...new Uint8Array(item.data.data)
+                                    )
+                                  )}`}
+                                  width={'60px'}
+                                />
+                              </Avatar>
+                            ) : item.data === null && item.imageUrl !== '' ? (
+                              <Avatar
+                                style={{
+                                  width: '48px',
+                                  height: '48px',
+                                  borderRadius: '50%',
+                                  border: '1px solid #ddd',
+                                  background: '#000',
+                                  color: '#fff',
+                                  fontSize: '0.8rem',
+                                }}
+                                alt={`Avatar n°${item + 1}`}
+                              >
+                                <img
+                                  src={item.imageUrl}
+                                  width="48px"
+                                  height="48px"
+                                />
+                              </Avatar>
+                            ) : (
+                              <Avatar
+                                style={{
+                                  borderRadius: '50%',
+                                  border: '1px solid #ddd',
+                                  borderColor: 'rgb(237, 243, 249)',
+                                  borderWidth: '4px',
+                                }}
+                                sx={{ width: 56, height: 56 }}
+                              >
+                                <img
+                                  src={`../../../../../user.png`}
+                                  width={'60px'}
+                                />
+                              </Avatar>
+                            )}
+
+                            <div>
+                              <div>{item.value.split(',')[0]}</div>
+                              <div>
+                                {item.key.indexOf('Headline') !== -1
+                                  ? item.value.split(',')[
+                                      item.key.split(',').indexOf('Headline')
+                                    ]
+                                  : null}
+                              </div>
+                            </div>
+                            <div
+                              style={{
+                                alignItems: 'end',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                width: '100%',
+                              }}
+                            >
+                              <div
+                                style={{
+                                  fontSize: '0.875rem',
+                                  lineHeight: '1.25rem',
+                                  borderRadius: '9999px',
+                                  justifyContent: 'center',
+                                  display: 'flex',
+                                  flexDirection: 'column',
+                                  width: 'fit-content',
+                                  background:
+                                    checked[index] === 'true'
+                                      ? '#6701e6'
+                                      : '#9CA3AF',
+                                }}
+                              >
+                                {checked[index] === 'true' ? (
+                                  <CheckIcon style={{ fill: 'white' }} />
+                                ) : (
+                                  <CheckIcon style={{ fill: '#333' }} />
+                                )}
+                              </div>
+                            </div>
+                          </Grid>
+                          <Grid item style={{ marginTop: '0.5rem' }}>
+                            <Rating
+                              readOnly
+                              value={item.rating}
+                              style={{
+                                color: ratingColor,
+                              }}
+                            />
+                          </Grid>
+                          <Grid item style={{ marginTop: '0.5rem' }}>
+                            {item.content}
+                          </Grid>
+                          <Grid item style={{ marginTop: '0.5rem' }}>
+                            {moment(item.date).format('ll')}
+                          </Grid>
+                        </Grid>
+                      </WidgetCard>
+                    );
+                  }
+                })}
+              </div>
+            </div>
+          </Grid>
+          <Grid item xs={1}></Grid>
+        </Grid>
+      </Dialog>
       <Drawer
         anchor="right"
         key="drawer1"
@@ -938,7 +1228,7 @@ export default function CreateWidget() {
                     key="js"
                     onClick={() => {
                       setCode(
-                        `<div className="loya-frame-embed" data-id="${url}"></div>\n<script defer type="text/javascript" src="http://35.170.73.191:3000/embedTemplate.js"></script>`
+                        `<div className="loya-frame-embed" data-id="${url}"></div>\n<script defer type="text/javascript" src="https://35.170.73.191:3000/embedTemplate.js"></script>`
                       );
                     }}
                   >
@@ -948,7 +1238,9 @@ export default function CreateWidget() {
                     value="url"
                     key="url"
                     onClick={() => {
-                      setCode(window.location.href);
+                      setCode(
+                        `https://${window.location.host}/widgets/p/${userId}-${projectId}-${url}`
+                      );
                     }}
                   >
                     URL
@@ -979,6 +1271,40 @@ export default function CreateWidget() {
           </Grid>
         </div>
       </Drawer>
+      <Popover
+        id={index}
+        open={openPop}
+        anchorEl={anchorEl}
+        onClose={handleAnchorClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'left',
+        }}
+        style={{ padding: '0.5rem', fontSize: '8px' }}
+      >
+        <MenuButton
+          sx={{ p: 2 }}
+          key="1"
+          onClick={() => {
+            setIfText('(item.status === 1 || item.status === 0)');
+            setFilter('Pick Testimonials');
+            handleAnchorClose();
+          }}
+        >
+          Pick Testimonials
+        </MenuButton>
+        <MenuButton
+          sx={{ p: 2 }}
+          key="2"
+          onClick={() => {
+            setIfText('item.status === 1');
+            setFilter('Public Testimonials');
+            handleAnchorClose();
+          }}
+        >
+          Public Testimonials
+        </MenuButton>
+      </Popover>
       <Snackbar
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
         open={openSnack}

@@ -1,9 +1,11 @@
 import testimonialService from '../services/testimonial.service';
+import { isEmpty } from '../util/isEmpty';
 import { ALL_SUCCESS, SAVE_INDEX, ALL_IMPORT } from './types';
 
 export const getAll = (data) => (dispatch) => {
   return testimonialService.getAll(data).then(
     (res) => {
+      console.log('TestimonialRES=', res);
       dispatch({
         type: ALL_SUCCESS,
         payload: res.data,
@@ -25,6 +27,10 @@ export const getAll = (data) => (dispatch) => {
 
 export const createTestimonial = (info, data) => {
   return testimonialService.create(info, data);
+};
+
+export const getGoogleReviews = (info) => {
+  return testimonialService.googleReviews(info);
 };
 
 export const getById = (id) => {

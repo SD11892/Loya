@@ -1,14 +1,14 @@
 import axios from 'axios';
 import { isEmpty } from '../util/isEmpty';
 
-const API_URL = '/api/project/';
+const API_URL = 'https://dashboard.tryloya.com:9000/api/project/';
 
-const create = (name, id, url) => {
+const create = (name, id, slug, url) => {
   return axios.post(
     API_URL + 'create',
     null,
     {
-      params: { name, id, url },
+      params: { name, id, slug, url },
     },
     {
       headers: { 'Content-Type': 'multi-part/form-data' },
@@ -17,9 +17,11 @@ const create = (name, id, url) => {
 };
 
 const update = (info) => {
+  console.log('Are you here???', info);
   return axios.post(
     API_URL + 'update',
-    { params: { info } },
+    null,
+    { params:{info} },
     {
       headers: { 'Content-Type': 'multi-part/form-data' },
     }
@@ -28,39 +30,38 @@ const update = (info) => {
 
 const getAll = () => {
   const userId = `${localStorage.getItem('userId')}`;
-  return axios
-    .post(API_URL + `all`, null, {
-      params: {
-        userId: userId,
-      },
-    })
-    .then((response) => {
-      if (isEmpty(response.data)) {
-        return {
-          CODE: '200',
-          message: 'Empty',
-        };
-      } else {
-        localStorage.setItem(
-          'projects',
-          JSON.stringify(response.data.projects)
-        );
-        localStorage.setItem(
-          'projectId',
-          JSON.stringify(response.data.projects[0].id)
-        );
-        return {
-          CODE: '200',
-          message: 'Get All Projects Successfully',
-          data: response.data,
-        };
-      }
-    })
-    .catch((err) => {
-      if (err.code === 'ERR_BAD_REQUEST') {
-        return { CODE: '404', message: 'Failed getting projects' };
-      }
-    });
+  if (userId !== null) {
+    console.log('userId2=======================', userId);
+    return axios
+      .post(API_URL + `all`, null, {
+        params: {
+          userId: userId,
+        },
+      })
+      .then((response) => {
+        if (isEmpty(response.data)) {
+          return {
+            CODE: '200',
+            message: 'Empty',
+          };
+        } else {
+          localStorage.setItem(
+            'projects',
+            JSON.stringify(response.data.projects)
+          );
+          return {
+            CODE: '200',
+            message: 'Get All Projects Successfully',
+            data: response.data,
+          };
+        }
+      })
+      .catch((err) => {
+        if (err.code === 'ERR_BAD_REQUEST') {
+          return { CODE: '404', message: 'Failed getting projects' };
+        }
+      });
+  }
 };
 
 const getById = async (Id) => {

@@ -47,12 +47,14 @@ import {
   updateTestimonial,
   deleteTestimonial,
 } from '../../actions/testimonial';
+import { createForm } from '../../actions/testimonialForm';
 import { useDispatch, useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { getAll } from '../../actions/testimonial';
 import PageTitle from '../uielements/pageTitle';
 import FormLabel from '../uielements/form/FormLabel';
 import FormGrid from '../uielements/form/FormGrid';
+import ReactPlayer from 'react-player';
 
 const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
@@ -62,6 +64,7 @@ const TestTable = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const testimonials = useSelector((state) => state.testimonial.testimonial);
+  const upgrade = localStorage.getItem('upgrade');
   const [status, setStatus] = useState(0);
   const [name, setName] = useState('');
   const [type, setType] = useState('');
@@ -79,6 +82,7 @@ const TestTable = () => {
   const [videoURL, setVideoURL] = useState('');
   const hiddenFileInput = React.useRef(null);
   const [open, setOpen] = React.useState(false);
+  const [limit, setLimit] = React.useState(null);
 
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -131,9 +135,16 @@ const TestTable = () => {
     avatarState,
     editState,
     selectedImage,
+    limit,
   ]);
   useEffect(() => {
-    dispatch(getAll());
+    dispatch(getAll()).then((res) => {
+      if (upgrade === 'free') {
+        setLimit(10);
+      } else {
+        setLimit(res.data.testimonials.length);
+      }
+    });
   }, []);
 
   return (
@@ -192,7 +203,7 @@ const TestTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {testimonials.map((row) => (
+            {testimonials.slice(0, limit).map((row) => (
               <TableRow
                 key={row.id}
                 sx={{
@@ -209,7 +220,7 @@ const TestTable = () => {
                       )}`
                     );
                     setId(row.id);
-                    setStatus(row.status);
+                    setStatus(Number(row.status));
                     setKey(row.key.split(','));
                     setValue(row.value.split(','));
                     setUrl(row.url);
@@ -217,11 +228,13 @@ const TestTable = () => {
                     setRateState(row.rating);
                     setDrawerState(true);
                     setDate(row.date);
+                    setName(`Widget for ${row.value[0]}`);
                     setVideo(row.video);
                   } else {
                     setId(row.id);
+                    setName(`Widget for ${row.value[0]}`);
                     setAvatarState('');
-                    setStatus(row.status);
+                    setStatus(Number(row.status));
                     setKey(row.key.split(','));
                     setValue(row.value.split(','));
                     setUrl(row.url);
@@ -252,18 +265,32 @@ const TestTable = () => {
                       {row.data !== null ? (
                         <Avatar
                           style={{
+                            width: '48px',
+                            height: '48px',
                             borderRadius: '50%',
                             border: '1px solid #ddd',
                           }}
+                          alt={`Avatar n°${row + 1}`}
+                          src={`data:image/png;base64,${btoa(
+                            String.fromCharCode(
+                              ...new Uint8Array(row.data.data)
+                            )
+                          )}`}
+                        />
+                      ) : row.data === null && row.imageUrl !== '' ? (
+                        <Avatar
+                          style={{
+                            width: '48px',
+                            height: '48px',
+                            borderRadius: '50%',
+                            border: '1px solid #ddd',
+                            background: '#000',
+                            color: '#fff',
+                            fontSize: '0.8rem',
+                          }}
+                          alt={`Avatar n°${row + 1}`}
                         >
-                          <img
-                            src={`data:image/png;base64,${btoa(
-                              String.fromCharCode(
-                                ...new Uint8Array(row.data.data)
-                              )
-                            )}`}
-                            width={'48px'}
-                          />
+                          <img src={row.imageUrl} width="48px" height="48px" />
                         </Avatar>
                       ) : (
                         <Avatar
@@ -301,20 +328,6 @@ const TestTable = () => {
                     </Grid>
                   </Grid>
                 </TableCell>
-                {/* <TableCell
-                  tyle={{
-                    padding: '1rem',
-                    fontSize: '0.8rem',
-                    lineHeight: '1.25rem',
-                  }}
-                  align="center">
-                <VideoImageThumbnail
-    videoUrl="https://dl.dropboxusercontent.com/s/pkz1yguv8vcs7k1/cover.mp4?dl=0"
-    thumbnailHandler={(thumbnail) => console.log(thumbnail)}
-    width={120}
-    height={80}
-    alt="my test video"
-    /></TableCell> */}
                 <TableCell
                   tyle={{
                     padding: '1rem',
@@ -324,30 +337,69 @@ const TestTable = () => {
                   align="left"
                 >
                   {row.video ? (
-                    <VideoImageThumbnail
-                      videoUrl={s3.getSignedUrl('getObject', {
-                        Bucket: 'loya-bucket',
-                        Key: row.video,
-                      })}
-                      alt="my test video"
-                    />
-                  ) : (
-                    <></>
-                  )}
-                  <div style={{ color: 'rgb(107,114,128)', maxWidth: '28rem' }}>
-                    {row.rating === null || row.rating === 0 ? null : (
-                      <div>
-                        <Rating
-                          value={row.rating}
-                          readOnly
-                          style={{ fontSize: '1rem' }}
-                        />
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'row',
+                        gap: '2rem',
+                      }}
+                    >
+                      <ReactPlayer
+                        className="react-player"
+                        url={s3.getSignedUrl('getObject', {
+                          Bucket: 'loya-bucket',
+                          Key: row.video,
+                        })}
+                      />
+                      <div style={{ display: 'flex', flexDirection: 'column' }}>
+                        <div
+                          style={{
+                            color: 'rgb(107,114,128)',
+                            maxWidth: '28rem',
+                          }}
+                        >
+                          {row.rating === null || row.rating === 0 ? null : (
+                            <div>
+                              <Rating
+                                value={row.rating}
+                                readOnly
+                                style={{ fontSize: '1.5rem' }}
+                              />
+                            </div>
+                          )}
+                        </div>
+                        <div
+                          style={{
+                            color: 'rgb(107,114,128)',
+                            maxWidth: '28rem',
+                          }}
+                        >
+                          {row.content}
+                        </div>
                       </div>
-                    )}
-                  </div>
-                  <div style={{ color: 'rgb(107,114,128)', maxWidth: '28rem' }}>
-                    {row.content}
-                  </div>
+                    </div>
+                  ) : (
+                    <div>
+                      <div
+                        style={{ color: 'rgb(107,114,128)', maxWidth: '28rem' }}
+                      >
+                        {row.rating === null || row.rating === 0 ? null : (
+                          <div>
+                            <Rating
+                              value={row.rating}
+                              readOnly
+                              style={{ fontSize: '1.5rem' }}
+                            />
+                          </div>
+                        )}
+                      </div>
+                      <div
+                        style={{ color: 'rgb(107,114,128)', maxWidth: '28rem' }}
+                      >
+                        {row.content}
+                      </div>
+                    </div>
+                  )}
                 </TableCell>
                 <TableCell
                   style={{
@@ -374,14 +426,14 @@ const TestTable = () => {
                 >
                   <StatusButton
                     style={
-                      row.status === 1
+                      row.status === '1'
                         ? { ...publicStyle }
                         : { ...privateStyle }
                     }
                     onClick={(e) => {
                       e.stopPropagation();
                       inf.id = row.id;
-                      inf.status = 1 - row.status;
+                      inf.status = 1 - Number(row.status);
                       inf.key = row.key;
                       inf.content = row.content;
                       inf.name = row.name;
@@ -395,7 +447,7 @@ const TestTable = () => {
                       });
                     }}
                   >
-                    {row.status === 1 ? 'public' : 'private'}
+                    {row.status === '1' ? 'public' : 'private'}
                   </StatusButton>
                 </TableCell>
               </TableRow>
@@ -454,6 +506,7 @@ const TestTable = () => {
                     updateTestimonial(inf, selectedImage).then(() => {
                       setStatus(1 - status);
                       dispatch(getAll());
+                      console.log('Status changed');
                     });
                   }}
                 >
@@ -538,23 +591,31 @@ const TestTable = () => {
             <p style={{ fontSize: '1.2rem' }}>
               <b>{value[0]}</b>
             </p>
+            <p style={{ whiteSpace: 'normal', maxWidth: '28rem' }}>
+              {contentState}
+            </p>
             {rateState ? (
-              <Rating name="read-only" value={rateState} readOnly />
+              <Rating
+                name="read-only"
+                value={rateState}
+                style={{ fontSize: '2rem' }}
+                readOnly
+              />
             ) : (
               <></>
             )}
             {video ? (
-              <video width={448} controls style={{ paddingRight: '2rem' }}>
-                <source src={videoURL} width={'100%'} type="video/mp4"></source>
-              </video>
+              <ReactPlayer
+                className="react-player-big"
+                url={s3.getSignedUrl('getObject', {
+                  Bucket: 'loya-bucket',
+                  Key: video,
+                })}
+                controls={true}
+              />
             ) : (
               <></>
             )}
-            <p style={{ whiteSpace: 'normal', maxWidth: '28rem' }}>
-              {contentState}
-            </p>
-
-            <Button>add tag</Button>
             <div
               style={{
                 marginRight: '2rem',
@@ -563,12 +624,6 @@ const TestTable = () => {
                 padding: '1rem',
               }}
             >
-              {/* <p>From: {url}</p>
-            <p>
-              {key.indexOf("Email Address") === -1
-                ? null
-                : `Email: ${value[key.indexOf("Email Address")]}`}
-            </p> */}
               {key.map((val) =>
                 val !== 'Your Name' ? (
                   <p>
@@ -579,12 +634,16 @@ const TestTable = () => {
               <p></p>
               <p>Date:{moment(date).format('LL')}</p>
             </div>
+
             <br />
             <EmbedButton
               variant="contained"
               onClick={() => {
-                localStorage.setItem('testimonialId', id);
-                navigate('/only_one_widget');
+                createForm(name, id).then((result) => {
+                  localStorage.setItem('widgetUrl', result.data.data.url);
+                  localStorage.setItem('testimonialId', id);
+                  navigate('/only_one_widget');
+                });
               }}
             >
               <Embed />

@@ -6,7 +6,7 @@ export const Googlesm = () => {
       height="16"
       preserveAspectRatio="xMidYMid"
       viewBox="0 0 256 262"
-      style={{ marginRight: "4px", marginTop: "-4px", verticalAlign: "middle" }}
+      style={{ marginTop: '-2px', marginRight: '2px', verticalAlign: 'middle' }}
     >
       <path
         fill="#4285F4"

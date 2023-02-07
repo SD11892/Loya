@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { isEmpty } from '../util/isEmpty';
 
-const API_URL = '/api/testimonial/';
+const API_URL = 'https://dashboard.tryloya.com:9000/api/testimonial/';
 
 const create = (info, data) => {
   const formData = new FormData();
@@ -49,6 +49,7 @@ const update = (info, data) => {
 const getAll = (searchData) => {
   let userId = `${localStorage.getItem('userId')}`;
   let projectId = localStorage.getItem('projectId');
+  console.log('++++++++++++', projectId + userId);
   console.log(userId, projectId);
   return axios
     .post(API_URL + `all`, null, { params: { userId, projectId, searchData } })
@@ -84,7 +85,7 @@ const getById = (id) => {
       };
     })
     .catch((err) => {
-      console.log('createErr=', err);
+      console.log('Err=', err);
     });
 };
 
@@ -103,10 +104,10 @@ const getByFormUrl = async (url) => {
 
 const getImport = async () => {
   let userId = `${localStorage.getItem('userId')}`;
-  let projects = JSON.parse(localStorage.getItem('projects'));
+  let projectId = `${localStorage.getItem('projectId')}`;
   return axios
     .post(API_URL + `history`, null, {
-      params: { userId, projects },
+      params: { userId, projectId },
     })
     .then((response) => {
       if (isEmpty(response.data)) {
@@ -168,6 +169,15 @@ const uploadVideo = (info, data) => {
   );
 };
 
+const googleReviews = (info) => {
+  console.log('infoooooooo=', info);
+  return axios.post(API_URL + 'googleReviews', null, {
+    params: {
+      info,
+    },
+  });
+};
+
 export default {
   getImport,
   create,
@@ -179,4 +189,5 @@ export default {
   search_target,
   getById,
   uploadVideo,
+  googleReviews,
 };

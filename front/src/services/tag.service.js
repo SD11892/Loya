@@ -1,11 +1,10 @@
-import axios from "axios";
-import { isEmpty } from "../util/isEmpty";
+import axios from 'axios';
+import { isEmpty } from '../util/isEmpty';
 
-const API_URL = "/api/tag/";
-const userId = JSON.parse(localStorage.getItem("userId"));
+const API_URL = '/api/tag/';
+const userId = JSON.parse(localStorage.getItem('userId'));
 const create = (tagname) => {
-  console.log(tagname);
-  return axios.post(API_URL + "create", null, {
+  return axios.post(API_URL + 'create', null, {
     params: {
       tagname,
       userId,
@@ -27,7 +26,7 @@ const create = (tagname) => {
 
 const getAll = () => {
   return axios
-    .post(API_URL + "getAll", null, {
+    .post(API_URL + 'getAll', null, {
       params: {
         userId,
       },
@@ -35,20 +34,20 @@ const getAll = () => {
     .then((response) => {
       if (isEmpty(response.data)) {
         return {
-          CODE: "200",
-          message: "Empty",
+          CODE: '200',
+          message: 'Empty',
         };
       } else {
         return {
-          CODE: "200",
-          message: "Get All Walls Successfully",
+          CODE: '200',
+          message: 'Get All Walls Successfully',
           data: response.data,
         };
       }
     })
     .catch((err) => {
-      if (err.code === "ERR_BAD_REQUEST") {
-        return { CODE: "404", message: "Failed getting forms" };
+      if (err.code === 'ERR_BAD_REQUEST') {
+        return { CODE: '404', message: 'Failed getting forms' };
       }
     });
 };

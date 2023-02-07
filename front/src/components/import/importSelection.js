@@ -1,49 +1,50 @@
-import { useNavigate } from "react-router-dom";
-import BackwardButton from "../uielements/buttons/backwardButton";
-import { Grid, ToggleButtonGroup } from "@mui/material";
-import PageTitle from "../uielements/pageTitle";
-import MenuButton from "../uielements/buttons/menuButton";
-import { Google } from "../../icons/google";
-import { Facebook } from "../../icons/facebook";
-import SiderText from "../uielements/siderText";
-import { Pencil as PencilIcon } from "../../icons/pencil";
-import { Camera as CameraIcon } from "../../icons/camera";
+import { useNavigate } from 'react-router-dom';
+import BackwardButton from '../uielements/buttons/backwardButton';
+import { Grid, ToggleButtonGroup } from '@mui/material';
+import PageTitle from '../uielements/pageTitle';
+import MenuButton from '../uielements/buttons/menuButton';
+import { Google } from '../../icons/google';
+import { Facebook } from '../../icons/facebook';
+import SiderText from '../uielements/siderText';
+import { Pencil as PencilIcon } from '../../icons/pencil';
+import { Camera as CameraIcon } from '../../icons/camera';
+import ButtonGroup from '../uielements/ButtonGroup';
 
 export const ImportSelection = (props) => {
   const navigate = useNavigate();
   return (
     <div
       style={{
-        width: "100%",
-        height: "100vh",
-        overflowY: "auto",
+        width: '100%',
+        height: '100vh',
+        overflowY: 'auto',
       }}
     >
       <Grid container>
         <BackwardButton
           onClick={() => {
-            navigate("/testimonials");
+            navigate('/testimonials');
           }}
         >
           <SiderText>← Testimonials</SiderText>
         </BackwardButton>
-        <Grid item xs={12} style={{ marginBottom: "1rem" }}>
+        <Grid item xs={12} style={{ marginBottom: '1rem' }}>
           <PageTitle>Import your testimonials</PageTitle>
         </Grid>
         <Grid
           item
           xs={12}
-          style={{ paddingTop: "1rem", borderTop: "1px solid #ddd" }}
+          style={{ paddingTop: '1rem', borderTop: '1px solid #ddd' }}
         >
-          <ToggleButtonGroup
+          <ButtonGroup
             value={props.select}
-            style={{ flexDirection: "column", width: "100%" }}
+            style={{ flexDirection: 'column', width: '100%' }}
           >
             <MenuButton
               value="text"
               key="text"
               onClick={() => {
-                props.setSelect("text");
+                props.setSelect('text');
               }}
             >
               <PencilIcon />
@@ -53,7 +54,7 @@ export const ImportSelection = (props) => {
               value="video"
               key="video"
               onClick={() => {
-                props.setSelect("video");
+                props.setSelect('video');
               }}
             >
               <CameraIcon />
@@ -63,7 +64,7 @@ export const ImportSelection = (props) => {
               value="google"
               key="google"
               onClick={() => {
-                props.setSelect("google");
+                props.setSelect('google');
               }}
             >
               <Google />
@@ -73,13 +74,13 @@ export const ImportSelection = (props) => {
               value="facebook"
               key="facebook"
               onClick={() => {
-                props.setSelect("facebook");
+                props.setSelect('facebook');
               }}
             >
               <Facebook />
               <SiderText>Facebook</SiderText>
             </MenuButton>
-          </ToggleButtonGroup>
+          </ButtonGroup>
         </Grid>
       </Grid>
     </div>

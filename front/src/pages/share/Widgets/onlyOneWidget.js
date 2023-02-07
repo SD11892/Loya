@@ -57,9 +57,11 @@ import {
 } from '../../../actions/testimonial';
 
 import { getByFormUrl, saveForm } from '../../../actions/testimonialForm';
+import { getById } from '../../../actions/testimonial';
 
 import { createColor } from 'material-ui-color';
 import WidgetBubble from '../../../components/widgets/widgetBubble';
+import toastr from 'toastr';
 
 const Div = styled('div')(({ theme }) => ({
   ...theme.typography.button,
@@ -94,7 +96,6 @@ const Alert = React.forwardRef(function Alert(props, ref) {
 
 const infor = {
   url: '',
-  spacing: '',
   shadow: '',
   border: '',
   bgColor: '',
@@ -107,12 +108,10 @@ const infor = {
 };
 
 export default function OnlyOneWidget() {
-  const testimonials = useSelector((state) => state.testimonial.testimonial);
-  const dispatch = useDispatch();
-  const url = window.location.pathname
-    .replace(/testimonialforms/i, '')
-    .replace('//', '');
-
+  const userId = localStorage.getItem('userId');
+  const projectId = localStorage.getItem('projectId');
+  const [url, setUrl] = React.useState('');
+  const [row, setRow] = React.useState(null);
   const [view, setView] = React.useState('theme');
   const [embed, setEmbed] = React.useState('js');
   const [bgColor, setBgColor] = React.useState('');
@@ -121,16 +120,14 @@ export default function OnlyOneWidget() {
   const [fgColor, setFgColor] = React.useState('');
   const [txtColor, setTxtColor] = React.useState('');
   const [ratingColor, setRatingColor] = React.useState('');
-  const [space, setSpace] = React.useState('');
   const [theme, setTheme] = React.useState(1);
   const [shadow, setShadow] = React.useState('');
   const [radius, setRadius] = React.useState('');
-  const [open, setOpen] = React.useState(false);
   const [itemList, setItemList] = React.useState([]);
   const [drawerState, setDrawerState] = React.useState(false);
   const [code, setCode] = React.useState(
-    `<div className="loya-frame-embed" data-id="${url}"></div>
-<script defer type="text/javascript" src="http://35.170.73.191:3000/embedTemplate.js"></script>`
+    `<div className="loya-frame-embed" data-id="${userId}-${projectId}-${url}"></div>
+<script defer type="text/javascript" src="https://dashboard.tryloya.com/embedTemplate.js"></script>`
   );
   const [openSnack, setOpenSnack] = React.useState(false);
   const [openCopySnack, setOpenCopySnack] = React.useState(false);
@@ -142,14 +139,7 @@ export default function OnlyOneWidget() {
     setEmbed(nextView);
   };
   const handleSave = () => {
-    itemList.map((row, index) => {
-      updateTestimonial(row, row.data);
-      if (index === itemList.length - 1) {
-        setOpenSnack(true);
-      }
-    });
     infor.url = url;
-    infor.spacing = space;
     infor.shadow = shadow;
     infor.border = radius;
     infor.bgColor = bgColor;
@@ -159,7 +149,9 @@ export default function OnlyOneWidget() {
     infor.bfColor = bfColor;
     infor.blColor = blColor;
     infor.fgColor = fgColor;
-    saveForm(infor);
+    saveForm(infor).then(() => {
+      toastr.success('Saved');
+    });
   };
 
   const handlebgColorChange = (value) => {
@@ -174,32 +166,9 @@ export default function OnlyOneWidget() {
   const handleRadiusChange = (value) => {
     setRadius(value.target.value);
   };
-  const handleSpaceChange = (value) => {
-    setSpace(value.target.value);
-  };
+
   const handleShadowChange = (value) => {
     setShadow(value.target.value);
-  };
-
-  const handleClickOpen = () => {
-    setOpen(true);
-  };
-
-  const handleClose = () => {
-    dispatch(saveIndex(itemList));
-    setOpen(false);
-  };
-
-  const onDragEnd = (droppedItem) => {
-    // Ignore drop outside droppable container
-    if (!droppedItem.destination) return;
-    var updatedList = [...itemList];
-    // Remove dragged item
-    const [reorderedItem] = updatedList.splice(droppedItem.source.index, 1);
-    // Add dropped item
-    updatedList.splice(droppedItem.destination.index, 0, reorderedItem);
-    // Update State
-    setItemList(updatedList);
   };
 
   const handleCloseSnack = (event, reason) => {
@@ -210,48 +179,46 @@ export default function OnlyOneWidget() {
     setOpenSnack(false);
     setOpenCopySnack(false);
   };
-
   React.useEffect(() => {
-    dispatch(getAll());
-    getByFormUrl(url)
-      .then((res) => {
-        const result = res.data.data.data;
-        setSpace(result.spacing);
-        setShadow(result.shadow);
-        setRadius(result.border);
-        setBgColor(result.bgColor);
-        setTxtColor(result.txtColor);
-        setRatingColor(result.ratingColor);
-        setTheme(result.theme);
-        setBlColor(result.blColor);
-        setBfColor(result.bfColor);
-        setFgColor(result.fgColor);
-      })
-      .catch((err) => {
-        alert('Invalid Form');
-      });
-    setItemList(testimonials);
+    let id = localStorage.getItem('testimonialId');
+    let widgetUrl = localStorage.getItem('widgetUrl');
+    getById(id).then((res) => {
+      setRow(res.data.data.fdata);
+      setUrl(`${userId}-${projectId}-${widgetUrl}`);
+      getByFormUrl(widgetUrl)
+        .then((res) => {
+          console.log('res=', res);
+          const result = res.data.data.data;
+          setShadow(result.shadow);
+          setRadius(result.border);
+          setBgColor(result.bgColor);
+          setTxtColor(result.txtColor);
+          setRatingColor(result.ratingColor);
+          setTheme(result.theme);
+          setBlColor(result.blColor);
+          setBfColor(result.bfColor);
+          setFgColor(result.fgColor);
+        })
+        .catch((err) => {
+          alert('Invalid Form');
+        });
+    });
   }, []);
-
-  React.useEffect(() => {
-    setItemList(testimonials);
-  }, [testimonials]);
 
   React.useEffect(() => {}, [
     view,
-    space,
     radius,
     shadow,
     bgColor,
     ratingColor,
     txtColor,
     itemList,
-    testimonials,
     code,
     theme,
     fgColor,
     bfColor,
     blColor,
+    row,
   ]);
 
   const navigate = useNavigate();
@@ -377,6 +344,7 @@ export default function OnlyOneWidget() {
                       setTxtColor('black');
                       setRatingColor('#FBBF24');
                       setTheme(1);
+                      console.log('data=', row);
                     }}
                   >
                     <img
@@ -513,20 +481,6 @@ export default function OnlyOneWidget() {
                   boxShadow: 'unset',
                 }}
               >
-                <Button variant="outlined" onClick={handleClickOpen}>
-                  Reorder testimonials
-                </Button>
-                <FormLabel>Spacing</FormLabel>
-                <Select
-                  onChange={handleSpaceChange}
-                  value={`${space}`}
-                  displayEmpty
-                >
-                  <MenuItem value="small">Small</MenuItem>
-                  <MenuItem value="medium">Medium</MenuItem>
-                  <MenuItem value="large">Large</MenuItem>
-                  <MenuItem value="extra large">Extra Large</MenuItem>
-                </Select>
                 <FormLabel>Shadow Size</FormLabel>
                 <Select
                   onChange={handleShadowChange}
@@ -563,323 +517,134 @@ export default function OnlyOneWidget() {
         >
           <div
             style={{
-              float: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill,350px)',
-              gap:
-                space === 'small'
-                  ? '0.5rem'
-                  : space === 'medium'
-                  ? '1rem'
-                  : space === 'large'
-                  ? '1.5rem'
-                  : space === 'extra large'
-                  ? '2rem'
-                  : 'unset',
               padding: '2rem',
-              display: 'grid',
               height: 'min-content',
             }}
           >
-            {itemList.map((row) =>
-              row.status === 1 && theme === 1 ? (
-                <WidgetCard
-                  bgColor={bgColor}
-                  txtColor={txtColor}
-                  radius={radius}
-                  shadow={shadow}
+            {theme === 1 && row !== null ? (
+              <WidgetCard
+                bgColor={bgColor}
+                txtColor={txtColor}
+                radius={radius}
+                shadow={shadow}
+              >
+                <Grid
+                  container
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                  }}
                 >
                   <Grid
-                    container
+                    item
                     style={{
+                      marginTop: '0.5rem',
                       display: 'flex',
-                      flexDirection: 'column',
+                      alignItems: 'center',
+                      gap: '0.5rem',
                     }}
                   >
-                    <Grid
-                      item
-                      style={{
-                        marginTop: '0.5rem',
-                        display: 'flex',
-                        alignItems: 'center',
-                        gap: '0.5rem',
-                      }}
-                    >
-                      {row.data !== null ? (
-                        <Avatar
-                          style={{
-                            borderRadius: '50%',
-                            border: '1px solid #ddd',
-                            borderColor: 'rgb(237, 243, 249)',
-                            borderWidth: '4px',
-                          }}
-                          sx={{ width: 56, height: 56 }}
-                        >
-                          <img
-                            src={`data:image/png;base64,${btoa(
-                              String.fromCharCode(
-                                ...new Uint8Array(row.data.data)
-                              )
-                            )}`}
-                            width={'60px'}
-                          />
-                        </Avatar>
-                      ) : (
-                        <Avatar
-                          style={{
-                            borderRadius: '50%',
-                            border: '1px solid #ddd',
-                            borderColor: 'rgb(237, 243, 249)',
-                            borderWidth: '4px',
-                          }}
-                          sx={{ width: 56, height: 56 }}
-                        >
-                          <img src={`../../../../../user.png`} width={'60px'} />
-                        </Avatar>
-                      )}
-
-                      <div>
-                        <div>{row.value.split(',')[0]}</div>
-                        <div>
-                          {row.key.indexOf('Headline') !== -1
-                            ? row.value.split(',')[
-                                row.key.split(',').indexOf('Headline')
-                              ]
-                            : null}
-                        </div>
-                      </div>
-                    </Grid>
-                    <Grid item style={{ marginTop: '0.5rem' }}>
-                      <Rating
-                        readOnly
-                        value={row.rating}
+                    {row.data !== null ? (
+                      <Avatar
                         style={{
-                          color: ratingColor,
+                          borderRadius: '50%',
+                          border: '1px solid #ddd',
+                          borderColor: 'rgb(237, 243, 249)',
+                          borderWidth: '4px',
                         }}
-                      />
-                    </Grid>
-                    <Grid item style={{ marginTop: '0.5rem' }}>
-                      {row.content}
-                    </Grid>
-                    <Grid item style={{ marginTop: '0.5rem' }}>
-                      {moment(row.date).format('ll')}
-                    </Grid>
+                        sx={{ width: 56, height: 56 }}
+                      >
+                        <img
+                          src={`data:image/png;base64,${btoa(
+                            String.fromCharCode(
+                              ...new Uint8Array(row.data.data)
+                            )
+                          )}`}
+                          width={'60px'}
+                        />
+                      </Avatar>
+                    ) : row.data === null && row.imageUrl !== '' ? (
+                      <Avatar
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          borderRadius: '50%',
+                          border: '1px solid #ddd',
+                          background: '#000',
+                          color: '#fff',
+                          fontSize: '0.8rem',
+                        }}
+                        alt={`Avatar n°${row + 1}`}
+                      >
+                        <img src={row.imageUrl} width="48px" height="48px" />
+                      </Avatar>
+                    ) : (
+                      <Avatar
+                        style={{
+                          borderRadius: '50%',
+                          border: '1px solid #ddd',
+                          borderColor: 'rgb(237, 243, 249)',
+                          borderWidth: '4px',
+                        }}
+                        sx={{ width: 56, height: 56 }}
+                      >
+                        <img src={`../../../../../user.png`} width={'60px'} />
+                      </Avatar>
+                    )}
+
+                    <div>
+                      <div>{row.value.split(',')[0]}</div>
+                      <div>
+                        {row.key.indexOf('Headline') !== -1
+                          ? row.value.split(',')[
+                              row.key.split(',').indexOf('Headline')
+                            ]
+                          : null}
+                      </div>
+                    </div>
                   </Grid>
-                </WidgetCard>
-              ) : row.status === 1 && theme === 2 ? (
-                <WidgetBubble
-                  fgColor={fgColor}
-                  bgColor={bgColor}
-                  ratingColor={ratingColor}
-                  content={row.content}
-                  rating={row.rating}
-                  bfColor={bfColor}
-                  blColor={blColor}
-                  name={row.value.split(',')[0]}
-                  txtColor={txtColor}
-                  headline={
-                    row.key.indexOf('Headline') !== -1
-                      ? row.value.split(',')[
-                          row.key.split(',').indexOf('Headline')
-                        ]
-                      : null
-                  }
-                  data={row.data !== null ? row.data.data : null}
-                />
-              ) : null
-            )}
+                  <Grid item style={{ marginTop: '0.5rem' }}>
+                    <Rating
+                      readOnly
+                      value={row.rating}
+                      style={{
+                        color: ratingColor,
+                      }}
+                    />
+                  </Grid>
+                  <Grid item style={{ marginTop: '0.5rem' }}>
+                    {row.content}
+                  </Grid>
+                  <Grid item style={{ marginTop: '0.5rem' }}>
+                    {moment(row.date).format('ll')}
+                  </Grid>
+                </Grid>
+              </WidgetCard>
+            ) : theme === 2 && row !== null ? (
+              <WidgetBubble
+                fgColor={fgColor}
+                bgColor={bgColor}
+                ratingColor={ratingColor}
+                content={row.content}
+                rating={row.rating}
+                bfColor={bfColor}
+                blColor={blColor}
+                name={row.value.split(',')[0]}
+                txtColor={txtColor}
+                headline={
+                  row.key.indexOf('Headline') !== -1
+                    ? row.value.split(',')[
+                        row.key.split(',').indexOf('Headline')
+                      ]
+                    : null
+                }
+                data={row.data !== null ? row.data.data : null}
+              />
+            ) : null}
           </div>
         </div>
       </div>
-      <Dialog fullScreen open={open} TransitionComponent={Transition}>
-        <Grid container>
-          <Grid item xs={3}></Grid>
-          <Grid
-            item
-            xs={6}
-            style={{
-              alignSelf: 'center',
-              display: 'flex',
-              flexDirection: 'column',
-              marginTop: '2rem',
-            }}
-          >
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-              <PageTitle>Edit Testimonial Order</PageTitle>
-              <IconButton
-                style={{ padding: '8px 16px' }}
-                onClick={() => {
-                  itemList.map((row, index) => {
-                    row.index = index;
-                    console.log('row=', row);
-                  });
-                  setItemList([...itemList]);
-                  handleClose();
-                }}
-              >
-                <CloseIcon />
-              </IconButton>
-            </div>
-            <div
-              style={{
-                width: '100%',
-                marginTop: '2rem',
-              }}
-            >
-              <DragDropContext onDragEnd={onDragEnd}>
-                <Droppable droppableId="some_id" direction="horizontal">
-                  {(provided) => (
-                    <div
-                      ref={provided.innerRef}
-                      {...provided.droppableProps}
-                      style={{
-                        gap:
-                          space === 'small'
-                            ? '0.5rem'
-                            : space === 'medium'
-                            ? '1rem'
-                            : space === 'large'
-                            ? '1.5rem'
-                            : space === 'extra large'
-                            ? '2rem'
-                            : 'unset',
-                        padding: '2rem',
-                        display: 'flex',
-                        flexWrap: 'wrap',
-                        height: 'min-content',
-                      }}
-                    >
-                      {itemList.map((item, index) => {
-                        return (
-                          <Draggable
-                            key={item.id.toString()}
-                            draggableId={item.id.toString()}
-                            index={index}
-                          >
-                            {(provided, snapshot) => (
-                              <div
-                                {...provided.draggableProps}
-                                {...provided.dragHandleProps}
-                                ref={provided.innerRef}
-                              >
-                                <Badge
-                                  badgeContent={index + 1}
-                                  color="secondary"
-                                >
-                                  <WidgetCard
-                                    bgColor={bgColor}
-                                    txtColor={txtColor}
-                                    radius={radius}
-                                    shadow={shadow}
-                                  >
-                                    <Grid
-                                      container
-                                      style={{
-                                        display: 'flex',
-                                        flexDirection: 'column',
-                                      }}
-                                    >
-                                      <Grid
-                                        item
-                                        style={{
-                                          marginTop: '0.5rem',
-                                          display: 'flex',
-                                          alignItems: 'center',
-                                          gap: '0.5rem',
-                                        }}
-                                      >
-                                        {item.data !== null ? (
-                                          <Avatar
-                                            style={{
-                                              borderRadius: '50%',
-                                              border: '1px solid #ddd',
-                                              borderColor: 'rgb(237, 243, 249)',
-                                              borderWidth: '4px',
-                                            }}
-                                            sx={{ width: 56, height: 56 }}
-                                          >
-                                            <img
-                                              src={`data:image/png;base64,${btoa(
-                                                String.fromCharCode(
-                                                  ...new Uint8Array(
-                                                    item.data.data
-                                                  )
-                                                )
-                                              )}`}
-                                              width={'60px'}
-                                            />
-                                          </Avatar>
-                                        ) : (
-                                          <Avatar
-                                            style={{
-                                              borderRadius: '50%',
-                                              border: '1px solid #ddd',
-                                              borderColor: 'rgb(237, 243, 249)',
-                                              borderWidth: '4px',
-                                            }}
-                                            sx={{ width: 56, height: 56 }}
-                                          >
-                                            <img
-                                              src={`../../../../../user.png`}
-                                              width={'60px'}
-                                            />
-                                          </Avatar>
-                                        )}
 
-                                        <div>
-                                          <div>{item.value.split(',')[0]}</div>
-                                          <div>
-                                            {item.key.indexOf('Headline') !== -1
-                                              ? item.value.split(',')[
-                                                  item.key
-                                                    .split(',')
-                                                    .indexOf('Headline')
-                                                ]
-                                              : null}
-                                          </div>
-                                        </div>
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        style={{ marginTop: '0.5rem' }}
-                                      >
-                                        <Rating
-                                          readOnly
-                                          value={item.rating}
-                                          style={{
-                                            color: ratingColor,
-                                          }}
-                                        />
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        style={{ marginTop: '0.5rem' }}
-                                      >
-                                        {item.content}
-                                      </Grid>
-                                      <Grid
-                                        item
-                                        style={{ marginTop: '0.5rem' }}
-                                      >
-                                        {moment(item.date).format('ll')}
-                                      </Grid>
-                                    </Grid>
-                                  </WidgetCard>
-                                </Badge>
-                              </div>
-                            )}
-                          </Draggable>
-                        );
-                      })}
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
-              </DragDropContext>
-            </div>
-          </Grid>
-          <Grid item xs={3}></Grid>
-        </Grid>
-      </Dialog>
       <Drawer
         anchor="right"
         key="drawer1"
@@ -938,7 +703,7 @@ export default function OnlyOneWidget() {
                     key="js"
                     onClick={() => {
                       setCode(
-                        `<div className="loya-frame-embed" data-id="${url}"></div>\n<script defer type="text/javascript" src="http://35.170.73.191:3000/embedTemplate.js"></script>`
+                        `<div className="loya-frame-embed" data-id="${url}"></div>\n<script defer type="text/javascript" src="https://dashboard.tryloya.com/embedTemplate.js"></script>`
                       );
                     }}
                   >

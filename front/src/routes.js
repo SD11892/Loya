@@ -24,6 +24,8 @@ import React from 'react';
 import NewPassword from './pages/sign/NewPassword';
 import Upgrade from './pages/stripe/upgrade';
 import Checkout from './pages/stripe/checkout';
+import Account from './components/account';
+import NewProject from './pages/newProject';
 
 export const routes = [
   {
@@ -31,7 +33,7 @@ export const routes = [
     element: <Login />,
   },
   {
-    path: '/signup',
+    path: 'signup',
     element: <Register />,
   },
   {
@@ -83,12 +85,20 @@ export const routes = [
         element: <Project />,
       },
       {
+        path: '/account',
+        element: <Account />,
+      },
+      {
         path: '/walls',
         element: <Walls />,
       },
       {
         path: '/tags',
         element: <Tags />,
+      },
+      {
+        path: '/new_project',
+        element: <NewProject />,
       },
     ],
   },

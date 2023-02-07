@@ -402,21 +402,25 @@ function NewForm() {
                           flexDirection: 'column',
                         }}
                       >
-                        {selectedImage !== null ? (
-                          <img
-                            src={URL.createObjectURL(selectedImage)}
-                            width={'48px'}
-                            alt="not found"
-                          />
-                        ) : selectedImage === null && data !== '' ? (
-                          <img
-                            src={`data:image/png;base64,${data}`}
-                            alt=""
-                            width={'48px'}
-                          />
-                        ) : (
-                          <img src={`../../heart.png`} width={'32px'} />
-                        )}
+                        {
+                          selectedImage !== null ? (
+                            <img
+                              src={URL.createObjectURL(selectedImage)}
+                              width={'48px'}
+                              alt="not found"
+                            />
+                          ) : (
+                            //  selectedImage === null && data !== '' ?
+                            <img
+                              src={`data:image/png;base64,${data}`}
+                              alt=""
+                              width={'48px'}
+                            />
+                          )
+                          // : (
+                          //   <img src={`../../heart.png`} width={'32px'} />
+                          // )
+                        }
                       </IconButton>
                     </label>
                     <FormLabel>Primary Color</FormLabel>
@@ -846,12 +850,12 @@ function NewForm() {
               style={{ display: visible === 1 ? 'flex' : 'none' }}
             >
               <TopLinkContainer>
-                <img
+                {/* <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
                   style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-                />
+                /> */}
                 <a
                   href="http://tryloya.com"
                   style={{
@@ -862,21 +866,25 @@ function NewForm() {
                 </a>
               </TopLinkContainer>
               <Grid container style={{ marginBottom: '1rem' }}>
-                {selectedImage !== null ? (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
-                    alt="not found"
-                  />
-                ) : data !== '' ? (
-                  <img
-                    src={`data:image/png;base64,${data}`}
-                    alt=""
-                    width={'48px'}
-                  />
-                ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
-                )}
+                {
+                  selectedImage !== null ? (
+                    <img
+                      src={URL.createObjectURL(selectedImage)}
+                      width={'48px'}
+                      alt="not found"
+                    />
+                  ) : (
+                    // data !== '' ?
+                    <img
+                      src={`data:image/png;base64,${data}`}
+                      alt=""
+                      width={'48px'}
+                    />
+                  )
+                  // : (
+                  //   <img src={`../../heart.png`} width={'32px'} />
+                  // )
+                }
               </Grid>
               <Grid container style={{ marginBottom: '1rem' }}>
                 <PageTitle>{title}</PageTitle>
@@ -915,12 +923,12 @@ function NewForm() {
               style={{ display: visible === 2 ? 'flex' : 'none' }}
             >
               <TopLinkContainer>
-                <img
+                {/* <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
                   style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-                />
+                /> */}
                 <a
                   href="http://tryloya.com"
                   style={{
@@ -931,21 +939,25 @@ function NewForm() {
                 </a>
               </TopLinkContainer>
               <Grid container style={{ marginTop: '1rem' }}>
-                {selectedImage !== null ? (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
-                    alt="not found"
-                  />
-                ) : data !== '' ? (
-                  <img
-                    src={`data:image/png;base64,${data}`}
-                    alt=""
-                    width={'48px'}
-                  />
-                ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
-                )}
+                {
+                  selectedImage !== null ? (
+                    <img
+                      src={URL.createObjectURL(selectedImage)}
+                      width={'48px'}
+                      alt="not found"
+                    />
+                  ) : (
+                    // data !== '' ?
+                    <img
+                      src={`data:image/png;base64,${data}`}
+                      alt=""
+                      width={'48px'}
+                    />
+                  )
+                  // : (
+                  //   <img src={`../../heart.png`} width={'32px'} />
+                  // )
+                }
               </Grid>
               <Grid container style={{ marginTop: '1rem' }}>
                 <PageTitle>Write a text textimonial</PageTitle>
@@ -982,12 +994,12 @@ function NewForm() {
               }}
             >
               <TopLinkContainer>
-                <img
+                {/* <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
                   style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-                />
+                /> */}
                 <a
                   href="http://tryloya.com"
                   style={{
@@ -998,21 +1010,25 @@ function NewForm() {
                 </a>
               </TopLinkContainer>
               <Grid container style={{ marginTop: '1rem' }}>
-                {selectedImage !== null ? (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
-                    alt="not found"
-                  />
-                ) : data !== '' ? (
-                  <img
-                    src={`data:image/png;base64,${data}`}
-                    alt=""
-                    width={'48px'}
-                  />
-                ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
-                )}
+                {
+                  selectedImage !== null ? (
+                    <img
+                      src={URL.createObjectURL(selectedImage)}
+                      width={'48px'}
+                      alt="not found"
+                    />
+                  ) : (
+                    // data !== '' ?
+                    <img
+                      src={`data:image/png;base64,${data}`}
+                      alt=""
+                      width={'48px'}
+                    />
+                  )
+                  // : (
+                  //   <img src={`../../heart.png`} width={'32px'} />
+                  // )
+                }
               </Grid>
               <Grid container style={{ marginTop: '1rem' }}>
                 <PageTitle>Almost done</PageTitle>
@@ -1130,12 +1146,12 @@ function NewForm() {
               style={{ display: visible === 4 ? 'flex' : 'none' }}
             >
               <TopLinkContainer>
-                <img
+                {/* <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
                   style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-                />
+                /> */}
                 <a
                   href="http://tryloya.com"
                   style={{
@@ -1146,21 +1162,25 @@ function NewForm() {
                 </a>
               </TopLinkContainer>
               <Grid container style={{ marginTop: '1rem' }}>
-                {selectedImage !== null ? (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
-                    alt="not found"
-                  />
-                ) : selectedImage === null && data !== '' ? (
-                  <img
-                    src={`data:image/png;base64,${data}`}
-                    alt=""
-                    width={'48px'}
-                  />
-                ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
-                )}
+                {
+                  selectedImage !== null ? (
+                    <img
+                      src={URL.createObjectURL(selectedImage)}
+                      width={'48px'}
+                      alt="not found"
+                    />
+                  ) : (
+                    // selectedImage === null && data !== '' ?
+                    <img
+                      src={`data:image/png;base64,${data}`}
+                      alt=""
+                      width={'48px'}
+                    />
+                  )
+                  // : (
+                  //   <img src={`../../heart.png`} width={'32px'} />
+                  // )
+                }
               </Grid>
               <Grid container style={{ marginTop: '1rem' }}>
                 <PageTitle>{thankTitle}</PageTitle>
@@ -1198,12 +1218,12 @@ function NewForm() {
               style={{ display: visible === 1 ? 'flex' : 'none' }}
             >
               <TopLinkContainer>
-                <img
+                {/* <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
                   style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-                />
+                /> */}
                 <a
                   href="http://tryloya.com"
                   style={{
@@ -1214,21 +1234,25 @@ function NewForm() {
                 </a>
               </TopLinkContainer>
               <Grid container style={{ marginBottom: '1rem' }}>
-                {selectedImage !== null ? (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
-                    alt="not found"
-                  />
-                ) : data !== '' ? (
-                  <img
-                    src={`data:image/png;base64,${data}`}
-                    alt=""
-                    width={'48px'}
-                  />
-                ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
-                )}
+                {
+                  selectedImage !== null ? (
+                    <img
+                      src={URL.createObjectURL(selectedImage)}
+                      width={'48px'}
+                      alt="not found"
+                    />
+                  ) : (
+                    // data !== '' ?
+                    <img
+                      src={`data:image/png;base64,${data}`}
+                      alt=""
+                      width={'48px'}
+                    />
+                  )
+                  // : (
+                  //   <img src={`../../heart.png`} width={'32px'} />
+                  // )
+                }
               </Grid>
               <Grid container style={{ marginBottom: '1rem' }}>
                 <PageTitle>{title}</PageTitle>
@@ -1268,12 +1292,12 @@ function NewForm() {
               style={{ display: visible === 2 ? 'flex' : 'none' }}
             >
               <TopLinkContainer>
-                <img
+                {/* <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
                   style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-                />
+                /> */}
                 <a
                   href="http://tryloya.com"
                   style={{
@@ -1284,21 +1308,25 @@ function NewForm() {
                 </a>
               </TopLinkContainer>
               <Grid container style={{ marginTop: '1rem' }}>
-                {selectedImage !== null ? (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
-                    alt="not found"
-                  />
-                ) : data !== '' ? (
-                  <img
-                    src={`data:image/png;base64,${data}`}
-                    alt=""
-                    width={'48px'}
-                  />
-                ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
-                )}
+                {
+                  selectedImage !== null ? (
+                    <img
+                      src={URL.createObjectURL(selectedImage)}
+                      width={'48px'}
+                      alt="not found"
+                    />
+                  ) : (
+                    // data !== '' ?
+                    <img
+                      src={`data:image/png;base64,${data}`}
+                      alt=""
+                      width={'48px'}
+                    />
+                  )
+                  // : (
+                  //   <img src={`../../heart.png`} width={'32px'} />
+                  // )
+                }
               </Grid>
               <Grid container style={{ marginTop: '1rem' }}>
                 <PageTitle>Write a text textimonial</PageTitle>
@@ -1338,12 +1366,12 @@ function NewForm() {
               }}
             >
               <TopLinkContainer>
-                <img
+                {/* <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
                   style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-                />
+                /> */}
                 <a
                   href="http://tryloya.com"
                   style={{
@@ -1354,21 +1382,25 @@ function NewForm() {
                 </a>
               </TopLinkContainer>
               <Grid container style={{ marginTop: '1rem' }}>
-                {selectedImage !== null ? (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
-                    alt="not found"
-                  />
-                ) : data !== '' ? (
-                  <img
-                    src={`data:image/png;base64,${data}`}
-                    alt=""
-                    width={'48px'}
-                  />
-                ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
-                )}
+                {
+                  selectedImage !== null ? (
+                    <img
+                      src={URL.createObjectURL(selectedImage)}
+                      width={'48px'}
+                      alt="not found"
+                    />
+                  ) : (
+                    // data !== '' ?
+                    <img
+                      src={`data:image/png;base64,${data}`}
+                      alt=""
+                      width={'48px'}
+                    />
+                  )
+                  // : (
+                  //   <img src={`../../heart.png`} width={'32px'} />
+                  // )
+                }
               </Grid>
               <Grid container style={{ marginTop: '1rem' }}>
                 <PageTitle>Almost done</PageTitle>
@@ -1486,12 +1518,12 @@ function NewForm() {
               style={{ display: visible === 4 ? 'flex' : 'none' }}
             >
               <TopLinkContainer>
-                <img
+                {/* <img
                   src={`../../heart.png`}
                   width="16px"
                   height="16px"
                   style={{ paddingTop: '0.4rem', marginRight: '0.2rem' }}
-                />
+                /> */}
                 <a
                   href="http://tryloya.com"
                   style={{
@@ -1502,21 +1534,25 @@ function NewForm() {
                 </a>
               </TopLinkContainer>
               <Grid container style={{ marginTop: '1rem' }}>
-                {selectedImage !== null ? (
-                  <img
-                    src={URL.createObjectURL(selectedImage)}
-                    width={'48px'}
-                    alt="not found"
-                  />
-                ) : selectedImage === null && data !== '' ? (
-                  <img
-                    src={`data:image/png;base64,${data}`}
-                    alt=""
-                    width={'48px'}
-                  />
-                ) : (
-                  <img src={`../../heart.png`} width={'32px'} />
-                )}
+                {
+                  selectedImage !== null ? (
+                    <img
+                      src={URL.createObjectURL(selectedImage)}
+                      width={'48px'}
+                      alt="not found"
+                    />
+                  ) : (
+                    // selectedImage === null && data !== '' ?
+                    <img
+                      src={`data:image/png;base64,${data}`}
+                      alt=""
+                      width={'48px'}
+                    />
+                  )
+                  // : (
+                  //   <img src={`../../heart.png`} width={'32px'} />
+                  // )
+                }
               </Grid>
               <Grid container style={{ marginTop: '1rem' }}>
                 <PageTitle>{thankTitle}</PageTitle>

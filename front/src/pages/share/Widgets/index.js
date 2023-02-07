@@ -39,6 +39,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CopyUrl } from '../../../icons/copyUrl';
 import { Edit } from '../../../icons/edit';
 import FileCopyOutlinedIcon from '@mui/icons-material/FileCopyOutlined';
+import toastr from 'toastr';
 
 const style = {
   position: 'absolute',
@@ -90,21 +91,62 @@ const Widgets = () => {
   };
 
   const handleCreate = () => {
-    createForm(formName)
-      .then((res) => {
-        dispatch(getAll()).then((result) => {
-          console.log(result);
-          handleClose();
+    if (isEmpty(testimonialForms)) {
+      createForm(formName, 1)
+        .then((res) => {
+          dispatch(getAll()).then((result) => {
+            console.log(result);
+            handleClose();
+          });
+          return {
+            CODE: 200,
+            message: 'success',
+            data: res,
+          };
+        })
+        .catch((err) => {
+          console.log('createErr=', err);
         });
-        return {
-          CODE: 200,
-          message: 'success',
-          data: res,
-        };
-      })
-      .catch((err) => {
-        console.log('createErr=', err);
-      });
+    } else {
+      let upgrade = localStorage.getItem('upgrade');
+      if (upgrade === 'free') {
+        if (testimonialForms.length === 1) {
+          toastr.error('Please upgrade your plan for more forms');
+        } else {
+          createForm(formName, 1)
+            .then((res) => {
+              dispatch(getAll()).then((res) => {
+                console.log(res);
+                handleClose();
+              });
+              return {
+                CODE: 200,
+                message: 'success',
+                data: res,
+              };
+            })
+            .catch((err) => {
+              console.log('createErr=', err);
+            });
+        }
+      } else {
+        createForm(formName, 1)
+          .then((res) => {
+            dispatch(getAll()).then((res) => {
+              console.log(res);
+              handleClose();
+            });
+            return {
+              CODE: 200,
+              message: 'success',
+              data: res,
+            };
+          })
+          .catch((err) => {
+            console.log('createErr=', err);
+          });
+      }
+    }
   };
 
   const handleCloseSnack = (event, reason) => {
@@ -196,9 +238,14 @@ const Widgets = () => {
                 <ListItem key={value.id} style={{ marginTop: '1rem' }}>
                   <ListItemButton
                     onClick={(e) => {
-                      console.log(e);
                       if (isEmpty(e.target.id)) {
-                        navigate(`/testimonialforms/${value.url}`);
+                        if (value.single === 1) {
+                          navigate(`/testimonialforms/${value.url}`);
+                        } else {
+                          localStorage.setItem('testimonialId', value.single);
+                          localStorage.setItem('widgetUrl', value.url);
+                          navigate('/only_one_widget');
+                        }
                       }
                     }}
                   >
@@ -233,8 +280,7 @@ const Widgets = () => {
                         {value.name}
                       </div>
                       <div>
-                        {value.testimonials} responses,created on{' '}
-                        {moment(value.createdAt).format('LL')}
+                        created on {moment(value.createdAt).format('LL')}
                       </div>
                     </ListItemText>
                     <IconContainer>
@@ -252,7 +298,7 @@ const Widgets = () => {
                       <IconButton
                         onClick={(ev) => {
                           ev.stopPropagation();
-                          createForm(value.name + ' copy').then((res) => {
+                          createForm(value.name + ' copy', 1).then((res) => {
                             dispatch(getAll());
                           });
                         }}

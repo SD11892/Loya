@@ -1,5 +1,5 @@
-import wallService from "../services/wall.service";
-import { WALL_SUCCESS } from "./types";
+import wallService from '../services/wall.service';
+import { WALL_SUCCESS } from './types';
 
 export const getAll = () => (dispatch) => {
   return wallService.getAll().then(
@@ -26,7 +26,9 @@ export const getAll = () => (dispatch) => {
 export const createWall = (name) => {
   const url = makeid(6);
   const fname = name;
-  return wallService.create(url, fname);
+  const projectId = localStorage.getItem('projectId');
+  const userId = `${localStorage.getItem('userId')}`;
+  return wallService.create(url, fname, projectId, userId);
 };
 
 export const deleteWall = (Ids) => {
@@ -56,8 +58,8 @@ export const getByWallUrl = (url) => {
 };
 
 function makeid(length) {
-  var result = "";
-  var characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+  var result = '';
+  var characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
   var charactersLength = characters.length;
   for (var i = 0; i < length; i++) {
     result += characters.charAt(Math.floor(Math.random() * charactersLength));

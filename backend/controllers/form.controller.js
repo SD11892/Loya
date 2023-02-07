@@ -1,5 +1,5 @@
-const db = require("../models");
-const fs = require("fs");
+const db = require('../models');
+const fs = require('fs');
 const Form = db.form;
 const Design = db.design;
 const Welcome = db.welcome;
@@ -14,44 +14,44 @@ exports.getAll = (req, res) => {
   const data = req.query;
   Form.findAll({
     where: {
-      projectId: data.projects.map((row) => row.id),
+      projectId: data.projectId,
       userId: data.userId,
     },
   })
     .then((forms) => {
       if (!forms) {
-        console.log("Forms Not Found");
-        return res.status(200).send({ message: "Empty" });
+        console.log('Forms Not Found');
+        return res.status(200).send({ message: 'Empty' });
       } else {
         res.status(200).send({ forms });
       }
     })
     .catch((err) => {
-      console.log("err=", err);
+      console.log('err=', err);
       res.status(500).send({ message: err.message });
     });
 };
 
 exports.getByUrl = (req, res) => {
-  const formUrl = req.params.url.replace(":", "");
+  const formUrl = req.params.url.replace(':', '');
   const designInfo = {
-    formName: "",
-    name: "",
-    type: "",
+    formName: '',
+    name: '',
+    type: '',
     data: null,
-    pColor: "",
-    bColor: "",
+    pColor: '',
+    bColor: '',
     prompt: ``,
     checked: [],
-    title: "",
+    title: '',
     message: ``,
-    thankTitle: "",
+    thankTitle: '',
     thankMessage: ``,
     call: 0,
-    textBtn: "",
-    linkUrl: "",
+    textBtn: '',
+    linkUrl: '',
     custom: 0,
-    directUrl: "",
+    directUrl: '',
     key: [],
   };
   Form.findAll({
@@ -66,7 +66,7 @@ exports.getByUrl = (req, res) => {
           formUrl: formUrl,
         },
       }).then((data) => {
-        designInfo.checked = data[0].dataValues.checked.split(",");
+        designInfo.checked = data[0].dataValues.checked.split(',');
         designInfo.data = data[0].dataValues.data;
         designInfo.type = data[0].dataValues.data;
         designInfo.name = data[0].dataValues.fileName;
@@ -114,13 +114,12 @@ exports.getByUrl = (req, res) => {
       });
     })
     .catch((err) => {
-      console.log("err=", err);
+      console.log('err=', err);
       res.status(500).send({ message: err.message });
     });
 };
 
 exports.create = (req, res) => {
-  console.log("create=", req);
   Form.create({
     projectId: req.query.parentId,
     userId: req.query.userId,
@@ -134,37 +133,37 @@ exports.create = (req, res) => {
         name: null,
         type: null,
         data: null,
-        pColor: "#6701e6",
-        bColor: "#ffffff",
+        pColor: '#6701e6',
+        bColor: '#ffffff',
         checked: [true, true, false, false].toString(),
       }).then(() => {
         Welcome.create({
           formUrl: req.query.url,
-          title: "Share a testimonial!",
+          title: 'Share a testimonial!',
           message:
             "Do you love using our product?\nWe'd love to hear about it!\n- Share your experience with a quick video or text testimonial\n- Recording a video? Don't forget to smile 😊",
         }).then(() => {
           Response.create({
             formUrl: req.query.url,
             prompt:
-              "- What do you like most about us?\n- Would you recommend us to a friend?",
+              '- What do you like most about us?\n- Would you recommend us to a friend?',
             collect: 0,
           }).then(() => {
             Attribution.create({
               formUrl: req.query.url,
-              key: "Your Name,Email Address,Headline,Your Website",
+              key: 'Your Name,Email Address,Headline,Your Website',
             }).then(() => {
               Thank.create({
                 formUrl: req.query.url,
-                title: "Thank you",
+                title: 'Thank you',
                 message:
-                  "Thank you so much for your support! We appreciate your support and we hope you enjoy using our product.",
+                  'Thank you so much for your support! We appreciate your support and we hope you enjoy using our product.',
                 call: 0,
                 custom: 0,
               }).then((result) => {
                 return res.json({
                   CODE: 200,
-                  message: "Success Form",
+                  message: 'Success Form',
                   data: result.dataValues.formUrl,
                 });
               });
@@ -174,7 +173,7 @@ exports.create = (req, res) => {
       });
     })
     .catch((err) => {
-      console.log("err=", err);
+      console.log('err=', err);
     });
 };
 
@@ -190,26 +189,16 @@ exports.update = (req, res) => {
           formUrl: data.formUrl,
         },
       }
-    ).then(() => {
-      Design.update(
-        {
-          pColor: data.pColor,
-          bColor: data.bColor,
-          type: data.fileType,
-          name: data.fileName,
-          checked: data.checked.toString(),
-          data: fs.readFileSync("../upload/" + req.file.filename),
-        },
-        {
-          where: {
-            formUrl: data.formUrl,
-          },
-        }
-      ).then(() => {
-        Welcome.update(
+    )
+      .then(() => {
+        Design.update(
           {
-            title: data.title,
-            message: data.message,
+            pColor: data.pColor,
+            bColor: data.bColor,
+            type: data.fileType,
+            name: data.fileName,
+            checked: data.checked.toString(),
+            data: fs.readFileSync('../upload/' + req.file.filename),
           },
           {
             where: {
@@ -217,9 +206,10 @@ exports.update = (req, res) => {
             },
           }
         ).then(() => {
-          Response.update(
+          Welcome.update(
             {
-              prompt: data.prompt,
+              title: data.title,
+              message: data.message,
             },
             {
               where: {
@@ -227,9 +217,9 @@ exports.update = (req, res) => {
               },
             }
           ).then(() => {
-            Attribution.update(
+            Response.update(
               {
-                key: data.key.toString(),
+                prompt: data.prompt,
               },
               {
                 where: {
@@ -237,24 +227,37 @@ exports.update = (req, res) => {
                 },
               }
             ).then(() => {
-              Thank.update(
+              Attribution.update(
                 {
-                  title: data.thankTitle,
-                  message: data.thankMessage,
+                  key: data.key.toString(),
                 },
                 {
                   where: {
                     formUrl: data.formUrl,
                   },
                 }
-              ).then((result) => {
-                res.json({ result });
+              ).then(() => {
+                Thank.update(
+                  {
+                    title: data.thankTitle,
+                    message: data.thankMessage,
+                  },
+                  {
+                    where: {
+                      formUrl: data.formUrl,
+                    },
+                  }
+                ).then((result) => {
+                  res.json({ result });
+                });
               });
             });
           });
         });
+      })
+      .catch((err) => {
+        console.log('FormUpdateErr=', err);
       });
-    });
   } else {
     Form.update(
       {
@@ -265,25 +268,15 @@ exports.update = (req, res) => {
           formUrl: data.formUrl,
         },
       }
-    ).then(() => {
-      Design.update(
-        {
-          pColor: data.pColor,
-          bColor: data.bColor,
-          type: data.fileType,
-          name: data.fileName,
-          checked: data.checked.toString(),
-        },
-        {
-          where: {
-            formUrl: data.formUrl,
-          },
-        }
-      ).then(() => {
-        Welcome.update(
+    )
+      .then(() => {
+        Design.update(
           {
-            title: data.title,
-            message: data.message,
+            pColor: data.pColor,
+            bColor: data.bColor,
+            type: data.fileType,
+            name: data.fileName,
+            checked: data.checked.toString(),
           },
           {
             where: {
@@ -291,9 +284,10 @@ exports.update = (req, res) => {
             },
           }
         ).then(() => {
-          Response.update(
+          Welcome.update(
             {
-              prompt: data.prompt,
+              title: data.title,
+              message: data.message,
             },
             {
               where: {
@@ -301,9 +295,9 @@ exports.update = (req, res) => {
               },
             }
           ).then(() => {
-            Attribution.update(
+            Response.update(
               {
-                key: data.key.toString(),
+                prompt: data.prompt,
               },
               {
                 where: {
@@ -311,31 +305,44 @@ exports.update = (req, res) => {
                 },
               }
             ).then(() => {
-              Thank.update(
+              Attribution.update(
                 {
-                  title: data.thankTitle,
-                  message: data.thankMessage,
+                  key: data.key.toString(),
                 },
                 {
                   where: {
                     formUrl: data.formUrl,
                   },
                 }
-              ).then((result) => {
-                console.log("result=", result);
-                res.json({ result });
+              ).then(() => {
+                Thank.update(
+                  {
+                    title: data.thankTitle,
+                    message: data.thankMessage,
+                  },
+                  {
+                    where: {
+                      formUrl: data.formUrl,
+                    },
+                  }
+                ).then((result) => {
+                  console.log('result=', result);
+                  res.json({ result });
+                });
               });
             });
           });
         });
+      })
+      .catch((err) => {
+        console.log('FormUpdateErr=', err);
       });
-    });
   }
 };
 
 exports.delete = (req, res) => {
   const Ids = req.query.ids;
-  console.log("ids=", Ids);
+  console.log('ids=', Ids);
   Ids.map((value) => {
     Form.findAll({
       where: {
@@ -379,10 +386,10 @@ exports.delete = (req, res) => {
                     },
                   })
                     .then((result) => {
-                      return res.status(200).send({ message: "Empty" });
+                      return res.status(200).send({ message: 'Empty' });
                     })
                     .catch((err) => {
-                      console.log("err=", err);
+                      console.log('err=', err);
                       res.status(500).send({ message: err.message });
                     });
                 });

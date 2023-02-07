@@ -27,6 +27,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import {
   createTestimonial,
+  getGoogleReviews,
   importSeveralTestimonials,
 } from '../../actions/testimonial';
 import { getAll, getImport } from '../../actions/testimonial';
@@ -37,6 +38,7 @@ import CheckIcon from '@mui/icons-material/Check';
 import toastr from 'toastr';
 import AWS from 'aws-sdk';
 import axios from 'axios';
+import FormTextArea from '../uielements/form/FormTextArea';
 
 export const ImportChannel = (props) => {
   const dispatch = useDispatch();
@@ -48,7 +50,6 @@ export const ImportChannel = (props) => {
   const [checkAll, setCheckAll] = React.useState(true);
   const [checked, setChecked] = React.useState([]);
   const [testimonials, setTestimonials] = React.useState([]);
-  const [data, setData] = React.useState([]);
   const [count, setCount] = React.useState(0);
   const [videoName, setVideoName] = React.useState('');
   const [total, setTotal] = React.useState({
@@ -80,10 +81,14 @@ export const ImportChannel = (props) => {
     imageUrl: '',
     importDate: '',
     video: '',
+    note: '',
   };
   const projects = JSON.parse(localStorage.getItem('projects'));
   const projectId = projects[0].id;
   const userId = `${localStorage.getItem('userId')}`;
+  const config = {
+    X_API_KEY: 'Z29vZ2xlLW9hdXRoMnwxMDMyNDg4NDYzMjYzNDM5MjEyMTF8NGZjZWI0YjU3MA',
+  };
 
   const onSubmit = () => {
     if (props.select === 'text') {
@@ -103,6 +108,7 @@ export const ImportChannel = (props) => {
       infor.imageUrl = total.imageUrl;
       infor.importDate = total.importDate;
       infor.url = null;
+      infor.note = 'text';
 
       console.log(infor, total.selectedImage);
 
@@ -137,6 +143,7 @@ export const ImportChannel = (props) => {
       infor.importDate = total.importDate;
       infor.url = null;
       infor.video = videoName;
+      infor.note = 'video';
       createTestimonial(infor, total.selectedImage).then(() => {
         const SESConfig = {
           accessKeyId: process.env.REACT_APP_ACCESS,
@@ -173,13 +180,38 @@ export const ImportChannel = (props) => {
           }
         );
       });
+    } else {
+      if (total.selectedImage) {
+        infor.name = total.selectedImage.name;
+        infor.type = total.selectedImage.type;
+      }
+      infor.content = total.review;
+      infor.key = ['Your Name', 'Email Address', 'Your Website'];
+      infor.value[0] = total.name;
+      infor.value[1] = total.headline;
+      infor.value[2] = total.url;
+      infor.rating = total.rating;
+      infor.index = props.testimonials.length;
+      infor.projectId = projectId;
+      infor.userId = userId;
+      infor.imageUrl = total.imageUrl;
+      infor.importDate = total.importDate;
+      infor.url = null;
+      infor.note = 'facebook';
+      console.log(infor, total.selectedImage);
+
+      createTestimonial(infor, total.selectedImage).then(() => {
+        dispatch(getImport()).then(() => {
+          toastr.success('Imported Facebook Testimonials');
+        });
+      });
     }
   };
 
   const OnGoogleSubmit = () => {
     axios
       .get(
-        `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyB-8fAitCwpddy1HfCTtYqKLWnESH90ZAE&query=${query}`,
+        `https://dashboard.tryloya.com:8080/https://maps.googleapis.com/maps/api/place/textsearch/json?key=AIzaSyB-8fAitCwpddy1HfCTtYqKLWnESH90ZAE&query=${query}`,
         {
           headers: {
             'Content-Type': 'application/json',
@@ -193,24 +225,17 @@ export const ImportChannel = (props) => {
         console.log(err);
       });
   };
+
   const OnTestimonialSubmit = () => {
     if (reviewNum === 0 || reviewNum === undefined) {
       toastr.error('Something went wrong.');
     } else {
-      axios
-        .get(
-          `https://cors-anywhere.herokuapp.com/https://maps.googleapis.com/maps/api/place/details/json?placeid=${placeId}&key=AIzaSyB-8fAitCwpddy1HfCTtYqKLWnESH90ZAE`,
-          {
-            headers: {
-              'Content-Type': 'application/json',
-            },
-          }
-        )
+      getGoogleReviews(placeId)
         .then((response) => {
-          setTestimonials(response.data.result.reviews);
-          setData(response.data.result.reviews);
-          setCount(response.data.result.reviews.length);
-          response.data.result.reviews.map((row, index) => {
+          console.log('response+++', response);
+          setTestimonials(response.data.data);
+          setCount(response.data.data.length);
+          response.data.data.map((row, index) => {
             checked[index] = true;
             setChecked([...checked]);
             setVisible(true);
@@ -379,9 +404,9 @@ export const ImportChannel = (props) => {
         spacing={2}
         style={{ marginTop: '0.1rem', paddingLeft: '1rem' }}
       >
-        <TextField
+        <FormTextArea
           multiline
-          rows={4}
+          rows={6}
           placeholder="Write something nice ✨"
           style={{ width: '100%' }}
           value={total.review}
@@ -496,7 +521,7 @@ export const ImportChannel = (props) => {
         >
           <Grid item xs={10}>
             <FormInput
-              placeholder="Senja, Battle Bridge Lane, London"
+              placeholder=" Battle Bridge Lane, London"
               onChange={(e) => {
                 setQuery(e.target.value);
               }}
@@ -530,7 +555,7 @@ export const ImportChannel = (props) => {
         >
           <FormLabel>
             If the business you want to import shows up when you search for the
-            address in Google, then Senja should be able to find your business.
+            address in Google, then Loya should be able to find your business.
           </FormLabel>
         </Grid>
         <Grid
@@ -637,7 +662,7 @@ export const ImportChannel = (props) => {
           paddingBottom: '2rem',
         }}
       >
-        <Checkbox
+        {/* <Checkbox
           style={{
             marginRight: '5px',
             color: '#ddd',
@@ -649,7 +674,7 @@ export const ImportChannel = (props) => {
           }}
           checked={checkAll}
           label="Select all testimonials"
-        />
+        /> */}
         <div
           style={{
             float: 'grid',
@@ -682,8 +707,6 @@ export const ImportChannel = (props) => {
                   } else {
                     setCount(count + 1);
                   }
-                  console.log('testimonials=', testimonials);
-                  console.log('data=', data);
                 }}
               >
                 <Grid
@@ -694,7 +717,7 @@ export const ImportChannel = (props) => {
                 >
                   <Grid item xs={3} style={{ alignItems: 'center' }}>
                     <img
-                      src={row.profile_photo_url}
+                      src={row.author_image}
                       width="24px"
                       height="24px"
                     />
@@ -709,7 +732,7 @@ export const ImportChannel = (props) => {
                       fontWeight: 'bold',
                     }}
                   >
-                    {row.author_name}
+                    {row.author_title}
                   </Grid>
                   <Grid
                     item
@@ -748,7 +771,7 @@ export const ImportChannel = (props) => {
                     flexDirection: 'column',
                   }}
                 >
-                  <Rating value={row.rating} readOnly />
+                  <Rating value={row.review_rating} readOnly />
                 </Grid>
                 <Grid
                   container
@@ -759,7 +782,7 @@ export const ImportChannel = (props) => {
                     marginTop: '1rem',
                   }}
                 >
-                  {moment.unix(row.time).format('MMM Do YYYY')}
+                  {moment(row.review_datetime_utc).format('MMM Do YYYY')}
                 </Grid>
               </Card>
             );
@@ -772,11 +795,11 @@ export const ImportChannel = (props) => {
               testimonials.map((row, index) => {
                 if (checked[index] === true) {
                   tmptotal.push({
-                    name: row.author_name,
-                    rating: row.rating,
-                    imageUrl: row.profile_photo_url,
-                    importDate: moment.unix(row.time).format('MMM Do YYYY'),
-                    review: row.text,
+                    name: row.author_title,
+                    rating: row.review_rating,
+                    imageUrl: row.author_image,
+                    importDate: moment(row.review_datetime_utc).format('MMM Do YYYY'),
+                    review: row.review_text,
                     headline: '',
                     url: '',
                     selectedImage: null,
@@ -848,11 +871,9 @@ export const ImportChannel = (props) => {
       </Grid>
       <Grid
         container
-        justifyContent="space-between"
         spacing={2}
         style={{
-          marginTop: '0.1rem',
-          marginBottom: '0.25rem',
+          marginTop: '0.25rem',
           paddingLeft: '1rem',
         }}
       >
@@ -979,10 +1000,9 @@ export const ImportChannel = (props) => {
         spacing={2}
         style={{ marginTop: '0.1rem', paddingLeft: '1rem' }}
       >
-        <TextField
+        <FormTextArea
           multiline
-          rows={4}
-          style={{ width: '100%' }}
+          rows={6}
           value={total.review}
           onChange={(e) => {
             setTotal({ ...total, review: e.target.value });

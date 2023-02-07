@@ -25,18 +25,27 @@ import { Wall as WallIcon } from '../icons/wall';
 import { Setting as SettingIcon } from '../icons/setting';
 import { UpDown as UpDownIcon } from '../icons/upDown';
 import { Widget as WidgetIcon } from '../icons/widget';
+import { Celebration as CelebrationIcon } from '../icons/celebration';
 import { DownArrow } from '../icons/downArrow';
 import { Auth } from 'aws-amplify';
 import ButtonGroup from './uielements/ButtonGroup';
-import { getAll } from '../actions/project';
+import { getAll, createProject } from '../actions/project';
+import toastr from 'toastr';
+import { getAll as getTestimonialAll } from '../actions/testimonial';
+import { getAll as getFormAll } from '../actions/form';
+import { getAll as getWidgetAll } from '../actions/testimonialForm';
+import { getAll as getWallAll } from '../actions/wall';
+import { isEmpty } from '../util/isEmpty';
 
 export const Sidebar = () => {
   const projects = useSelector((state) => state.project.payload);
+  const [list, setList] = React.useState(null);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [anchor, setAnchor] = React.useState(null);
   const [menu, setMenu] = React.useState(
     `${window.location.pathname.replace(/\//g, '')}`
   );
+
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
@@ -62,7 +71,7 @@ export const Sidebar = () => {
   };
   const handleProject = () => {};
 
-  React.useEffect(() => {}, [menu, openPop, projects]);
+  React.useEffect(() => {}, [menu, openPop, projects, anchor]);
   React.useEffect(() => {
     dispatch(getAll());
   }, []);
@@ -92,7 +101,7 @@ export const Sidebar = () => {
             ></Avatar>
           </div>
           <div style={{ fontSize: '0.9rem', fontWeight: '600' }}>
-            {JSON.parse(localStorage.getItem('user'))}
+            {localStorage.getItem('user')}
           </div>
           <DownArrow />
         </SiderButton>
@@ -100,9 +109,9 @@ export const Sidebar = () => {
         <ButtonGroup
           value={menu}
           onChange={handleToggleChange}
-          style={{ flexDirection: 'column' }}
+          style={{ flexDirection: 'column', gap: '0.5rem' }}
         >
-          <Grid container mb={2}>
+          <Grid container>
             <Label>COLLECT</Label>
           </Grid>
           <MenuButton
@@ -125,7 +134,7 @@ export const Sidebar = () => {
             <ImportIcon />
             <SiderText>Import Testimonials</SiderText>
           </MenuButton>
-          <Grid container mb={2}>
+          <Grid container>
             <Label>MANAGE</Label>
           </Grid>
           <MenuButton
@@ -148,7 +157,7 @@ export const Sidebar = () => {
             <SearchIcon />
             <SiderText>Search</SiderText>
           </MenuButton>
-          <MenuButton
+          {/* <MenuButton
             value="tags"
             key="tags"
             onClick={() => {
@@ -157,8 +166,8 @@ export const Sidebar = () => {
           >
             <TagsIcon />
             <SiderText>Tags</SiderText>
-          </MenuButton>
-          <Grid container mb={2}>
+          </MenuButton> */}
+          <Grid container>
             <Label>SHARE</Label>
           </Grid>
           <MenuButton
@@ -181,6 +190,17 @@ export const Sidebar = () => {
             <WidgetIcon />
             <SiderText>Widgets</SiderText>
           </MenuButton>
+          <MenuButton
+            value="upgrades"
+            key="upgrades"
+            onClick={() => {
+              window.open('/upgrade', '_blank');
+            }}
+            style={{ color: '#6701e6' }}
+          >
+            <CelebrationIcon />
+            <SiderText>Upgrade</SiderText>
+          </MenuButton>
         </ButtonGroup>
         <Popover
           id={id}
@@ -191,28 +211,40 @@ export const Sidebar = () => {
             vertical: 'bottom',
             horizontal: 'left',
           }}
-          style={{ padding: '0.5rem' }}
+          style={{ padding: '0.5rem', fontSize: '8px' }}
         >
           <MenuButton sx={{ p: 2 }} key="1">
-            {localStorage.getItem('user')}
-          </MenuButton>
-          <MenuButton sx={{ p: 2 }} key="2">
-            Account and Billing
-          </MenuButton>
-          <MenuButton sx={{ p: 2 }} key="3">
-            Upgrade
-          </MenuButton>
-          <MenuButton sx={{ p: 2 }} key="4">
-            Roadmap
+            <div style={{ display: 'flex', gap: '0.5rem' }}>
+              <div>Signed in as</div>
+              <div style={{ fontWeight: 600 }}>
+                {localStorage.getItem('email')}
+              </div>
+            </div>
           </MenuButton>
           <MenuButton
-            key="5"
+            sx={{ p: 2 }}
+            key="2"
+            onClick={() => {
+              navigate('/account');
+            }}
+          >
+            Account and Billing
+          </MenuButton>
+          <MenuButton
+            sx={{ p: 2 }}
+            key="3"
+            onClick={() => {
+              navigate('/upgrade');
+            }}
+          >
+            Upgrade
+          </MenuButton>
+          <MenuButton
+            key="4"
             sx={{ p: 2 }}
             style={{ color: '#6701e6' }}
             onClick={() => {
               Auth.signOut();
-              navigate('/');
-              localStorage.clear();
             }}
           >
             Sign Out
@@ -255,16 +287,20 @@ export const Sidebar = () => {
                 borderRadius: '0.2rem',
               }}
             >
-              <img src="../heart.png" width="16px" height="16px" />
+              {/* <img src="../heart.png" width="16px" height="16px" /> */}
             </div>
             {projects.map((row, index) => {
-              if (index === 0) return row.name;
+              if (row.id === JSON.parse(localStorage.getItem('projectId')))
+                return row.name;
             })}
           </div>
           <div style={{ display: 'flex' }}>
             <IconButton
               onClick={() => {
-                navigate(`/settings/${Object.values(projects)[0].id}`);
+                navigate(
+                  `/settings/${JSON.parse(localStorage.getItem('projectId'))}`
+                );
+                document.location.reload(true);
               }}
             >
               <SettingIcon />
@@ -290,7 +326,18 @@ export const Sidebar = () => {
           >
             {projects.map((row, index) => {
               return (
-                <MenuButton key={index} sx={{ p: 2 }}>
+                <MenuButton
+                  key={index}
+                  sx={{ p: 2 }}
+                  onClick={async () => {
+                    await localStorage.setItem('projectId', row.id);
+                    await dispatch(getTestimonialAll());
+                    await dispatch(getFormAll());
+                    await dispatch(getWidgetAll());
+                    await dispatch(getWallAll());
+                    handleUpDownClose();
+                  }}
+                >
                   {row.name}
                 </MenuButton>
               );
@@ -298,6 +345,32 @@ export const Sidebar = () => {
             <MenuButton
               sx={{ p: 2 }}
               style={{ background: '#000', color: '#fff' }}
+              onClick={() => {
+                let upgrade = localStorage.getItem('upgrade');
+                if (upgrade === 'free') {
+                  toastr.error(
+                    'You must upgrade your plan to create a new project!'
+                  );
+                } else if (upgrade === 'pro') {
+                  console.log('projectLength=', projects.length);
+                  if (projects.length === 2) {
+                    toastr.error(
+                      'You can create at least 2 projects. Please Upgrade your plan to create more projects!'
+                    );
+                  } else {
+                    navigate('/new_project');
+                  }
+                } else if (upgrade === 'team') {
+                  console.log('projectLength=', projects.length);
+                  if (projects.length === 5) {
+                    toastr.error(
+                      'You can create at least 5 projects. Please Upgrade your plan to create more projects!'
+                    );
+                  } else {
+                    navigate('/new_project');
+                  }
+                }
+              }}
             >
               Create a New Project
             </MenuButton>

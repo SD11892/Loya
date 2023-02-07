@@ -14,6 +14,8 @@ import {
 import { loadStripe } from '@stripe/stripe-js';
 import DefaultButton from '../../components/uielements/buttons/defaultButton';
 import { payment } from '../../actions/stripe';
+import { upgrade } from '../../actions/auth';
+import toastr from 'toastr';
 
 const stripePromise = loadStripe(
   'pk_test_51M9Da2CzEqaIGqKyEN9V2beZh1LYaZNEXUKOYdUTJ6wbrOAUUKU0EW8DY12zPDL2OO5o5kPuNWx0lTrGD8sqyndR009Y9RGnT5'
@@ -32,7 +34,32 @@ const Checkout = () => {
         token: result.token.id,
         amount: pay,
       };
-      payment(sendData);
+      payment(sendData).then((res) => {
+        console.log('sendData=', sendData);
+        console.log('payment=', res);
+        console.log('why=', pay);
+        if (res.data.data.plan.amount === 0) {
+          upgrade('free').then(() => {
+            localStorage.setItem('upgrade', 'free');
+            toastr.success('Upgraded to free');
+            navigate('/upgrade');
+          });
+        }
+        if (res.data.data.plan.amount === 1900) {
+          upgrade('pro').then(() => {
+            localStorage.setItem('upgrade', 'pro');
+            toastr.success('Upgraded to Pro!');
+            navigate('/upgrade');
+          });
+        }
+        if (res.data.data.plan.amount === 5900) {
+          upgrade('team').then(() => {
+            localStorage.setItem('upgrade', 'team');
+            toastr.success('Upgraded to Team!!!');
+            navigate('/upgrade');
+          });
+        }
+      });
     });
   };
 
@@ -51,13 +78,19 @@ const Checkout = () => {
       </>
     );
   };
-  useEffect(() => {
-    localStorage.getItem('level') === 'free'
-      ? setPay(0)
-      : localStorage.getItem('level') === 'pro'
-      ? setPay(19)
-      : setPay(59);
+  useEffect(async () => {
+    if (localStorage.getItem('level') === 'free') {
+      console.log('free?');
+      await setPay(0);
+    } else if (localStorage.getItem('level') === 'pro') {
+      console.log('pro?');
+      await setPay(19);
+    } else {
+      console.log('team?');
+      await setPay(59);
+    }
   }, []);
+  useEffect(() => {}, [pay]);
   const Description = (props) => {
     return props.width === 'lg' || props.width === 'xl' ? (
       <>
@@ -84,7 +117,7 @@ const Checkout = () => {
               display: 'flex',
             }}
           >
-            <img src="../heart.png" width={20} height={20} />
+            {/* <img src="../heart.png" width={20} height={20} /> */}
           </div>
         </div>
         <div
@@ -94,7 +127,7 @@ const Checkout = () => {
             whiteSpace: 'nowrap',
           }}
         >
-          Subscribe to Senja Pro - Monthly
+          Subscribe to Loya Pro - Monthly
         </div>
         <div
           style={{
@@ -132,7 +165,7 @@ const Checkout = () => {
             }}
           >
             <div>
-              <div>Senja Pro - Monthly</div>
+              <div>Loya Pro - Monthly</div>
               <div
                 style={{
                   fontSize: '.875rem',
@@ -145,27 +178,7 @@ const Checkout = () => {
             </div>
             <div>${pay}</div>
           </div>
-          <div
-            style={{
-              justifyContent: 'space-between',
-              display: 'flex',
-              marginTop: '2rem',
-            }}
-          >
-            <div>VAT (20%)</div>
-            <div>${pay / 5}</div>
-          </div>
           <hr style={{ borderColor: '#fff', marginTop: '2rem' }} />
-          <div
-            style={{
-              justifyContent: 'space-between',
-              display: 'flex',
-              marginTop: '2rem',
-            }}
-          >
-            <div>Total due today</div>
-            <div>${(pay * 6) / 5}</div>
-          </div>
           <div
             style={{
               fontSize: '.875rem',
@@ -244,7 +257,7 @@ const Checkout = () => {
               display: 'flex',
             }}
           >
-            <img src="../heart.png" width={20} height={20} />
+            {/* <img src="../heart.png" width={20} height={20} /> */}
           </div>
         </div>
         <div
@@ -291,7 +304,7 @@ const Checkout = () => {
           }}
         >
           <div>
-            <div>Senja Pro - Monthly</div>
+            <div>Loya Pro - Monthly</div>
             <div
               style={{
                 fontSize: '.875rem',
