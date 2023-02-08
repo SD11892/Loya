@@ -97,6 +97,7 @@ const gmailGet = (gmail) => {
       },
     })
     .then((response) => {
+      console.log('response=====', response);
       return {
         CODE: '200',
         message: 'Account came',
@@ -163,7 +164,7 @@ const account = (username, email) => {
     });
 };
 const logout = () => {
-  localStorage.removeItem('user');
+  localStorage.clear();
 };
 
 export default {

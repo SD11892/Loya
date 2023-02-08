@@ -24,10 +24,13 @@ import { Camerasm } from '../../icons/camera_sm';
 import { getAll } from '../../actions/testimonial';
 
 const Testimonials = () => {
+  const testimonials = useSelector((state) => state.testimonial.testimonial);
+  const upgrade = localStorage.getItem('upgrade');
   const [anchorEl, setAnchorEl] = React.useState(null);
   const [visible, setVisible] = React.useState('visible');
   const [height, setHeight] = React.useState('');
   const [searchVal, setSearchVal] = React.useState('');
+  const [limit, setLimit] = React.useState(null);
   const dispatch = useDispatch();
 
   const handleClick = (event) => {
@@ -40,6 +43,15 @@ const Testimonials = () => {
 
   const open = Boolean(anchorEl);
   const id = open ? 'simple-popover' : undefined;
+  useEffect(() => {
+    dispatch(getAll()).then((res) => {
+      if (upgrade === 'free') {
+        setLimit(10);
+      } else {
+        setLimit(res.data.testimonials.length);
+      }
+    });
+  }, []);
 
   return (
     <div>
@@ -260,7 +272,7 @@ const Testimonials = () => {
         </MainButton>
       </div>
       <div style={{ marginLeft: '2.5rem', marginTop: '0.5rem' }}>
-        <TestTable />
+        <TestTable testimonials={testimonials} limit={limit} />
       </div>
       <Popover
         id={id}

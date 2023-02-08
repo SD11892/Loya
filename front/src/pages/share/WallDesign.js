@@ -2,6 +2,10 @@ import * as React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import moment from 'moment';
+import { CopyToClipboard } from 'react-copy-to-clipboard';
+import SyntaxHighlighter from 'react-syntax-highlighter';
+import { docco } from 'react-syntax-highlighter/dist/esm/styles/hljs';
+import toastr from 'toastr';
 
 import { getAll, saveIndex } from '../../actions/testimonial';
 import { getByWallUrl, saveWall } from '../../actions/wall';
@@ -27,6 +31,8 @@ import { CallToAction as CallToActionIcon } from '../../icons/wall/calltoaction'
 import { Close as CloseIcon } from '../../icons/close';
 import { Share as ShareIcon } from '../../icons/wall/share';
 import CheckIcon from '@mui/icons-material/Check';
+import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
+import ToggleButton from '@mui/material/ToggleButton';
 
 import DesignPane from '../../components/wall/DesignPane';
 import NavigationPane from '../../components/wall/NavigationPane';
@@ -37,12 +43,16 @@ import Sitetwo from '../../components/wall/Sitetwo';
 import SiderText from '../../components/uielements/siderText';
 import DefaultButton from '../../components/uielements/buttons/defaultButton';
 import FormGrid from '../../components/uielements/form/FormGrid';
+import EmbedToolButton from '../../components/uielements/buttons/embedToolButton';
 import WidgetCard from '../../components/uielements/widgetCard';
 import BackwardButton from '../../components/uielements/buttons/backwardButton';
 import PageTitle from '../../components/uielements/pageTitle';
 import SiderButton from '../../components/uielements/buttons/siderButton';
 import MenuButton from '../../components/uielements/buttons/menuButton';
 import MainButton from '../../components/uielements/buttons/mainButton';
+import { Embed as EmbedIcon } from '../../icons/embed';
+import { CopyEmbed as CopyEmbedIcon } from '../../icons/copyEmbed';
+import Description from '../../components/uielements/description';
 
 import { isEmpty } from '../../util/isEmpty';
 
@@ -83,10 +93,13 @@ const AccordionDetails = styled(MuiAccordionDetails)(({ theme }) => ({
 
 const WallDesign = () => {
   const testimonials = useSelector((state) => state.testimonial.testimonial);
+
+  const url = window.location.pathname.replace(/walls/i, '').replace('//', '');
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
   const [filter, setFilter] = React.useState('Pick Testimonials');
+  const [embed, setEmbed] = React.useState('js');
   const [name, setName] = React.useState('');
   const [theme, setTheme] = React.useState(0);
   const [pColor, setPColor] = React.useState('');
@@ -104,8 +117,11 @@ const WallDesign = () => {
   const [checked, setChecked] = React.useState([]);
   const [chooseOpen, setChooseOpen] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [ifText, setIfText] = React.useState(
-    '(item.status === 1 || item.status === 0)'
+  const [ifText, setIfText] = React.useState(0);
+  const [openCopySnack, setOpenCopySnack] = React.useState(false);
+  const [code, setCode] = React.useState(
+    `<div class="loya-frame-embed" data-id="${url}"></div>
+<script defer type="text/javascript" src="https://dashboard.tryloya.com/embedTemplate.js"></script>`
   );
 
   const openPop = Boolean(anchorEl);
@@ -125,6 +141,7 @@ const WallDesign = () => {
     key: [],
     value: [],
     checked: '',
+    public: '',
   };
   const handleCloseSnack = (event, reason) => {
     if (reason === 'clickaway') {
@@ -132,6 +149,10 @@ const WallDesign = () => {
     }
 
     setOpen(false);
+    setOpenCopySnack(false);
+  };
+  const handleEmbedChange = (even, nextView) => {
+    setEmbed(nextView);
   };
   const handleChooseClose = () => {
     setChooseOpen(false);
@@ -148,8 +169,6 @@ const WallDesign = () => {
 
   const userId = localStorage.getItem('userId');
   const projectId = localStorage.getItem('projectId');
-
-  const url = window.location.pathname.replace(/walls/i, '').replace('//', '');
 
   React.useEffect(() => {
     dispatch(getAll());
@@ -170,6 +189,7 @@ const WallDesign = () => {
         await setType(result.type);
         await setKey(result.key.split(','));
         await setValue(result.value.split(','));
+        await setIfText(result.public);
         if (isEmpty(result.checked)) {
           await setChecked(result.checked);
         } else {
@@ -194,6 +214,7 @@ const WallDesign = () => {
     infor.key = key;
     infor.value = value;
     infor.checked = checked.toString();
+    infor.public = ifText;
     saveWall(infor).then(() => {
       setOpen(true);
     });
@@ -250,6 +271,7 @@ const WallDesign = () => {
                   infor.subTitle = subTitle;
                   infor.url = url;
                   infor.checked = checked.toString();
+                  infor.public = ifText;
                   saveWall(infor).then(() => {
                     let path = `/walls/p/${userId}-${projectId}/testimonials/${url}`;
                     navigate(path);
@@ -375,6 +397,112 @@ const WallDesign = () => {
                 />
               </AccordionDetails>
             </Accordion>
+            <Accordion
+              expanded={expanded === 'panel5'}
+              onChange={handleChange('panel5')}
+            >
+              <AccordionSummary
+                aria-controls="panel5d-content"
+                id="panel5d-header"
+              >
+                <EmbedIcon />
+                <div style={{ marginLeft: '1rem' }}>Embed</div>
+              </AccordionSummary>
+              <AccordionDetails>
+                <div>
+                  <Grid
+                    container
+                    spacing={1}
+                    style={{
+                      padding: '2rem',
+                      width: '512px',
+                      height: '140px',
+                      backgroundColor: '#6701e6',
+                    }}
+                  >
+                    <PageTitle style={{ color: 'white' }}>
+                      Share your Wall of Love?🥳
+                    </PageTitle>
+                    <Description style={{ color: '#fff' }}>
+                      Follow the instructions to embed this on your website
+                    </Description>
+                  </Grid>
+                  <Grid container style={{ padding: '2rem', width: '500px' }}>
+                    <Grid item style={{ width: '100%' }}>
+                      Embed on your website
+                    </Grid>
+                    <Grid
+                      item
+                      style={{
+                        fontSize: '0.875rem',
+                        lineHeight: '1.25rem',
+                        background: 'rgb(55,65,81)',
+                        overflow: 'hidden',
+                        width: '100%',
+                      }}
+                    >
+                      <div
+                        style={{
+                          color: '#fff',
+                          padding: '0.5rem',
+                          gap: '0.5rem',
+                          display: 'flex',
+                        }}
+                      >
+                        <ToggleButtonGroup
+                          value={embed}
+                          onChange={handleEmbedChange}
+                          exclusive
+                        >
+                          <EmbedToolButton
+                            value="js"
+                            key="js"
+                            onClick={() => {
+                              setCode(
+                                `<div className="loya-frame-embed" data-id="${url}"></div>\n<script defer type="text/javascript" src="https://dashboard.tryloya.com/embedTemplate.js"></script>`
+                              );
+                            }}
+                          >
+                            Javascript
+                          </EmbedToolButton>
+                          <EmbedToolButton
+                            value="url"
+                            key="url"
+                            onClick={() => {
+                              setCode(
+                                `https://dashboard.tryloya.com/walls/p/${userId}-${projectId}/testimonials/${url}`
+                              );
+                            }}
+                          >
+                            URL
+                          </EmbedToolButton>
+                        </ToggleButtonGroup>
+                        <div style={{ flexGrow: 1 }}></div>
+                        <CopyToClipboard
+                          text={code}
+                          onCopy={() => {
+                            toastr.success('Copied to clipboard');
+                          }}
+                        >
+                          <IconButton>
+                            <CopyEmbedIcon stroke="white" />
+                          </IconButton>
+                        </CopyToClipboard>
+                      </div>
+                      <div>
+                        <SyntaxHighlighter
+                          id="myInput"
+                          language="javascript"
+                          style={docco}
+                        >
+                          {code}
+                        </SyntaxHighlighter>
+                      </div>
+                    </Grid>
+                  </Grid>
+                </div>
+              </AccordionDetails>
+            </Accordion>
           </Grid>
           <FormGrid>
             <DefaultButton
@@ -382,6 +510,7 @@ const WallDesign = () => {
               style={{ padding: '0.5rem', borderRadius: '9999px' }}
               onClick={() => {
                 let temp = [];
+                setIfText(0);
                 if (isEmpty(checked)) {
                   testimonials.map((row, index) => {
                     temp[index] = 'true';
@@ -424,6 +553,7 @@ const WallDesign = () => {
             ctaTitle={ctaTitle}
             ctaUrl={ctaUrl}
             checked={checked}
+            ifText={ifText}
           />
         </Grid>
       ) : (
@@ -446,6 +576,7 @@ const WallDesign = () => {
             subTitle={subTitle}
             ctaTitle={ctaTitle}
             ctaUrl={ctaUrl}
+            ifText={ifText}
           />
         </Grid>
       )}
@@ -469,12 +600,20 @@ const WallDesign = () => {
                 gap: '10rem',
               }}
             >
-              <SiderButton onClick={handleClick}>
+              <SiderButton
+                style={{
+                  width: 'unset',
+                  marginTop: 'unset',
+                  marginBottom: 'unset',
+                }}
+                onClick={handleClick}
+              >
                 <PageTitle>{filter}</PageTitle>
                 <DownArrow />
               </SiderButton>
 
               <MainButton
+                style={{ height: '2rem', alignSelf: 'center' }}
                 onClick={() => {
                   handleChooseClose();
                 }}
@@ -498,7 +637,11 @@ const WallDesign = () => {
                 }}
               >
                 {testimonials.map((item, index) => {
-                  if (!isEmpty(checked) && ifText.replace(/["']/g, '')) {
+                  if (
+                    !isEmpty(checked) &&
+                    (Number(item.status) === 1 ||
+                      Number(item.status) === ifText)
+                  ) {
                     return (
                       <Card
                         style={{
@@ -639,7 +782,7 @@ const WallDesign = () => {
                             {item.content}
                           </Grid>
                           <Grid item style={{ marginTop: '0.5rem' }}>
-                            {moment(item.date).format('ll')}
+                            {item.importDate}
                           </Grid>
                         </Grid>
                       </Card>
@@ -666,8 +809,9 @@ const WallDesign = () => {
         <MenuButton
           sx={{ p: 2 }}
           key="1"
+          value="1"
           onClick={() => {
-            setIfText('(item.status === 1 || item.status === 0)');
+            setIfText(0);
             setFilter('Pick Testimonials');
             handleClose();
           }}
@@ -677,8 +821,9 @@ const WallDesign = () => {
         <MenuButton
           sx={{ p: 2 }}
           key="2"
+          value="2"
           onClick={() => {
-            setIfText('item.status === 1');
+            setIfText(1);
             setFilter('Public Testimonials');
             handleClose();
           }}

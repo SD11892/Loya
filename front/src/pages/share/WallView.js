@@ -28,6 +28,7 @@ const WallView = () => {
   const [array, setArray] = React.useState([]);
   const [fileName, setFileName] = React.useState('');
   const [type, setType] = React.useState('');
+  const [ifText, setIfText] = React.useState(0);
 
   const url = window.location.pathname.slice(-6);
   const userId = window.location.pathname.slice(
@@ -55,6 +56,7 @@ const WallView = () => {
         setData(result.data);
         setFileName(result.fileName);
         setType(result.type);
+        setIfText(result.public);
         setKey(result.key.split(','));
         setValue(result.value.split(','));
         if (isEmpty(result.checked)) {
@@ -67,18 +69,18 @@ const WallView = () => {
         alert('Invalid Form');
       });
     dispatch(getAll()).then(async (res) => {
-      console.log('result===========', res.data.testimonials);
       let test = res.data.testimonials;
       let temp = [];
       await test.map((row) => {
         temp.push(row);
       });
-      console.log('temp===========', temp);
       setArray([...temp]);
     });
   }, []);
 
-  React.useEffect(() => {}, [theme, pColor, key, value, array]);
+  React.useEffect(() => {
+    console.log('public=', ifText);
+  }, [theme, pColor, key, value, array, ifText]);
 
   return (
     <Grid container justifyContent="space-between">
@@ -103,6 +105,7 @@ const WallView = () => {
             ctaTitle={ctaTitle}
             ctaUrl={ctaUrl}
             checked={checked}
+            ifText={ifText}
           />
         ) : theme === 2 && !isEmpty(array) ? (
           <Sitetwo
@@ -114,6 +117,7 @@ const WallView = () => {
             ctaTitle={ctaTitle}
             ctaUrl={ctaUrl}
             checked={checked}
+            ifText={ifText}
           />
         ) : null}
       </Grid>

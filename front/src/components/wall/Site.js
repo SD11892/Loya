@@ -19,11 +19,12 @@ const Site = ({
   ctaTitle,
   ctaUrl,
   checked,
+  ifText,
 }) => {
   const navigate = useNavigate();
   React.useEffect(() => {}, [keys, values]);
   React.useEffect(() => {
-    console.log('checked=', testimonials);
+    console.log('ifText=', ifText);
   }, []);
   return (
     <div style={{ background: '#F4F4F5' }}>
@@ -74,7 +75,11 @@ const Site = ({
         }}
       >
         {testimonials.map((row, index) => {
-          if (!isEmpty(checked) && !isEmpty(testimonials)) {
+          if (
+            !isEmpty(checked) &&
+            !isEmpty(testimonials) &&
+            (Number(row.status) === 1 || Number(row.status) === ifText)
+          ) {
             if (checked[index] === 'true') {
               return (
                 <Card
@@ -176,7 +181,9 @@ const Site = ({
                       {row.content}
                     </Grid>
                     <Grid item style={{ marginTop: '0.5rem' }}>
-                      {moment(row.date).format('ll')}
+                      {row.importDate === null
+                        ? moment(row.createdAt).format('ll')
+                        : row.importDate}
                     </Grid>
                   </Grid>
                 </Card>

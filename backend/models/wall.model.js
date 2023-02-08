@@ -48,6 +48,9 @@ module.exports = (sequelize, Sequelize) => {
     projectId: {
       type: Sequelize.INTEGER,
     },
+    public: {
+      type: Sequelize.INTEGER,
+    },
   });
   return Wall;
 };

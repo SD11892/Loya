@@ -144,9 +144,7 @@ export default function CreateWidget() {
   const [openSnack, setOpenSnack] = React.useState(false);
   const [openCopySnack, setOpenCopySnack] = React.useState(false);
   const [anchorEl, setAnchorEl] = React.useState(null);
-  const [ifText, setIfText] = React.useState(
-    '(item.status === 1 || item.status === 0)'
-  );
+  const [ifText, setIfText] = React.useState(1);
   const [filter, setFilter] = React.useState('Pick Testimonials');
 
   const openPop = Boolean(anchorEl);
@@ -177,6 +175,7 @@ export default function CreateWidget() {
     infor.blColor = blColor;
     infor.fgColor = fgColor;
     infor.checked = checked.toString();
+    infor.public = ifText;
     saveForm(infor);
   };
 
@@ -256,6 +255,7 @@ export default function CreateWidget() {
         setBlColor(result.blColor);
         setBfColor(result.bfColor);
         setFgColor(result.fgColor);
+        setIfText(result.public);
         if (isEmpty(result.checked)) {
           setChecked(result.checked);
         } else {
@@ -317,6 +317,7 @@ export default function CreateWidget() {
             variant="contained"
             onClick={() => {
               let temp = [];
+              setIfText(0);
               if (isEmpty(checked)) {
                 testimonials.map((row, index) => {
                   temp[index] = 'true';
@@ -640,7 +641,10 @@ export default function CreateWidget() {
               ? 'Please select your tetimonials'
               : checked.map((row, index) => {
                   if (checked[index] === 'true') {
-                    return testimonials[index] !== null && theme === 1 ? (
+                    return testimonials[index] !== null &&
+                      theme === 1 &&
+                      (Number(testimonials[index].status) === 1 ||
+                        Number(testimonials[index].status) === ifText) ? (
                       <WidgetCard
                         bgColor={bgColor}
                         txtColor={txtColor}
@@ -682,6 +686,26 @@ export default function CreateWidget() {
                                     )
                                   )}`}
                                   width={'60px'}
+                                />
+                              </Avatar>
+                            ) : testimonials[index].data === null &&
+                              testimonials[index].imageUrl !== '' ? (
+                              <Avatar
+                                style={{
+                                  width: '48px',
+                                  height: '48px',
+                                  borderRadius: '50%',
+                                  border: '1px solid #ddd',
+                                  background: '#000',
+                                  color: '#fff',
+                                  fontSize: '0.8rem',
+                                }}
+                                alt={`Avatar n°${testimonials[index] + 1}`}
+                              >
+                                <img
+                                  src={testimonials[index].imageUrl}
+                                  width="48px"
+                                  height="48px"
                                 />
                               </Avatar>
                             ) : (
@@ -884,6 +908,26 @@ export default function CreateWidget() {
                                               width={'60px'}
                                             />
                                           </Avatar>
+                                        ) : item.data === null &&
+                                          item.imageUrl !== '' ? (
+                                          <Avatar
+                                            style={{
+                                              width: '48px',
+                                              height: '48px',
+                                              borderRadius: '50%',
+                                              border: '1px solid #ddd',
+                                              background: '#000',
+                                              color: '#fff',
+                                              fontSize: '0.8rem',
+                                            }}
+                                            alt={`Avatar n°${item + 1}`}
+                                          >
+                                            <img
+                                              src={item.imageUrl}
+                                              width="48px"
+                                              height="48px"
+                                            />
+                                          </Avatar>
                                         ) : (
                                           <Avatar
                                             style={{
@@ -1014,7 +1058,11 @@ export default function CreateWidget() {
                 }}
               >
                 {testimonials.map((item, index) => {
-                  if (!isEmpty(checked) && ifText.replace(/["']/g, '')) {
+                  if (
+                    !isEmpty(checked) &&
+                    (Number(item.status) === 1 ||
+                      Number(item.status) === ifText)
+                  ) {
                     return (
                       <WidgetCard
                         bgColor={bgColor}
@@ -1286,7 +1334,7 @@ export default function CreateWidget() {
           sx={{ p: 2 }}
           key="1"
           onClick={() => {
-            setIfText('(item.status === 1 || item.status === 0)');
+            setIfText(0);
             setFilter('Pick Testimonials');
             handleAnchorClose();
           }}
@@ -1297,7 +1345,7 @@ export default function CreateWidget() {
           sx={{ p: 2 }}
           key="2"
           onClick={() => {
-            setIfText('item.status === 1');
+            setIfText(1);
             setFilter('Public Testimonials');
             handleAnchorClose();
           }}

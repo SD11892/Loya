@@ -50,7 +50,6 @@ const getAll = (searchData) => {
   let userId = `${localStorage.getItem('userId')}`;
   let projectId = localStorage.getItem('projectId');
   console.log('++++++++++++', projectId + userId);
-  console.log(userId, projectId);
   return axios
     .post(API_URL + `all`, null, { params: { userId, projectId, searchData } })
     .then((response) => {

@@ -42,6 +42,7 @@ exports.create = (req, res) => {
     single: data.single,
     userId: Number(data.userId),
     projectId: Number(data.projectId),
+    public: 0,
   }).then((result) => {
     return res.json({
       CODE: 200,
@@ -80,6 +81,7 @@ exports.update = (req, res) => {
       bfColor: data.info.bfColor,
       fgColor: data.info.fgColor,
       checked: data.info.checked,
+      public: data.info.public,
     },
     {
       where: {
@@ -109,6 +111,8 @@ exports.getByUrl = (req, res) => {
     blColor: '',
     bfColor: '',
     fgColor: '',
+    checked: '',
+    public: 0,
   };
   TestimonialForm.findAll({
     where: {
@@ -128,6 +132,7 @@ exports.getByUrl = (req, res) => {
       designInfo.fgColor = fdata[0].dataValues.fgColor;
       designInfo.theme = fdata[0].dataValues.theme;
       designInfo.checked = fdata[0].dataValues.checked;
+      designInfo.public = fdata[0].dataValues.public;
       res.status(200).send({ data: designInfo });
     })
     .catch((err) => {

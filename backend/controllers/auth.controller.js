@@ -159,7 +159,6 @@ exports.signin = (req, res) => {
 };
 
 exports.getByGmail = (req, res) => {
-  console.log('++++++++++++++++++++++++++++++++++++++++');
   User.findOne({
     where: {
       email: req.query.gmail,

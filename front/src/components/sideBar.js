@@ -353,7 +353,7 @@ export const Sidebar = () => {
                   );
                 } else if (upgrade === 'pro') {
                   console.log('projectLength=', projects.length);
-                  if (projects.length === 2) {
+                  if (projects.length >= 2) {
                     toastr.error(
                       'You can create at least 2 projects. Please Upgrade your plan to create more projects!'
                     );
@@ -362,7 +362,7 @@ export const Sidebar = () => {
                   }
                 } else if (upgrade === 'team') {
                   console.log('projectLength=', projects.length);
-                  if (projects.length === 5) {
+                  if (projects.length >= 5) {
                     toastr.error(
                       'You can create at least 5 projects. Please Upgrade your plan to create more projects!'
                     );

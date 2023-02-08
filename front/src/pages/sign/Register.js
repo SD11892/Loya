@@ -64,7 +64,7 @@ const Register = () => {
       .length === 0;
 
   return (
-    <Grid container>
+    <Grid container style={{ alignItems: 'center', flexDirection: 'column' }}>
       <Grid item xs={6} style={{ minHeight: '100vh', display: 'flex' }}>
         <div style={{ display: 'flex', flexDirection: 'row', height: '100vh' }}>
           <div
@@ -161,9 +161,6 @@ const Register = () => {
             </FormGrid>
           </div>
         </div>
-      </Grid>
-      <Grid item xs={6}>
-        <SignPanel />
       </Grid>
     </Grid>
   );

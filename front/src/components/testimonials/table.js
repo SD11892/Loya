@@ -60,10 +60,9 @@ const Alert = React.forwardRef(function Alert(props, ref) {
   return <MuiAlert elevation={6} ref={ref} variant="filled" {...props} />;
 });
 
-const TestTable = () => {
+const TestTable = ({ testimonials, limit }) => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  const testimonials = useSelector((state) => state.testimonial.testimonial);
   const upgrade = localStorage.getItem('upgrade');
   const [status, setStatus] = useState(0);
   const [name, setName] = useState('');
@@ -82,7 +81,6 @@ const TestTable = () => {
   const [videoURL, setVideoURL] = useState('');
   const hiddenFileInput = React.useRef(null);
   const [open, setOpen] = React.useState(false);
-  const [limit, setLimit] = React.useState(null);
 
   const [selectedImage, setSelectedImage] = useState(null);
 
@@ -138,13 +136,13 @@ const TestTable = () => {
     limit,
   ]);
   useEffect(() => {
-    dispatch(getAll()).then((res) => {
-      if (upgrade === 'free') {
-        setLimit(10);
-      } else {
-        setLimit(res.data.testimonials.length);
-      }
-    });
+    // dispatch(getAll()).then((res) => {
+    //  if (upgrade === 'free') {
+    //     setLimit(10);
+    //   } else {
+    //     setLimit(res.data.testimonials.length);
+    //   }
+    // });
   }, []);
 
   return (

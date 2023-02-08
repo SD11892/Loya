@@ -97,7 +97,7 @@ const Forms = () => {
     } else {
       let upgrade = localStorage.getItem('upgrade');
       if (upgrade === 'free') {
-        if (forms.length === 1) {
+        if (forms.length >= 1) {
           toastr.error('Please upgrade your plan for more forms');
         } else {
           createForm(formName)

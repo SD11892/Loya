@@ -1,14 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React from 'react';
 import { useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
 import { Button, Grid, Portal } from '@material-ui/core';
 import { Auth } from 'aws-amplify';
-import toastr from 'toastr';
 
 import { validator } from './Validator';
 import useForm from './useForm';
-import SignPanel from './SignPanel';
 
 import CssTextField from '../../components/uielements/cssTextField';
 import PageTitle from '../../components/uielements/pageTitle';
@@ -17,53 +15,19 @@ import FormGrid from '../../components/uielements/form/FormGrid';
 
 import { Googlesm } from '../../icons/google_sm';
 // import { Heart as HeartIcon } from '../../icons/heart';
-
-import { login } from '../../actions/auth';
-import { getAll } from '../../actions/project';
 import DefaultButton from '../../components/uielements/buttons/defaultButton';
 
 const Login = () => {
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
-
+  React.useEffect(() => {
+    localStorage.clear();
+  }, []);
   const initState = {
     email: '',
     password: '',
   };
 
   const submit = async () => {
-    await Auth.signIn(state.email, state.password)
-      .then(async (result) => {
-        console.log('result=', result);
-        await dispatch(login(state.email, state.password))
-          .then((res) => {
-            console.log('res=', res);
-            if (res.CODE === 200) {
-              dispatch(getAll())
-                .then((result) => {
-                  let projectId = result.data.projects[0].id;
-                  toastr.success('Success Login!');
-                  localStorage.setItem('signIn', true);
-                  localStorage.setItem('projectId', projectId);
-                  navigate('/testimonials');
-                })
-                .catch((projectErr) => {
-                  console.log('ProjectErr=', projectErr);
-                });
-            } else {
-              /////////////////Cognito passed, Database failed////////////////////////
-              navigate('/profile');
-            }
-          })
-          .catch((erro) => {
-            /////////////////Cognito passed, Database failed////////////////////////
-            toastr.error(erro.message);
-          });
-      })
-      .catch((err) => {
-        toastr.error('Incorrect Email');
-        // Something is Wrong
-      });
+    await Auth.signIn(state.email, state.password);
   };
 
   const { handleChange, handleBlur, state, errors } = useForm({

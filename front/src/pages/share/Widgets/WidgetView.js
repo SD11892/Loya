@@ -7,7 +7,7 @@ import WidgetCard from '../../../components/uielements/widgetCard';
 import WidgetBubble from '../../../components/widgets/widgetBubble';
 import { Card, Grid, Avatar, Rating } from '@mui/material';
 
-export default function CreateWidget() {
+export default function WidgetView() {
   const testimonials = useSelector((state) => state.testimonial.testimonial);
   const dispatch = useDispatch();
   const url = window.location.pathname.slice(-6);
@@ -32,6 +32,7 @@ export default function CreateWidget() {
   const [radius, setRadius] = React.useState('');
   const [checked, setChecked] = React.useState([]);
   const [itemList, setItemList] = React.useState([]);
+  const [ifText, setIfText] = React.useState(0);
 
   React.useEffect(async () => {
     await localStorage.setItem('userId', userId);
@@ -52,6 +53,7 @@ export default function CreateWidget() {
         setBfColor(result.bfColor);
         setFgColor(result.fgColor);
         setChecked(result.checked.split(','));
+        setIfText(result.public);
       })
       .catch((err) => {
         alert('Invalid Form');
@@ -106,7 +108,10 @@ export default function CreateWidget() {
         {checked.map((row, index) => {
           if (checked[index] === 'true') {
             console.log('check=', checked);
-            return testimonials[index] !== null && theme === 1 ? (
+            return testimonials[index] !== null &&
+              theme === 1 &&
+              (testimonials[index].status === 1 ||
+                testimonials[index].status === ifText) ? (
               <WidgetCard
                 bgColor={bgColor}
                 txtColor={txtColor}
@@ -147,6 +152,21 @@ export default function CreateWidget() {
                           )}`}
                           width={'60px'}
                         />
+                      </Avatar>
+                    ) : item.data === null && item.imageUrl !== '' ? (
+                      <Avatar
+                        style={{
+                          width: '48px',
+                          height: '48px',
+                          borderRadius: '50%',
+                          border: '1px solid #ddd',
+                          background: '#000',
+                          color: '#fff',
+                          fontSize: '0.8rem',
+                        }}
+                        alt={`Avatar n°${item + 1}`}
+                      >
+                        <img src={item.imageUrl} width="48px" height="48px" />
                       </Avatar>
                     ) : (
                       <Avatar

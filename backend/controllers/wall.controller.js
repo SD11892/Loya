@@ -43,6 +43,7 @@ exports.create = (req, res) => {
     type: '',
     userId: Number(data.userId),
     projectId: Number(data.projectId),
+    public: 0,
   }).then((result) => {
     return res.json({
       CODE: 200,
@@ -53,7 +54,6 @@ exports.create = (req, res) => {
 };
 exports.delete = (req, res) => {
   const Ids = req.query.ids;
-  console.log('ids=', Ids);
   Ids.map((value) => {
     Wall.destroy({
       where: {
@@ -80,6 +80,7 @@ exports.update = (req, res) => {
       pTitle: data.pTitle,
       subTitle: data.subTitle,
       checked: data.checked,
+      public: data.public,
     },
     {
       where: {
@@ -111,6 +112,7 @@ exports.getByUrl = (req, res) => {
     ctaTitle: '',
     ctaUrl: '',
     checked: '',
+    public: 0,
   };
   Wall.findAll({
     where: {
@@ -131,6 +133,7 @@ exports.getByUrl = (req, res) => {
       designInfo.ctaTitle = fdata[0].dataValues.ctaTitle;
       designInfo.ctaUrl = fdata[0].dataValues.ctaUrl;
       designInfo.checked = fdata[0].dataValues.checked;
+      designInfo.public = fdata[0].dataValues.public;
       res.status(200).send({ data: designInfo });
     })
     .catch((err) => {

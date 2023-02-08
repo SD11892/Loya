@@ -79,6 +79,8 @@
   https: 'use strict';
   function t() {
     const e = document.querySelectorAll('.loya-frame-embed');
+    const userId = localStorage.getItem('userId');
+    const projectId = localStorage.getItem('projectId');
     let i = [],
       r = [];
     for (let t = 0; t < e.length; t++) {
@@ -97,7 +99,7 @@
         a.setAttribute('loading', 'lazy'),
         a.setAttribute(
           'data-src',
-          `https://dashboard.tryloya.com/widgets/p/${s}`
+          `https://dashboard.tryloya.com/walls/p/${userId}-${projectId}/testimonials/${s}`
         ),
         a.setAttribute('scrolling', 'no'),
         a.setAttribute('frameborder', '0'),

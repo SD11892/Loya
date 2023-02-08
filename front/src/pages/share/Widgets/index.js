@@ -110,7 +110,7 @@ const Widgets = () => {
     } else {
       let upgrade = localStorage.getItem('upgrade');
       if (upgrade === 'free') {
-        if (testimonialForms.length === 1) {
+        if (testimonialForms.length >= 1) {
           toastr.error('Please upgrade your plan for more forms');
         } else {
           createForm(formName, 1)

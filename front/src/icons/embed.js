@@ -11,7 +11,7 @@ export const Embed = () => {
       strokeLinecap="round"
       strokeLinejoin="round"
       style={{
-        padding: "5px",
+        marginLeft: '1rem',
       }}
     >
       <path d="m18 16 4-4-4-4"></path>

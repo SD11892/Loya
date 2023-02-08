@@ -6,15 +6,13 @@ import { routes } from './routes';
 import GlobalStyle from './theme/globalStyle';
 import { theme } from './theme/theme';
 import { Hub, Auth, Amplify } from 'aws-amplify';
-import { Loader } from 'rsuite';
 import { getByGmail } from './actions/auth';
 import { getAll } from './actions/project';
+import { getAll as getTestimonialAll } from './actions/testimonial';
 import awsConfig from './aws-exports';
 import 'toastr/toastr.js';
 import 'toastr/build/toastr.css';
 import toastr from 'toastr';
-import { isEmpty } from './util/isEmpty';
-import { resolveComponentProps } from '@mui/base';
 
 Amplify.configure(awsConfig);
 
@@ -36,7 +34,7 @@ const App = () => {
             if (result.data.status === 200) {
               console.log('here Register');
               localStorage.setItem('email', gmail);
-              localStorage.setItem('password', 'abcd!@#$1234');
+              localStorage.setItem('password', '!@#$%^&*()abcd1234');
               localStorage.setItem('upgrade', 'free');
               await navigate('/profile');
             } else if (result.data.status === 201) {
@@ -52,11 +50,19 @@ const App = () => {
               });
               promise
                 .then(() => {
+                  let userId = localStorage.getItem('userId');
+                  console.log('localstorage=', userId);
                   dispatch(getAll()).then((res) => {
                     console.log('projects=', res);
                     let projectId = res.data.projects[0].id;
-                      localStorage.setItem('projectId', projectId);
-                      navigate('/testimonials');
+                    localStorage.setItem('projectId', projectId);
+                    dispatch(getTestimonialAll())
+                      .then((result) => {
+                        navigate('/testimonials');
+                      })
+                      .catch((erro) => {
+                        console.log('AppTestimonialError=', erro);
+                      });
                   });
                 })
                 .catch((err) => {
@@ -84,7 +90,7 @@ const App = () => {
       if (payload.event === 'signOut') {
         console.log('Sign Out HERE!!!');
         localStorage.clear();
-        navigate('/');
+        //navigate('/');
       }
     });
   }, []);
